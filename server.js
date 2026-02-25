@@ -49,16 +49,18 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         2. TYPOGRAPHY: Use a professional font stack (e.g., 'Inter', 'Roboto', or 'Segoe UI'). Use distinct font weights for headings vs body text.
         3. SECTIONS: Include Contact Info, Professional Summary, Work Experience, Education, and Skills. Use clear, underlined or bolded section headers.
         4. SPACING: Ensure consistent padding and margins between all elements. The CV should look organized and easy to scan.
+        5. SINGLE PAGE ENFORCEMENT: The CV MUST fit on exactly ONE A4 page. Adjust font sizes (e.g., 10pt-11pt for body), margins, and section spacing as necessary to ensure all content fits on one page without being overcrowded. If there is too much content, prioritize the most important details and use a more compact layout (like a two-column setup).
 
         Requirements:
-        1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements and ensure colors translate well to paper.
-        2. CONTENT OPTIMIZATION:
+        1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements. Set body margin to 0 and use a container with fixed width (approx 210mm) if necessary to ensure 1-page output.
+        2. CSS FOR PRINT: Include CSS rules like `page-break-inside: avoid;` for sections and `html, body { height: 100%; overflow: hidden; }` within `@media print` to discourage the browser from creating a second page.
+        3. CONTENT OPTIMIZATION:
            - REWRITE WORK EXPERIENCE: Transform simple job descriptions into achievement-oriented bullet points using powerful action verbs (e.g., 'Spearheaded', 'Engineered', 'Orchestrated').
            - REWRITE SUMMARY: Craft a compelling, high-level professional 'About Me' that highlights the user's unique value proposition.
            - TONE: Maintain a sophisticated, executive-level tone throughout.
            - SKILLS: Group skills logically if there are many.
-        3. OUTPUT: Return ONLY the raw HTML code, starting with <!DOCTYPE html>. Do NOT wrap it in markdown code blocks.
-        4. PROFILE PICTURE: If provided, integrate it seamlessly (e.g., as a circular or rounded square image in the header or sidebar).`;
+        4. OUTPUT: Return ONLY the raw HTML code, starting with <!DOCTYPE html>. Do NOT wrap it in markdown code blocks.
+        5. PROFILE PICTURE: If provided, integrate it seamlessly (e.g., as a circular or rounded square image in the header or sidebar).`;
 
         let dataUri = "";
         const parts = [];
