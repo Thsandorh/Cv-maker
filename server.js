@@ -60,9 +60,9 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         3. OUTPUT: Return ONLY the raw HTML code, starting with <!DOCTYPE html>. Do NOT wrap it in markdown code blocks.
         4. PROFILE PICTURE: If provided, integrate it seamlessly (e.g., as a circular or rounded square image in the header or sidebar).`;
 
-        const parts = [{ text: prompt }];
-
         let dataUri = "";
+        const parts = [];
+
         if (req.file) {
             const base64Data = req.file.buffer.toString("base64");
             dataUri = `data:${req.file.mimetype};base64,${base64Data}`;
@@ -73,8 +73,10 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
                     mimeType: req.file.mimetype
                 }
             });
-            prompt += `\n\nCRITICAL: A profile picture is provided. You MUST include an <img> tag for it. The src attribute of this <img> tag MUST be EXACTLY the text "{{PROFILE_PICTURE_DATA_URI}}" (including the curly braces). Do not use any other placeholder URL.`;
+            prompt += `\n\nCRITICAL: A profile picture is provided. You MUST include an <img> tag for it. The src attribute of this <img> tag MUST be EXACTLY the text "{{PROFILE_PICTURE_DATA_URI}}" (including the curly braces). Do not use any other placeholder URL. Ensure the image has appropriate styling (e.g., width, height, object-fit, border-radius).`;
         }
+
+        parts.unshift({ text: prompt });
 
         let result;
         let retries = 3;
@@ -102,10 +104,18 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
 
         // Replace placeholder with actual data URI if present
         if (dataUri) {
+            // Standard placeholder
             html = html.replace(/\{\{PROFILE_PICTURE_DATA_URI\}\}/g, dataUri);
+
             // Fallback: Replace common placeholders that Gemini might use instead of the requested placeholder
-            html = html.replace(/https:\/\/via\.placeholder\.com\/[0-9x]+/g, dataUri);
-            html = html.replace(/https:\/\/placehold\.co\/[0-9x]+/g, dataUri);
+            html = html.replace(/https?:\/\/via\.placeholder\.com\/[^\s"'>]+/g, dataUri);
+            html = html.replace(/https?:\/\/placehold\.co\/[^\s"'>]+/g, dataUri);
+            html = html.replace(/https?:\/\/picsum\.photos\/[^\s"'>]+/g, dataUri);
+
+            // Even broader fallback: if we still see a likely profile image tag with a dummy src
+            // but didn't find the specific placeholder, let's try to find any img tag and if there's only one, replace its src.
+            // Or better: look for tags like src="profile.jpg", src="avatar.png", etc.
+            html = html.replace(/src="[^"]*(?:profile|avatar|user|portrait)[^"]*"/gi, `src="${dataUri}"`);
         }
 
         res.send(html);
