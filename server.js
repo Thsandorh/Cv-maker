@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -40,21 +39,26 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
                 themeInstruction = "Use a sleek, modern professional design with indigo accents, clean sections, and high readability. Use a mix of weights for typography.";
         }
 
-        let prompt = `You are an expert CV writer. Create a professional and visually appealing CV in a single HTML file with embedded CSS.
+        let prompt = `You are an expert CV writer. Create a professional, highly structured, and visually stunning CV in a single HTML file with embedded CSS.
         The CV should be based on the following user data: ${JSON.stringify(parsedUserData)}.
 
         Theme Style: ${themeInstruction}
 
+        Layout & Design Guidelines:
+        1. STRUCTURE: Use a clear layout (e.g., a two-column layout for 'Modern' and 'Creative', or a sleek one-column for 'Minimalist' and 'Classic'). Ensure generous white space and perfect alignment.
+        2. TYPOGRAPHY: Use a professional font stack (e.g., 'Inter', 'Roboto', or 'Segoe UI'). Use distinct font weights for headings vs body text.
+        3. SECTIONS: Include Contact Info, Professional Summary, Work Experience, Education, and Skills. Use clear, underlined or bolded section headers.
+        4. SPACING: Ensure consistent padding and margins between all elements. The CV should look organized and easy to scan.
+
         Requirements:
-        1. Include sections for: Contact Info, Profile/Summary, Experience, Education, and Skills.
-        2. Make it print-friendly (use @media print to ensure it looks perfect on A4 paper).
-        3. Professional Optimization:
-           - Transform simple job descriptions into achievement-oriented bullet points using action verbs (e.g., 'Managed', 'Developed', 'Optimized').
-           - Refine the 'Summary' to be a compelling elevator pitch.
-           - Ensure the tone is professional, confident, and sophisticated.
-           - Suggest appropriate professional skills if the user provided only a few.
-        4. Return ONLY the HTML code, starting with <!DOCTYPE html>. No markdown formatting around the code.
-        5. If a profile picture is provided, include it elegantly in the design.`;
+        1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements and ensure colors translate well to paper.
+        2. CONTENT OPTIMIZATION:
+           - REWRITE WORK EXPERIENCE: Transform simple job descriptions into achievement-oriented bullet points using powerful action verbs (e.g., 'Spearheaded', 'Engineered', 'Orchestrated').
+           - REWRITE SUMMARY: Craft a compelling, high-level professional 'About Me' that highlights the user's unique value proposition.
+           - TONE: Maintain a sophisticated, executive-level tone throughout.
+           - SKILLS: Group skills logically if there are many.
+        3. OUTPUT: Return ONLY the raw HTML code, starting with <!DOCTYPE html>. Do NOT wrap it in markdown code blocks.
+        4. PROFILE PICTURE: If provided, integrate it seamlessly (e.g., as a circular or rounded square image in the header or sidebar).`;
 
         const parts = [{ text: prompt }];
 

@@ -16,13 +16,21 @@
 
 .remove-btn {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: -0.75rem;
+    right: -0.75rem;
+    background-color: #fee2e2;
     color: #ef4444;
-    font-size: 0.875rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    border: 1px solid #fecaca;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .remove-btn:hover {
-    text-decoration: underline;
+    background-color: #fecaca;
 }
