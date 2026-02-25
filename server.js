@@ -10,15 +10,34 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
+// Error handler for Multer
+app.use((err, req, res, next) => {
+    if (err.name === 'MulterError') {
+        return res.status(400).send('Upload Error: ' + err.message);
+    }
+    next(err);
+});
+
 // Multer setup for image uploads (in-memory storage)
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 4 * 1024 * 1024 } // 4MB limit for Vercel payloads
+});
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) => {
     try {
+        if (!process.env.GEMINI_API_KEY) {
+            throw new Error("GEMINI_API_KEY is not configured in environment variables.");
+        }
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+        if (!req.body || !req.body.userData) {
+            return res.status(400).send('Error: Missing userData in request body.');
+        }
+
         const { userData, theme } = req.body;
         const parsedUserData = JSON.parse(userData);
 
@@ -53,7 +72,7 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
 
         Requirements:
         1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements. Set body margin to 0 and use a container with fixed width (approx 210mm) if necessary to ensure 1-page output.
-        2. CSS FOR PRINT: Include CSS rules like `page-break-inside: avoid;` for sections and `html, body { height: 100%; overflow: hidden; }` within `@media print` to discourage the browser from creating a second page.
+        2. CSS FOR PRINT: Include CSS rules like 'page-break-inside: avoid;' for sections and 'html, body { height: 100%; overflow: hidden; }' within '@media print' to discourage the browser from creating a second page.
         3. CONTENT OPTIMIZATION:
            - REWRITE WORK EXPERIENCE: Transform simple job descriptions into achievement-oriented bullet points using powerful action verbs (e.g., 'Spearheaded', 'Engineered', 'Orchestrated').
            - REWRITE SUMMARY: Craft a compelling, high-level professional 'About Me' that highlights the user's unique value proposition.
@@ -123,7 +142,8 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         res.send(html);
     } catch (error) {
         console.error('Error generating CV:', error);
-        res.status(500).send('Error generating CV: ' + error.message);
+        const status = error.name === 'MulterError' ? 400 : 500;
+        res.status(status).send('Error generating CV: ' + error.message);
     }
 });
 
@@ -131,6 +151,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+// Export for Vercel
+module.exports = app;
+
+// Only listen if not running as a module (local dev)
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+}

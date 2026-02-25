@@ -83,6 +83,12 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
         const theme = document.getElementById('theme').value;
         const profilePicture = document.getElementById('profilePicture').files[0];
 
+        if (profilePicture && profilePicture.size > 4 * 1024 * 1024) {
+            alert('The profile picture is too large. Please select an image smaller than 4MB.');
+            loadingOverlay.classList.add('hidden');
+            return;
+        }
+
         const payload = new FormData();
         payload.append('userData', JSON.stringify(userData));
         payload.append('theme', theme);
