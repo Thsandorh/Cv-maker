@@ -45,7 +45,8 @@ if (document.readyState === 'loading') {
     init();
 }
 
-async function handleFormSubmit(e) {
+// Make handleFormSubmit global so the HTML onsubmit attribute can find it
+window.handleFormSubmit = async function(e) {
     e.preventDefault();
     console.log("Form submit intercepted. Mode:", window.currentMode);
 
