@@ -6,6 +6,7 @@ def verify_cv_preview():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         # Emulate a small desktop window where the preview might be constrained
+        # Adding some margin for potential scrollbar
         context = browser.new_context(viewport={'width': 1200, 'height': 900})
         page = context.new_page()
 
@@ -66,27 +67,33 @@ def verify_cv_preview():
             print("ERROR: Could not access iframe content frame.")
             return
 
-        # Check if the body has the transform style applied
-        # Note: The script we injected applies style directly to document.body.style.transform
-        body_transform = iframe_content_frame.evaluate("document.body.style.transform")
-        body_width = iframe_content_frame.evaluate("document.body.style.width")
+        # Check if the wrapper has the transform style applied
+        wrapper_transform = iframe_content_frame.evaluate("document.getElementById('cv-scale-wrapper') ? document.getElementById('cv-scale-wrapper').style.transform : 'NONE'")
 
-        print(f"Iframe body transform: '{body_transform}'")
-        print(f"Iframe body width: '{body_width}'") # Should be '210mm' from CSS or script if set
+        print(f"Wrapper transform: '{wrapper_transform}'")
 
-        # Also check computed style for width to verify CSS injection
-        computed_width = iframe_content_frame.evaluate("window.getComputedStyle(document.body).width")
-        print(f"Computed body width: {computed_width}") # Should be approx 793px (210mm)
+        # Check for horizontal overflow
+        scroll_width = iframe_content_frame.evaluate("document.documentElement.scrollWidth")
+        client_width = iframe_content_frame.evaluate("document.documentElement.clientWidth")
 
-        if "scale" in body_transform:
-            print("SUCCESS: Transform scale applied to iframe body.")
+        print(f"Iframe scrollWidth: {scroll_width}")
+        print(f"Iframe clientWidth: {client_width}")
+
+        # Allow a tiny margin of error (e.g. 1-2px) due to rendering differences
+        if scroll_width > client_width + 2:
+            print("FAILURE: Horizontal scrollbar detected! The content is overflowing.")
         else:
-            print("FAILURE: Transform scale NOT applied.")
+            print("SUCCESS: No horizontal overflow detected.")
+
+        if "scale" in wrapper_transform:
+            print("SUCCESS: Transform scale applied to wrapper.")
+        else:
+            print("FAILURE: Transform scale NOT applied to wrapper.")
 
         # Take screenshots
         preview_container = page.locator("#previewContainer")
-        preview_container.screenshot(path="verification/preview_scaled.png")
-        page.screenshot(path="verification/full_page.png")
+        preview_container.screenshot(path="verification/preview_scaled_wrapper.png")
+        page.screenshot(path="verification/full_page_wrapper.png")
 
         browser.close()
 
