@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproduction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #previewContainer {
+            width: 500px; /* Simulate a smaller column */
+            height: 800px;
+            overflow: hidden; /* As per original code */
+            border: 2px solid red;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="p-10">
+        <h1>Reproduction of CV Preview Issue</h1>
+        <div id="previewContainer"></div>
+        <button onclick="runTest()" class="mt-4 bg-blue-500 text-white p-2 rounded">Inject A4 Content</button>
+    </div>
+
+    <script>
+        function runTest() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '';
+
+            const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            container.appendChild(iframe);
+
+            // Mock A4 content that is non-responsive (simulating "bad" AI output or print-only optimized output)
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body {
+                            width: 210mm; /* Fixed A4 width */
+                            min-height: 297mm;
+                            background-color: white;
+                            color: black;
+                            font-family: sans-serif;
+                            border: 1px solid blue; /* To see the boundary */
+                        }
+                        .header {
+                            background-color: #333;
+                            color: white;
+                            padding: 20px;
+                            font-size: 40px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">[NÉV NINCS MEGADVA]</div>
+                    <div style="padding: 20px;">
+                        <p>This is a test content that extends to A4 width (approx 794px).</p>
+                        <p>The container is only 500px wide.</p>
+                        <p>We expect this to be cut off if overflow is hidden, or scrollable if not.</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(html);
+            doc.close();
+        }
+    </script>
+</body>
+</html>
