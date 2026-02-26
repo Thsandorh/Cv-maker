@@ -15,33 +15,47 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchMode(mode) {
-    currentMode = mode;
-    const structuredBtn = document.getElementById('structuredModeBtn');
-    const bulkBtn = document.getElementById('bulkModeBtn');
-    const structuredSections = document.getElementById('structuredSections');
-    const bulkSection = document.getElementById('bulkSection');
+    try {
+        currentMode = mode;
+        const structuredBtn = document.getElementById('structuredModeBtn');
+        const bulkBtn = document.getElementById('bulkModeBtn');
+        const structuredSections = document.getElementById('structuredSections');
+        const bulkSection = document.getElementById('bulkSection');
 
-    if (mode === 'structured') {
-        structuredBtn.classList.add('mode-active');
-        structuredBtn.classList.remove('text-gray-500');
-        bulkBtn.classList.remove('mode-active');
-        bulkBtn.classList.add('text-gray-500');
-        structuredSections.classList.remove('hidden');
-        bulkSection.classList.add('hidden');
-    } else {
-        bulkBtn.classList.add('mode-active');
-        bulkBtn.classList.remove('text-gray-500');
-        structuredBtn.classList.remove('mode-active');
-        structuredBtn.classList.add('text-gray-500');
-        bulkSection.classList.remove('hidden');
-        structuredSections.classList.add('hidden');
+        if (!structuredBtn || !bulkBtn || !structuredSections || !bulkSection) {
+            console.error('Hiányzó DOM elemek a módváltáshoz.');
+            return;
+        }
+
+        if (mode === 'structured') {
+            structuredBtn.classList.add('mode-active');
+            structuredBtn.classList.remove('text-gray-500');
+            bulkBtn.classList.remove('mode-active');
+            bulkBtn.classList.add('text-gray-500');
+            structuredSections.classList.remove('hidden');
+            bulkSection.classList.add('hidden');
+        } else {
+            bulkBtn.classList.add('mode-active');
+            bulkBtn.classList.remove('text-gray-500');
+            structuredBtn.classList.remove('mode-active');
+            structuredBtn.classList.add('text-gray-500');
+            bulkSection.classList.remove('hidden');
+            structuredSections.classList.add('hidden');
+
+            // Görgetés a szabad szöveg mezőhöz, hogy a felhasználó biztosan lássa
+            setTimeout(() => {
+                bulkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    } catch (error) {
+        console.error('Hiba a módváltás során:', error);
     }
 }
 
 function addExperience() {
     const container = document.getElementById('experienceList');
     const div = document.createElement('div');
-    div.className = 'experience-entry group animate-in fade-in duration-300';
+    div.className = 'experience-entry group';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -60,7 +74,7 @@ function addExperience() {
 function addEducation() {
     const container = document.getElementById('educationList');
     const div = document.createElement('div');
-    div.className = 'education-entry group animate-in fade-in duration-300';
+    div.className = 'education-entry group';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
