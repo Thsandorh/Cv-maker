@@ -1,6 +1,17 @@
 let currentMode = 'structured';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Eseménykezelők hozzáadása a gombokhoz
+    const structuredBtn = document.getElementById('structuredModeBtn');
+    const bulkBtn = document.getElementById('bulkModeBtn');
+
+    if (structuredBtn) {
+        structuredBtn.addEventListener('click', () => switchMode('structured'));
+    }
+    if (bulkBtn) {
+        bulkBtn.addEventListener('click', () => switchMode('bulk'));
+    }
+
     // Kezdeti üres mezők hozzáadása
     addExperience();
     addEducation();
