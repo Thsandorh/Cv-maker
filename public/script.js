@@ -2,7 +2,9 @@
 // Globális változók explicit deklarálása
 // window.currentMode a HTML-ben lévő inline scriptben van definiálva
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
+    console.log("Initialization started. readyState:", document.readyState);
+
     // Eseménykezelők hozzáadása a gombokhoz
     const structuredBtn = document.getElementById('structuredModeBtn');
     const bulkBtn = document.getElementById('bulkModeBtn');
@@ -25,15 +27,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     initPayPal();
     */
-});
 
-// A window.addExperience és window.addEducation most már az index.html-ben van definiálva
-// Az itt lévő duplikációt eltávolítottuk, hogy elkerüljük a felülírást és a zavart.
+    // Event listener hozzáadása a form elküldéséhez
+    const cvForm = document.getElementById('cvForm');
+    if (cvForm) {
+        // Remove any previous listener to be safe
+        cvForm.removeEventListener('submit', handleFormSubmit);
+        cvForm.addEventListener('submit', handleFormSubmit);
+        console.log("CV Form submit listener attached.");
+    } else {
+        console.error("Critical Error: CV Form not found!");
+    }
+}
 
-document.getElementById('cvForm').addEventListener('submit', async (e) => {
+// Robust initialization pattern
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+async function handleFormSubmit(e) {
     e.preventDefault();
+    console.log("Form submit intercepted. Mode:", window.currentMode);
+
     const loadingOverlay = document.getElementById('loadingOverlay');
-    loadingOverlay.classList.remove('hidden');
+    if (loadingOverlay) loadingOverlay.classList.remove('hidden');
 
     try {
         const formData = new FormData(e.target);
@@ -84,7 +103,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
             const bulkText = formData.get('bulkData');
             if (!bulkText || bulkText.trim().length < 10) {
                 alert('Kérlek írj be legalább néhány mondatot a szabad szöveges mezőbe!');
-                loadingOverlay.classList.add('hidden');
+                if (loadingOverlay) loadingOverlay.classList.add('hidden');
                 return;
             }
             userData.bulkData = bulkText;
@@ -95,7 +114,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
 
         if (profilePicture && profilePicture.size > 4 * 1024 * 1024) {
             alert('A profilkép túl nagy. Kérlek válassz 4MB-nál kisebb képet.');
-            loadingOverlay.classList.add('hidden');
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
             return;
         }
 
@@ -122,12 +141,14 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
         console.error('Hiba:', error);
         alert('Hiba történt: ' + error.message);
     } finally {
-        loadingOverlay.classList.add('hidden');
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
     }
-});
+}
 
 function displayCV(html) {
     const container = document.getElementById('previewContainer');
+    if (!container) return;
+
     container.innerHTML = ''; // Helyőrző törlése
 
     const iframe = document.createElement('iframe');
@@ -138,7 +159,8 @@ function displayCV(html) {
     doc.write(html);
     doc.close();
 
-    document.getElementById('downloadPdf').classList.remove('hidden');
+    const downloadBtn = document.getElementById('downloadPdf');
+    if (downloadBtn) downloadBtn.classList.remove('hidden');
 
     // Mobilnézeten görgetés az előnézethez
     if (window.innerWidth < 1024) {
@@ -146,9 +168,12 @@ function displayCV(html) {
     }
 }
 
-document.getElementById('downloadPdf').addEventListener('click', () => {
-    const iframe = document.querySelector('#previewContainer iframe');
-    if (iframe) {
-        iframe.contentWindow.print();
-    }
-});
+const downloadBtn = document.getElementById('downloadPdf');
+if (downloadBtn) {
+    downloadBtn.addEventListener('click', () => {
+        const iframe = document.querySelector('#previewContainer iframe');
+        if (iframe) {
+            iframe.contentWindow.print();
+        }
+    });
+}
