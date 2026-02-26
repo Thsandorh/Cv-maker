@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVPro AI - Premium CV Builder</title>
+    <title>CVPro AI - Prémium Önéletrajz Készítő</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
 </head>
 <body class="gradient-bg min-h-screen pb-12">
     <div class="container mx-auto px-4 py-6">
-        <!-- Navigation / Logo -->
+        <!-- Navigáció / Logó -->
         <nav class="flex justify-between items-center mb-10 px-4">
             <div class="flex items-center space-x-2">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
@@ -30,137 +30,137 @@
                 <span class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">CVPro AI</span>
             </div>
 
-            <!-- PayPal Preparation (Placeholder) -->
+            <!-- PayPal Előkészítés (Helyőrző) -->
             <!--
             <div id="paypal-container" class="hidden">
                 <button class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-2 px-6 rounded-full flex items-center space-x-2 transition duration-200">
-                    <span>Pay with</span>
+                    <span>Fizetés</span>
                     <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal">
                 </button>
             </div>
             -->
             <div class="text-sm font-medium text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full border border-indigo-100">
-                Premium Builder
+                Prémium Készítő
             </div>
         </nav>
 
         <header class="text-center mb-12">
-            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Create your <span class="text-indigo-600">dream career</span> today.</h1>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Generate a high-impact, professional CV in seconds using our advanced AI engine. Achievement-oriented and print-ready.</p>
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Valósítsd meg <span class="text-indigo-600">álmaid karrierjét</span> még ma.</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Készíts profi, meggyőző önéletrajzot másodpercek alatt fejlett AI motorunkkal. Teljesítmény-orientált és nyomtatásra kész.</p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <!-- Form Section -->
+            <!-- Űrlap Szekció -->
             <section class="glass p-8 rounded-3xl shadow-2xl space-y-8">
-                <!-- Mode Toggle -->
+                <!-- Mód Kapcsoló -->
                 <div class="flex justify-center">
                     <div class="bg-gray-200 p-1 rounded-2xl flex w-full max-w-sm">
-                        <button type="button" id="structuredModeBtn" onclick="switchMode('structured')" class="mode-toggle-btn mode-active flex-1 py-2 px-4 rounded-xl text-sm font-bold">Structured Data</button>
-                        <button type="button" id="bulkModeBtn" onclick="switchMode('bulk')" class="mode-toggle-btn flex-1 py-2 px-4 rounded-xl text-sm font-bold text-gray-500">Bulk Input</button>
+                        <button type="button" id="structuredModeBtn" onclick="switchMode('structured')" class="mode-toggle-btn mode-active flex-1 py-2 px-4 rounded-xl text-sm font-bold">Strukturált Adatok</button>
+                        <button type="button" id="bulkModeBtn" onclick="switchMode('bulk')" class="mode-toggle-btn flex-1 py-2 px-4 rounded-xl text-sm font-bold text-gray-500">Szabad Szöveg</button>
                     </div>
                 </div>
 
                 <form id="cvForm" class="space-y-8">
-                    <!-- Personal Info (Always shown) -->
+                    <!-- Személyes Adatok (Mindig látható) -->
                     <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center space-x-2">
                             <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            <span>Personal Information</span>
+                            <span>Személyes Információk</span>
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="fullName" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Full Name</label>
+                                <label for="fullName" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Teljes Név</label>
                                 <input type="text" id="fullName" name="fullName" required class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                             <div>
-                                <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Email Address</label>
+                                <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">E-mail Cím</label>
                                 <input type="email" id="email" name="email" required class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="phone" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Phone Number</label>
+                                <label for="phone" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Telefonszám</label>
                                 <input type="text" id="phone" name="phone" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                             <div>
-                                <label for="location" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Location</label>
-                                <input type="text" id="location" name="location" placeholder="City, Country" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
+                                <label for="location" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Tartózkodási Hely</label>
+                                <input type="text" id="location" name="location" placeholder="Város, Ország" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                         </div>
                         <div>
-                            <label for="profilePicture" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Profile Photo</label>
+                            <label for="profilePicture" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Profilkép</label>
                             <input type="file" id="profilePicture" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition-all cursor-pointer">
                         </div>
                     </div>
 
-                    <!-- Structured Sections -->
+                    <!-- Strukturált Szekciók -->
                     <div id="structuredSections" class="space-y-8 animate-in fade-in duration-500">
-                        <!-- About Me -->
+                        <!-- Szakmai Bemutatkozás -->
                         <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
-                            <h2 class="text-xl font-bold text-gray-800">Professional Summary</h2>
-                            <textarea id="summary" name="summary" rows="3" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none" placeholder="Briefly describe your career goals and key strengths..."></textarea>
+                            <h2 class="text-xl font-bold text-gray-800">Szakmai Bemutatkozás</h2>
+                            <textarea id="summary" name="summary" rows="3" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none" placeholder="Röviden írd le karriered céljait és legfontosabb erősségeidet..."></textarea>
                         </div>
 
-                        <!-- Experience -->
+                        <!-- Munkatapasztalat -->
                         <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
                             <div class="flex justify-between items-center">
-                                <h2 class="text-xl font-bold text-gray-800">Work Experience</h2>
-                                <button type="button" onclick="addExperience()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Add Role</button>
+                                <h2 class="text-xl font-bold text-gray-800">Munkatapasztalat</h2>
+                                <button type="button" onclick="addExperience()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Új pozíció</button>
                             </div>
                             <div id="experienceList" class="space-y-6 pt-2">
-                                <!-- Dynamic experience entries -->
+                                <!-- Dinamikus bejegyzések -->
                             </div>
                         </div>
 
-                        <!-- Education -->
+                        <!-- Tanulmányok -->
                         <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
                             <div class="flex justify-between items-center">
-                                <h2 class="text-xl font-bold text-gray-800">Education</h2>
-                                <button type="button" onclick="addEducation()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Add Degree</button>
+                                <h2 class="text-xl font-bold text-gray-800">Tanulmányok</h2>
+                                <button type="button" onclick="addEducation()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Új végzettség</button>
                             </div>
                             <div id="educationList" class="space-y-6 pt-2">
-                                <!-- Dynamic education entries -->
+                                <!-- Dinamikus bejegyzések -->
                             </div>
                         </div>
 
-                        <!-- Skills -->
+                        <!-- Készségek -->
                         <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
-                            <h2 class="text-xl font-bold text-gray-800">Skills & Expertise</h2>
-                            <input type="text" name="skills" placeholder="e.g. JavaScript, AWS, Project Management, Agile..." class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none">
+                            <h2 class="text-xl font-bold text-gray-800">Készségek és Szaktudás</h2>
+                            <input type="text" name="skills" placeholder="pl. JavaScript, AWS, Projektmenedzsment, Agile..." class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none">
                         </div>
                     </div>
 
-                    <!-- Bulk Mode Section -->
+                    <!-- Szabad Szöveg Szekció -->
                     <div id="bulkSection" class="hidden space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60 animate-in fade-in duration-500">
-                        <h2 class="text-xl font-bold text-gray-800">Bulk Information</h2>
-                        <p class="text-sm text-gray-500 mb-2">Just paste everything here—your experience, education, skills, and summary. Our AI will sort it out.</p>
-                        <textarea id="bulkData" name="bulkData" rows="15" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-4 outline-none font-mono text-sm" placeholder="Work Experience:
-Software Engineer at Acme Corp (2020-2023)
-- Lead developer for the web team...
+                        <h2 class="text-xl font-bold text-gray-800">Összesített adatok</h2>
+                        <p class="text-sm text-gray-500 mb-2">Csak másolj be ide mindent — tapasztalatokat, tanulmányokat, készségeket és a bemutatkozást. Az AI majd rendszerezi neked.</p>
+                        <textarea id="bulkData" name="bulkData" rows="15" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-4 outline-none font-mono text-sm" placeholder="Munkatapasztalat:
+Szoftverfejlesztő az Acme Corp-nál (2020-2023)
+- Lead developer a webes csapatban...
 
-Education:
-BS in Computer Science, University of Technology (2019)..."></textarea>
+Tanulmányok:
+Informatikus mérnök BSc, Műszaki Egyetem (2019)..."></textarea>
                     </div>
 
-                    <!-- Theme Selection & Generate -->
+                    <!-- Sablon Választás & Generálás -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <div class="md:col-span-1">
-                            <label for="theme" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Template Style</label>
+                            <label for="theme" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Sablon Stílusa</label>
                             <select id="theme" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none appearance-none transition-all">
-                                <option value="modern">Modern Professional</option>
-                                <option value="minimalist">Minimalist</option>
-                                <option value="creative">Creative</option>
-                                <option value="classic">Classic</option>
+                                <option value="modern">Modern Profi</option>
+                                <option value="minimalist">Minimalista</option>
+                                <option value="creative">Kreatív</option>
+                                <option value="classic">Klasszikus</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
-                            <button type="submit" class="w-full btn-premium text-white py-3.5 px-6 rounded-2xl font-bold text-lg shadow-xl">Generate Professional CV</button>
+                            <button type="submit" class="w-full btn-premium text-white py-3.5 px-6 rounded-2xl font-bold text-lg shadow-xl">Profi Önéletrajz Generálása</button>
                         </div>
                     </div>
                 </form>
             </section>
 
-            <!-- Preview Section -->
+            <!-- Előnézet Szekció -->
             <section class="flex flex-col space-y-6">
                 <div class="glass p-6 rounded-3xl shadow-2xl flex-grow flex flex-col min-h-[700px]">
                     <div class="flex justify-between items-center mb-6">
@@ -168,11 +168,11 @@ BS in Computer Science, University of Technology (2019)..."></textarea>
                             <div class="w-3 h-3 bg-red-400 rounded-full"></div>
                             <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
                             <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-                            <span class="ml-2 text-sm font-bold text-gray-500 uppercase tracking-widest">Live Preview</span>
+                            <span class="ml-2 text-sm font-bold text-gray-500 uppercase tracking-widest">Élő előnézet</span>
                         </div>
                         <button id="downloadPdf" class="hidden bg-emerald-500 text-white py-2 px-6 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg flex items-center space-x-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 012 2v1H7v-1a2 2 0 012-2zM9 9h6v4H9V9z"></path></svg>
-                            <span>Download PDF</span>
+                            <span>PDF Letöltése</span>
                         </button>
                     </div>
                     <div id="previewContainer" class="bg-gray-100/50 rounded-2xl flex-grow flex items-center justify-center border-2 border-dashed border-gray-300 relative overflow-hidden">
@@ -180,8 +180,8 @@ BS in Computer Science, University of Technology (2019)..."></textarea>
                             <div class="w-20 h-20 bg-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-indigo-400">
                                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                             </div>
-                            <p class="text-gray-500 font-medium">Ready for your masterpiece?</p>
-                            <p class="text-sm text-gray-400">Your generated CV will appear right here.</p>
+                            <p class="text-gray-500 font-medium">Készen állsz a mesterművedre?</p>
+                            <p class="text-sm text-gray-400">A generált önéletrajzod itt fog megjelenni.</p>
                         </div>
                     </div>
                 </div>
@@ -189,15 +189,15 @@ BS in Computer Science, University of Technology (2019)..."></textarea>
         </main>
     </div>
 
-    <!-- Loading Overlay -->
+    <!-- Betöltési Réteg -->
     <div id="loadingOverlay" class="fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-50">
         <div class="bg-white p-10 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm text-center">
             <div class="relative w-20 h-20 mb-6">
                 <div class="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
                 <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Crafting Perfection</h3>
-            <p class="text-gray-500">Our AI is analyzing your information to build a high-impact CV.</p>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Tökéletesítés folyamatban</h3>
+            <p class="text-gray-500">Az AI elemzi az adataidat, hogy egy profi önéletrajzot készítsen.</p>
         </div>
     </div>
 

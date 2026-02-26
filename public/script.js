@@ -1,15 +1,14 @@
 let currentMode = 'structured';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Add initial empty fields
+    // Kezdeti üres mezők hozzáadása
     addExperience();
     addEducation();
 
-    // PayPal Skeleton (Commented out for future use)
+    // PayPal Előkészítés (Jövőbeli használatra)
     /*
     const initPayPal = () => {
-        // Mock PayPal SDK initialization
-        console.log("PayPal SDK Ready");
+        console.log("PayPal SDK Kész");
     };
     initPayPal();
     */
@@ -48,12 +47,12 @@ function addExperience() {
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Company Name" class="p-3 bg-white/50 border border-gray-100 rounded-xl company focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Job Title" class="p-3 bg-white/50 border border-gray-100 rounded-xl title focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Duration (e.g. 2020 - Present)" class="p-3 bg-white/50 border border-gray-100 rounded-xl duration focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
-            <input type="text" placeholder="Location" class="p-3 bg-white/50 border border-gray-100 rounded-xl location focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Cégnév" class="p-3 bg-white/50 border border-gray-100 rounded-xl company focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Pozíció" class="p-3 bg-white/50 border border-gray-100 rounded-xl title focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Időtartam (pl. 2020 - Jelenleg)" class="p-3 bg-white/50 border border-gray-100 rounded-xl duration focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Helyszín" class="p-3 bg-white/50 border border-gray-100 rounded-xl location focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
         </div>
-        <textarea placeholder="Key Responsibilities & Achievements" class="w-full mt-3 p-3 bg-white/50 border border-gray-100 rounded-xl description focus:ring-2 focus:ring-indigo-200 outline-none transition-all" rows="2"></textarea>
+        <textarea placeholder="Főbb feladatok és eredmények" class="w-full mt-3 p-3 bg-white/50 border border-gray-100 rounded-xl description focus:ring-2 focus:ring-indigo-200 outline-none transition-all" rows="2"></textarea>
     `;
     container.appendChild(div);
 }
@@ -67,10 +66,10 @@ function addEducation() {
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Institution" class="p-3 bg-white/50 border border-gray-100 rounded-xl institution focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Degree / Qualification" class="p-3 bg-white/50 border border-gray-100 rounded-xl degree focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Year of Graduation" class="p-3 bg-white/50 border border-gray-100 rounded-xl year focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
-            <input type="text" placeholder="Field of Study" class="p-3 bg-white/50 border border-gray-100 rounded-xl field focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Intézmény" class="p-3 bg-white/50 border border-gray-100 rounded-xl institution focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Végzettség / Megnevezés" class="p-3 bg-white/50 border border-gray-100 rounded-xl degree focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Végzés éve" class="p-3 bg-white/50 border border-gray-100 rounded-xl year focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Szak" class="p-3 bg-white/50 border border-gray-100 rounded-xl field focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
         </div>
     `;
     container.appendChild(div);
@@ -97,7 +96,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
             userData.experience = [];
             userData.education = [];
 
-            // Gather Experience
+            // Tapasztalatok összegyűjtése
             document.querySelectorAll('.experience-entry').forEach(entry => {
                 const company = entry.querySelector('.company').value;
                 const title = entry.querySelector('.title').value;
@@ -112,7 +111,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
                 }
             });
 
-            // Gather Education
+            // Tanulmányok összegyűjtése
             document.querySelectorAll('.education-entry').forEach(entry => {
                 const institution = entry.querySelector('.institution').value;
                 const degree = entry.querySelector('.degree').value;
@@ -133,7 +132,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
         const profilePicture = document.getElementById('profilePicture').files[0];
 
         if (profilePicture && profilePicture.size > 4 * 1024 * 1024) {
-            alert('The profile picture is too large. Please select an image smaller than 4MB.');
+            alert('A profilkép túl nagy. Kérlek válassz 4MB-nál kisebb képet.');
             loadingOverlay.classList.add('hidden');
             return;
         }
@@ -152,14 +151,14 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(errorText || 'Failed to generate CV');
+            throw new Error(errorText || 'Hiba történt a generálás során');
         }
 
         const htmlContent = await response.text();
         displayCV(htmlContent);
     } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred: ' + error.message);
+        console.error('Hiba:', error);
+        alert('Hiba történt: ' + error.message);
     } finally {
         loadingOverlay.classList.add('hidden');
     }
@@ -167,7 +166,7 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
 
 function displayCV(html) {
     const container = document.getElementById('previewContainer');
-    container.innerHTML = ''; // Clear placeholder
+    container.innerHTML = ''; // Helyőrző törlése
 
     const iframe = document.createElement('iframe');
     container.appendChild(iframe);
@@ -179,7 +178,7 @@ function displayCV(html) {
 
     document.getElementById('downloadPdf').classList.remove('hidden');
 
-    // Smooth scroll to preview on mobile
+    // Mobilnézeten görgetés az előnézethez
     if (window.innerWidth < 1024) {
         container.scrollIntoView({ behavior: 'smooth' });
     }

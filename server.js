@@ -76,6 +76,7 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         }
 
         let prompt = `You are an expert CV writer. Create a professional, highly structured, and visually stunning CV in a single HTML file with embedded CSS.
+        IMPORTANT: The CV MUST be written in Hungarian (magyarul) unless explicitly requested otherwise by the input data.
         ${dataContext}
 
         Theme Style: ${themeInstruction}
