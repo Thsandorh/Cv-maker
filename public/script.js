@@ -28,13 +28,11 @@ function init() {
     initPayPal();
     */
 
-    // Event listener hozzáadása a form elküldéséhez
+    // Event listener hozzáadása a form elküldéséhez (Most már HTML onsubmit attribútum kezeli)
+    // Csak a log miatt hagyjuk itt a check-et
     const cvForm = document.getElementById('cvForm');
     if (cvForm) {
-        // Remove any previous listener to be safe
-        cvForm.removeEventListener('submit', handleFormSubmit);
-        cvForm.addEventListener('submit', handleFormSubmit);
-        console.log("CV Form submit listener attached.");
+        console.log("CV Form found.");
     } else {
         console.error("Critical Error: CV Form not found!");
     }
