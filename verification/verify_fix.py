@@ -10,9 +10,24 @@ def verify_cv_preview():
         context = browser.new_context(viewport={'width': 1200, 'height': 900})
         page = context.new_page()
 
+        # Listen to console messages
+        page.on("console", lambda msg: print(f"PAGE CONSOLE: {msg.text}"))
+        page.on("pageerror", lambda err: print(f"PAGE ERROR: {err}"))
+
         # Load the local HTML file directly
         file_path = os.path.abspath("public/index.html")
         page.goto(f"file://{file_path}")
+
+        # Wait for the page to be fully loaded
+        page.wait_for_load_state("networkidle")
+
+        # Explicitly wait for displayCV to be defined
+        try:
+            page.wait_for_function("typeof window.displayCV === 'function'", timeout=5000)
+            print("SUCCESS: displayCV is defined.")
+        except Exception as e:
+            print(f"ERROR: displayCV is NOT defined after waiting. Error: {e}")
+            return
 
         # Inject a function to simulate receiving the CV content and triggering the displayCV logic
         # We need to construct the HTML string carefully.
@@ -51,7 +66,7 @@ def verify_cv_preview():
         dummy_cv_html_escaped = dummy_cv_html.replace("\\", "\\\\").replace("\n", "\\n").replace("'", "\\'").replace("\"", '\\"')
 
         print("Injecting dummy CV content...")
-        page.evaluate(f"displayCV('{dummy_cv_html_escaped}')")
+        page.evaluate(f"window.displayCV('{dummy_cv_html_escaped}')")
 
         # Wait for potential layout shifts and script execution
         time.sleep(2)
@@ -72,15 +87,16 @@ def verify_cv_preview():
 
         print(f"Wrapper transform: '{wrapper_transform}'")
 
-        # Check for horizontal overflow
-        scroll_width = iframe_content_frame.evaluate("document.documentElement.scrollWidth")
-        client_width = iframe_content_frame.evaluate("document.documentElement.clientWidth")
+        # Check for horizontal overflow in the CONTAINER
+        # The container is what scrolls, so check if scrollWidth > clientWidth there
+        container_scroll_width = iframe_content_frame.evaluate("document.getElementById('scale-container').scrollWidth")
+        container_client_width = iframe_content_frame.evaluate("document.getElementById('scale-container').clientWidth")
 
-        print(f"Iframe scrollWidth: {scroll_width}")
-        print(f"Iframe clientWidth: {client_width}")
+        print(f"Container scrollWidth: {container_scroll_width}")
+        print(f"Container clientWidth: {container_client_width}")
 
         # Allow a tiny margin of error (e.g. 1-2px) due to rendering differences
-        if scroll_width > client_width + 2:
+        if container_scroll_width > container_client_width + 2:
             print("FAILURE: Horizontal scrollbar detected! The content is overflowing.")
         else:
             print("SUCCESS: No horizontal overflow detected.")
@@ -90,19 +106,14 @@ def verify_cv_preview():
         else:
             print("FAILURE: Transform scale NOT applied to wrapper.")
 
-        # Check if body height is set (new logic)
-        body_height_style = iframe_content_frame.evaluate("document.body.style.height")
-        print(f"Iframe body style height: '{body_height_style}'")
-        if "px" in body_height_style:
-             print("SUCCESS: Body height is dynamically set.")
-        else:
-             print("FAILURE: Body height is NOT dynamically set.")
-
+        # Check wrapper margin bottom
+        wrapper_margin_bottom = iframe_content_frame.evaluate("document.getElementById('cv-scale-wrapper').style.marginBottom")
+        print(f"Wrapper margin-bottom: '{wrapper_margin_bottom}'")
 
         # Take screenshots
         preview_container = page.locator("#previewContainer")
-        preview_container.screenshot(path="verification/preview_scaled_wrapper_fixed.png")
-        page.screenshot(path="verification/full_page_wrapper_fixed.png")
+        preview_container.screenshot(path="verification/preview_scaled_wrapper_centered_fixed.png")
+        page.screenshot(path="verification/full_page_wrapper_centered_fixed.png")
 
         browser.close()
 

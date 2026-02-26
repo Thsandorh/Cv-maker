@@ -563,7 +563,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
-        function displayCV(html) {
+        window.displayCV = function(html) {
             const container = document.getElementById('previewContainer');
             if (!container) return;
 
@@ -588,26 +588,28 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                         height: 100%;
                         margin: 0;
                         padding: 0;
-                        overflow-x: hidden; /* Hide horizontal scrollbar */
-                        overflow-y: scroll; /* Always show vertical scrollbar to avoid jumping */
+                        overflow: hidden; /* Hide all scrollbars on html/body initially */
                     }
-                    /* Reset potentially interfering styles on body children */
-                    body > *:not(#cv-scale-wrapper) {
-                        display: none !important;
+                    #scale-container {
+                        width: 100%;
+                        height: 100%;
+                        overflow-y: auto; /* Handle vertical scroll here */
+                        overflow-x: hidden;
+                        display: flex;
+                        justify-content: center; /* Center the A4 page */
+                        background-color: #525659; /* Standard PDF viewer background */
                     }
                     #cv-scale-wrapper {
-                        transform-origin: top left;
+                        transform-origin: top center; /* Scale from center top */
                         width: 210mm;
-                        height: 297mm; /* Force exact A4 height */
+                        height: 297mm;
                         background-color: white;
-                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                        overflow: hidden; /* Clip content strictly to A4 */
-                        position: relative;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+                        margin-bottom: 20px; /* Space at bottom */
                     }
-                    /* Neutralize min-h-screen which might be on the CV content */
-                    #cv-scale-wrapper > * {
-                        min-height: 0 !important;
-                        height: 100% !important;
+                    /* Reset potentially interfering styles */
+                    body > *:not(#scale-container) {
+                        display: none !important;
                     }
                 }
                 @media print {
@@ -616,7 +618,14 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                         margin: 0;
                         width: 210mm;
                         height: 297mm;
-                        overflow: hidden; /* Ensure print doesn't spill over */
+                        overflow: hidden;
+                    }
+                    #scale-container {
+                        display: block;
+                        width: 210mm;
+                        height: 297mm;
+                        overflow: visible;
+                        background-color: white;
                     }
                     #cv-scale-wrapper {
                         transform: none !important;
@@ -624,41 +633,62 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                         height: 297mm !important;
                         margin: 0 !important;
                         box-shadow: none !important;
-                        overflow: visible !important;
                     }
                 }
             `;
             doc.head.appendChild(style);
 
-            // Wrap existing content in the scaling wrapper
-            const wrapper = doc.createElement('div');
-            wrapper.id = 'cv-scale-wrapper';
+            // Wrap existing content in the scaling wrapper inside a container
+            // Use var or let to avoid redeclaration issues if this code runs multiple times in the same context (though in iframe it's fresh)
+            // But 'container' is already used in the outer scope (displayCV). Let's use different names.
+            const scaleContainer = doc.createElement('div');
+            scaleContainer.id = 'scale-container';
+            const scaleWrapper = doc.createElement('div');
+            scaleWrapper.id = 'cv-scale-wrapper';
+
             while (doc.body.firstChild) {
-                wrapper.appendChild(doc.body.firstChild);
+                scaleWrapper.appendChild(doc.body.firstChild);
             }
-            doc.body.appendChild(wrapper);
+            scaleContainer.appendChild(scaleWrapper);
+            doc.body.appendChild(scaleContainer);
 
             const script = doc.createElement('script');
             script.textContent = `
                 function resizeCV() {
-                    const clientWidth = document.documentElement.clientWidth;
-                    if (!clientWidth) return;
-
-                    const a4width = 794; // 210mm @ 96dpi
-                    const scale = clientWidth / a4width;
-
+                    const container = document.getElementById('scale-container');
                     const wrapper = document.getElementById('cv-scale-wrapper');
-                    if (wrapper) {
-                        wrapper.style.transform = 'scale(' + scale + ')';
+                    if (!container || !wrapper) return;
 
-                        // Force the body height to match the SCALED height of the A4 page
-                        // This ensures the native scrollbar scrolls exactly the length of the page
-                        const scaledHeight = 297 * 3.7795275591 * scale; // 297mm to px * scale
-                        document.body.style.height = scaledHeight + 'px';
+                    const containerWidth = container.clientWidth;
+                    const a4width = 794; // 210mm @ 96dpi
 
-                        // If scale < 1, we might have extra whitespace on the right if not handled,
-                        // but width: 100% on html/body plus overflow-x: hidden handles it.
-                    }
+                    // Add some padding (e.g. 20px on each side) if width allows,
+                    // otherwise scale to fit width exactly
+                    let availableWidth = containerWidth - 40;
+                    if (availableWidth < 300) availableWidth = containerWidth; // Fallback for very small screens
+
+                    const scale = availableWidth / a4width;
+
+                    wrapper.style.transform = 'scale(' + scale + ')';
+
+                    // Adjust wrapper height in flow so container can scroll it
+                    // The wrapper takes up space equal to its scaled height plus top margin
+                    const scaledHeight = 297 * 3.7795275591 * scale;
+
+                    // We need to set the wrapper's margin-bottom or height explicitly in the parent context
+                    // But since transform doesn't affect flow, we might need a spacer or just margin on the wrapper
+                    wrapper.style.marginBottom = '-' + (297 * 3.7795275591 * (1 - scale)) + 'px';
+                    // Actually, cleaner approach: Set height of wrapper to match scaled height
+                    // But 'transform' doesn't change layout size.
+                    // Better: Wrapper is 297mm. Scaled down, it looks smaller.
+                    // We need to ensure the scrollable area is correct.
+                    // Let's set the container to handle the spacing.
+
+                    // Simplified: just set margin-bottom to negative of the empty space
+                    const originalHeight = 1123; // 297mm @ 96dpi
+                    const spaceRemoved = originalHeight - scaledHeight;
+                    wrapper.style.marginBottom = '-' + spaceRemoved + 'px';
+                    wrapper.style.marginTop = '20px';
                 }
 
                 window.addEventListener('resize', resizeCV);
