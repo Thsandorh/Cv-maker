@@ -51,54 +51,106 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         let themeInstruction = "";
         switch(theme) {
             case 'minimalist':
-                themeInstruction = "Use a minimalist design with plenty of white space, simple typography (sans-serif), and subtle accents. Avoid heavy borders or bright colors.";
+                themeInstruction = `DESIGN SYSTEM: 'Minimalist'
+                - Visual Style: 'Swiss Design' aesthetic. Ultra-clean, high whitespace, no clutter.
+                - Typography: Sans-serif (Inter, Roboto, or Helvetica). Light to Regular weights.
+                - Layout: Single column or simple 30/70 split.
+                - Color Palette: Monochrome (Black text, White background, Light Grey borders).
+                - Mood: Sophisticated, efficient, clarity-focused.`;
                 break;
             case 'creative':
-                themeInstruction = "Use a creative design with a bold color palette, unique layout (e.g., sidebars), and modern decorative elements. Use stylish fonts.";
+                themeInstruction = `DESIGN SYSTEM: 'Creative'
+                - Visual Style: 'Modern Editorial'. Bold, expressive, and unique.
+                - Typography: Mix of Serif (Playfair Display) for headers and Sans-serif (Lato) for body.
+                - Layout: Asymmetric or Grid-based. Use of colored blocks or subtle background shapes.
+                - Color Palette: High contrast. Use #5E17EB (Electric Blue) or #FFDE59 (Yellow) as accents against dark text.
+                - Mood: Innovative, bold, personality-driven.`;
                 break;
             case 'classic':
-                themeInstruction = "Use a traditional, conservative design. Serif fonts, standard layouts, and a very formal structure. Suitable for law or finance.";
+                themeInstruction = `DESIGN SYSTEM: 'Classic'
+                - Visual Style: 'Ivy League / Corporate'. Traditional and authoritative.
+                - Typography: Serif (Merriweather, Garamond, or Times New Roman).
+                - Layout: Single column, centered headers, horizontal dividers.
+                - Color Palette: Navy Blue, Charcoal Grey, or Black text. White background.
+                - Mood: Reliable, experienced, executive.`;
                 break;
             default: // modern
-                themeInstruction = "Use a sleek, modern professional design with indigo accents, clean sections, and high readability. Use a mix of weights for typography.";
+                themeInstruction = `DESIGN SYSTEM: 'Modern'
+                - Visual Style: 'Tech / Startup'. Clean, grid-based, flat design.
+                - Typography: Sans-serif (Open Sans, Montserrat). Bold headers.
+                - Layout: Two-column (Sidebar for contact/skills, Main for exp).
+                - Color Palette: Slate Grey, nice Blue accents, dark text.
+                - Mood: Professional, current, adaptable.`;
         }
 
-        let dataContext = "";
+        let inputProcessingInstruction = "";
         if (parsedUserData.mode === 'bulk') {
-            dataContext = `The user has provided their information in a raw, unstructured bulk text format. Your first task is to carefully parse and extract the relevant details (Work Experience, Education, Skills, etc.) from this text. Here is the bulk data:\n\n${parsedUserData.bulkData}\n\nUser's Personal Info: ${JSON.stringify({
+            inputProcessingInstruction = `INPUT DATA (UNSTRUCTURED):
+            The user provided raw text. You must function as an NLP extractor:
+            1. Parse the text below to identify Contact Info, Experience, Education, and Skills.
+            2. Infer missing structure (e.g., if a date is "2020-2022", identify it as duration).
+            3. IGNORE irrelevant conversational text.
+            RAW DATA:
+            ${parsedUserData.bulkData}
+
+            KNOWN PERSONAL DETAILS: ${JSON.stringify({
                 fullName: parsedUserData.fullName,
                 email: parsedUserData.email,
                 phone: parsedUserData.phone,
                 location: parsedUserData.location
             })}`;
         } else {
-            dataContext = `The CV should be based on the following structured user data: ${JSON.stringify(parsedUserData)}`;
+            inputProcessingInstruction = `INPUT DATA (STRUCTURED):
+            Use the JSON data provided below. Map fields directly to CV sections.
+            DATA: ${JSON.stringify(parsedUserData)}`;
         }
 
-        let prompt = `You are an expert CV writer. Create a professional, highly structured, and visually stunning CV in a single HTML file with embedded CSS.
-        IMPORTANT: The CV MUST be written in Hungarian (magyarul) unless explicitly requested otherwise by the input data.
-        ${dataContext}
+        let prompt = `ROLE: You are an elite Career Strategist and Expert Frontend Architect. Your goal is to create a high-impact, ATS-optimized HTML CV that gets the user hired.
 
-        Theme Style: ${themeInstruction}
+        TASK: Generate a single, self-contained HTML5 file for a CV based on the User Data and Design System provided.
 
-        Layout & Design Guidelines:
-        1. STRUCTURE: Use a clear layout (e.g., a two-column layout for 'Modern' and 'Creative', or a sleek one-column for 'Minimalist' and 'Classic'). Ensure generous white space and perfect alignment.
-        2. TYPOGRAPHY: Use a professional font stack (e.g., 'Inter', 'Roboto', or 'Segoe UI'). Use distinct font weights for headings vs body text.
-        3. SECTIONS: Include Contact Info, Professional Summary, Work Experience, Education, and Skills. Use clear, underlined or bolded section headers.
-        4. SPACING: Ensure consistent padding and margins between all elements. The CV should look organized and easy to scan.
-        5. SINGLE PAGE ENFORCEMENT: The CV MUST fit on exactly ONE A4 page. Adjust font sizes (e.g., 10pt-11pt for body), margins, and section spacing as necessary to ensure all content fits on one page without being overcrowded. If there is too much content, prioritize the most important details and use a more compact layout (like a two-column setup).
-        6. DATE VISIBILITY: Ensure "Duration" (for work experience) and "Year of Graduation" (for education) are explicitly included and clearly visible. If you use a right-aligned layout for dates, ensure there is sufficient padding/margin so they are NOT cut off at the edge of the page.
+        ${inputProcessingInstruction}
 
-        Requirements:
-        1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements. Set body margin to 0 and use a container with fixed width (approx 210mm) if necessary to ensure 1-page output.
-        2. CSS FOR PRINT: Include CSS rules like 'page-break-inside: avoid;' for sections and 'html, body { height: 100%; overflow: hidden; }' within '@media print' to discourage the browser from creating a second page. Ensure that containers for dates/years have 'white-space: nowrap;' and 'overflow: visible;' to prevent clipping.
-        3. CONTENT OPTIMIZATION:
-           - REWRITE WORK EXPERIENCE: Transform simple job descriptions into achievement-oriented bullet points using powerful action verbs (e.g., 'Spearheaded', 'Engineered', 'Orchestrated').
-           - REWRITE SUMMARY: Craft a compelling, high-level professional 'About Me' that highlights the user's unique value proposition.
-           - TONE: Maintain a sophisticated, executive-level tone throughout.
-           - SKILLS: Group skills logically if there are many.
-        4. OUTPUT: Return ONLY the raw HTML code, starting with <!DOCTYPE html>. Do NOT wrap it in markdown code blocks.
-        5. PROFILE PICTURE: If provided, integrate it seamlessly (e.g., as a circular or rounded square image in the header or sidebar).`;
+        ${themeInstruction}
+
+        CRITICAL REQUIREMENTS (35-POINT QUALITY CHECK):
+        1. LANGUAGE: Output MUST be in HUNGARIAN (Magyar). Translate Section Headers:
+           - "Experience" -> "Szakmai Tapasztalat"
+           - "Education" -> "Tanulmányok"
+           - "Skills" -> "Készségek"
+           - "Contact" -> "Kapcsolat"
+           - "About Me" -> "Rólam" or "Bemutatkozás"
+
+        2. CONTENT REFINEMENT (The "STAR" Method):
+           - Do NOT just copy the input descriptions.
+           - REWRITE work experiences to be achievement-oriented.
+           - Use the formula: "Action Verb + Task + Result" (e.g., "Növelte az eladásokat 20%-kal...").
+           - Use professional Hungarian action verbs (e.g., "Koordinálta", "Fejlesztette", "Vezette").
+           - If the input is sparse, expand it professionally without hallucinating specific lies.
+
+        3. DESIGN & TECH SPECS:
+           - OUTPUT: Raw HTML only. Start with <!DOCTYPE html>. NO Markdown.
+           - STYLING: Use embedded CSS (<style>). You may use a CDN for Tailwind CSS (<script src="https://cdn.tailwindcss.com"></script>) to make styling easier and modern.
+           - LAYOUT: Must be responsive but optimized for A4 PRINT.
+           - FONTS: Use Google Fonts via CDN (import them in <head>). Match the Design System.
+           - ICONS: Use FontAwesome or SVG icons for Contact info (Phone, Email, Location).
+
+        4. SINGLE PAGE CONSTRAINT:
+           - The CV must fit on ONE A4 PAGE.
+           - Strategy: If content is long, use a 2-column layout, reduce font size to 9pt/10pt, or condense spacing.
+           - CSS: @media print { @page { size: A4; margin: 0; } body { margin: 0; -webkit-print-color-adjust: exact; } }
+
+        5. PROFILE PICTURE LOGIC:
+           - If a profile picture is provided, place it according to the design theme (e.g., circle in sidebar).
+           - IMG SRC: You MUST use exactly: src="{{PROFILE_PICTURE_DATA_URI}}"
+           - STYLE: object-fit: cover; border-radius: 50% (or theme appropriate); aspect-ratio: 1/1.
+
+        6. ANTI-HALLUCINATION:
+           - Do not invent degrees or companies.
+           - Do not add "Lorem Ipsum".
+           - If a section (like Education) is empty in the input, OMIT that section entirely.
+
+        GENERATE THE HTML NOW.`;
 
         let dataUri = "";
         const parts = [];
