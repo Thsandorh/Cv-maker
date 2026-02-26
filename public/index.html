@@ -322,6 +322,8 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                     return;
                 }
 
+                const form = document.getElementById('cvForm');
+
                 if (mode === 'structured') {
                     structuredBtn.classList.add('mode-active');
                     structuredBtn.classList.remove('text-gray-500');
@@ -329,6 +331,9 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                     bulkBtn.classList.add('text-gray-500');
                     structuredSections.classList.remove('hidden');
                     bulkSection.classList.add('hidden');
+
+                    // Enable HTML5 validation for structured mode
+                    if (form) form.noValidate = false;
 
                     // Add required attribute back
                     requiredSelectors.forEach(selector => {
@@ -342,7 +347,10 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                     bulkSection.classList.remove('hidden');
                     structuredSections.classList.add('hidden');
 
-                    // Remove required attribute
+                    // Disable HTML5 validation for bulk mode to prevent hidden fields blocking submission
+                    if (form) form.noValidate = true;
+
+                    // Remove required attribute (as backup)
                     requiredSelectors.forEach(selector => {
                         document.querySelectorAll(selector).forEach(el => el.removeAttribute('required'));
                     });
