@@ -90,10 +90,19 @@ def verify_cv_preview():
         else:
             print("FAILURE: Transform scale NOT applied to wrapper.")
 
+        # Check if body height is set (new logic)
+        body_height_style = iframe_content_frame.evaluate("document.body.style.height")
+        print(f"Iframe body style height: '{body_height_style}'")
+        if "px" in body_height_style:
+             print("SUCCESS: Body height is dynamically set.")
+        else:
+             print("FAILURE: Body height is NOT dynamically set.")
+
+
         # Take screenshots
         preview_container = page.locator("#previewContainer")
-        preview_container.screenshot(path="verification/preview_scaled_wrapper.png")
-        page.screenshot(path="verification/full_page_wrapper.png")
+        preview_container.screenshot(path="verification/preview_scaled_wrapper_fixed.png")
+        page.screenshot(path="verification/full_page_wrapper_fixed.png")
 
         browser.close()
 

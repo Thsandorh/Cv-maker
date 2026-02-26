@@ -589,14 +589,25 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                         margin: 0;
                         padding: 0;
                         overflow-x: hidden; /* Hide horizontal scrollbar */
-                        overflow-y: auto;   /* Allow vertical scroll */
+                        overflow-y: scroll; /* Always show vertical scrollbar to avoid jumping */
+                    }
+                    /* Reset potentially interfering styles on body children */
+                    body > *:not(#cv-scale-wrapper) {
+                        display: none !important;
                     }
                     #cv-scale-wrapper {
                         transform-origin: top left;
                         width: 210mm;
-                        min-height: 297mm;
-                        background-color: white; /* Ensure bg is opaque */
-                        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Nice drop shadow for paper effect */
+                        height: 297mm; /* Force exact A4 height */
+                        background-color: white;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                        overflow: hidden; /* Clip content strictly to A4 */
+                        position: relative;
+                    }
+                    /* Neutralize min-h-screen which might be on the CV content */
+                    #cv-scale-wrapper > * {
+                        min-height: 0 !important;
+                        height: 100% !important;
                     }
                 }
                 @media print {
@@ -604,14 +615,16 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                     html, body {
                         margin: 0;
                         width: 210mm;
-                        height: auto;
-                        overflow: visible;
+                        height: 297mm;
+                        overflow: hidden; /* Ensure print doesn't spill over */
                     }
                     #cv-scale-wrapper {
                         transform: none !important;
                         width: 210mm !important;
+                        height: 297mm !important;
                         margin: 0 !important;
                         box-shadow: none !important;
+                        overflow: visible !important;
                     }
                 }
             `;
@@ -628,19 +641,23 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const script = doc.createElement('script');
             script.textContent = `
                 function resizeCV() {
-                    const width = document.documentElement.clientWidth;
-                    if (!width) return;
+                    const clientWidth = document.documentElement.clientWidth;
+                    if (!clientWidth) return;
 
-                    // A4 width in pixels at 96 DPI is approx 794px.
-                    const a4width = 794;
-
-                    // Calculate scale to fit width
-                    const scale = (width) / a4width;
+                    const a4width = 794; // 210mm @ 96dpi
+                    const scale = clientWidth / a4width;
 
                     const wrapper = document.getElementById('cv-scale-wrapper');
                     if (wrapper) {
                         wrapper.style.transform = 'scale(' + scale + ')';
-                        // We can also adjust the wrapper's height or bottom margin if needed
+
+                        // Force the body height to match the SCALED height of the A4 page
+                        // This ensures the native scrollbar scrolls exactly the length of the page
+                        const scaledHeight = 297 * 3.7795275591 * scale; // 297mm to px * scale
+                        document.body.style.height = scaledHeight + 'px';
+
+                        // If scale < 1, we might have extra whitespace on the right if not handled,
+                        // but width: 100% on html/body plus overflow-x: hidden handles it.
                     }
                 }
 
