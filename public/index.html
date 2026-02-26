@@ -570,11 +570,64 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             container.innerHTML = ''; // Helyőrző törlése
 
             const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
             container.appendChild(iframe);
 
             const doc = iframe.contentWindow.document;
             doc.open();
             doc.write(html);
+
+            // --- INJECT AUTO-SCALING LOGIC & CSS ---
+            const style = doc.createElement('style');
+            style.textContent = `
+                @media screen {
+                    body {
+                        transform-origin: top left;
+                        width: 210mm;
+                        min-height: 297mm;
+                        overflow-x: hidden;
+                    }
+                    /* Ensure vertical scrollbar is on html/window level if needed */
+                    html {
+                        overflow-x: hidden;
+                        overflow-y: auto;
+                    }
+                }
+                @media print {
+                    @page { margin: 0; size: A4; }
+                    body {
+                        transform: none !important;
+                        width: 210mm !important;
+                        margin: 0 !important;
+                        box-shadow: none !important;
+                    }
+                }
+            `;
+            doc.head.appendChild(style);
+
+            const script = doc.createElement('script');
+            script.textContent = `
+                function resizeCV() {
+                    const width = window.innerWidth;
+                    const a4width = 794; // approx 210mm @ 96dpi
+                    const scale = width / a4width;
+
+                    // Apply scale
+                    document.body.style.transform = 'scale(' + scale + ')';
+
+                    // Optional: Adjust body height to match scaled height so scrollbar is correct
+                    // document.body.style.height = (297 * 3.78) + 'mm';
+                }
+
+                window.addEventListener('resize', resizeCV);
+                window.addEventListener('DOMContentLoaded', resizeCV);
+                window.onload = resizeCV;
+            `;
+            doc.head.appendChild(script);
+            // ---------------------------------------
+
             doc.close();
 
             const downloadBtn = document.getElementById('downloadPdf');
