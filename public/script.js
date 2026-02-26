@@ -80,7 +80,14 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
                 }
             });
         } else {
-            userData.bulkData = formData.get('bulkData');
+            // Validate Bulk Mode input manually
+            const bulkText = formData.get('bulkData');
+            if (!bulkText || bulkText.trim().length < 10) {
+                alert('Kérlek írj be legalább néhány mondatot a szabad szöveges mezőbe!');
+                loadingOverlay.classList.add('hidden');
+                return;
+            }
+            userData.bulkData = bulkText;
         }
 
         const theme = document.getElementById('theme').value;
