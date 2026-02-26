@@ -1,4 +1,6 @@
-let currentMode = 'structured';
+
+// Globális változók explicit deklarálása
+// window.currentMode a HTML-ben lévő inline scriptben van definiálva
 
 document.addEventListener('DOMContentLoaded', () => {
     // Eseménykezelők hozzáadása a gombokhoz
@@ -6,15 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const bulkBtn = document.getElementById('bulkModeBtn');
 
     if (structuredBtn) {
-        structuredBtn.addEventListener('click', () => switchMode('structured'));
+        structuredBtn.addEventListener('click', () => window.switchMode('structured'));
     }
     if (bulkBtn) {
-        bulkBtn.addEventListener('click', () => switchMode('bulk'));
+        bulkBtn.addEventListener('click', () => window.switchMode('bulk'));
     }
 
     // Kezdeti üres mezők hozzáadása
-    addExperience();
-    addEducation();
+    if (typeof window.addExperience === 'function') window.addExperience();
+    if (typeof window.addEducation === 'function') window.addEducation();
 
     // PayPal Előkészítés (Jövőbeli használatra)
     /*
@@ -25,46 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     */
 });
 
-function switchMode(mode) {
-    try {
-        currentMode = mode;
-        const structuredBtn = document.getElementById('structuredModeBtn');
-        const bulkBtn = document.getElementById('bulkModeBtn');
-        const structuredSections = document.getElementById('structuredSections');
-        const bulkSection = document.getElementById('bulkSection');
-
-        if (!structuredBtn || !bulkBtn || !structuredSections || !bulkSection) {
-            console.error('Hiányzó DOM elemek a módváltáshoz.');
-            return;
-        }
-
-        if (mode === 'structured') {
-            structuredBtn.classList.add('mode-active');
-            structuredBtn.classList.remove('text-gray-500');
-            bulkBtn.classList.remove('mode-active');
-            bulkBtn.classList.add('text-gray-500');
-            structuredSections.classList.remove('hidden');
-            bulkSection.classList.add('hidden');
-        } else {
-            bulkBtn.classList.add('mode-active');
-            bulkBtn.classList.remove('text-gray-500');
-            structuredBtn.classList.remove('mode-active');
-            structuredBtn.classList.add('text-gray-500');
-            bulkSection.classList.remove('hidden');
-            structuredSections.classList.add('hidden');
-
-            // Görgetés a szabad szöveg mezőhöz, hogy a felhasználó biztosan lássa
-            setTimeout(() => {
-                bulkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-        }
-    } catch (error) {
-        console.error('Hiba a módváltás során:', error);
-    }
-}
-
-function addExperience() {
+// Ezeket a függvényeket globálissá tesszük, hogy a HTML onclick attribútumok elérjék őket
+window.addExperience = function() {
     const container = document.getElementById('experienceList');
+    if (!container) return;
     const div = document.createElement('div');
     div.className = 'experience-entry group';
     div.innerHTML = `
@@ -82,8 +48,9 @@ function addExperience() {
     container.appendChild(div);
 }
 
-function addEducation() {
+window.addEducation = function() {
     const container = document.getElementById('educationList');
+    if (!container) return;
     const div = document.createElement('div');
     div.className = 'education-entry group';
     div.innerHTML = `
@@ -112,10 +79,10 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
             email: formData.get('email'),
             phone: formData.get('phone'),
             location: formData.get('location'),
-            mode: currentMode
+            mode: window.currentMode || 'structured' // Fallback
         };
 
-        if (currentMode === 'structured') {
+        if (window.currentMode === 'structured') {
             userData.summary = formData.get('summary');
             userData.skills = formData.get('skills');
             userData.experience = [];
