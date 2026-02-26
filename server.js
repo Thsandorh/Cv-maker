@@ -69,10 +69,11 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         3. SECTIONS: Include Contact Info, Professional Summary, Work Experience, Education, and Skills. Use clear, underlined or bolded section headers.
         4. SPACING: Ensure consistent padding and margins between all elements. The CV should look organized and easy to scan.
         5. SINGLE PAGE ENFORCEMENT: The CV MUST fit on exactly ONE A4 page. Adjust font sizes (e.g., 10pt-11pt for body), margins, and section spacing as necessary to ensure all content fits on one page without being overcrowded. If there is too much content, prioritize the most important details and use a more compact layout (like a two-column setup).
+        6. DATE VISIBILITY: Ensure "Duration" (for work experience) and "Year of Graduation" (for education) are explicitly included and clearly visible. If you use a right-aligned layout for dates, ensure there is sufficient padding/margin so they are NOT cut off at the edge of the page.
 
         Requirements:
         1. PRINT-FRIENDLY: Must be optimized for A4 paper. Use @media print to hide any non-essential elements. Set body margin to 0 and use a container with fixed width (approx 210mm) if necessary to ensure 1-page output.
-        2. CSS FOR PRINT: Include CSS rules like 'page-break-inside: avoid;' for sections and 'html, body { height: 100%; overflow: hidden; }' within '@media print' to discourage the browser from creating a second page.
+        2. CSS FOR PRINT: Include CSS rules like 'page-break-inside: avoid;' for sections and 'html, body { height: 100%; overflow: hidden; }' within '@media print' to discourage the browser from creating a second page. Ensure that containers for dates/years have 'white-space: nowrap;' and 'overflow: visible;' to prevent clipping.
         3. CONTENT OPTIMIZATION:
            - REWRITE WORK EXPERIENCE: Transform simple job descriptions into achievement-oriented bullet points using powerful action verbs (e.g., 'Spearheaded', 'Engineered', 'Orchestrated').
            - REWRITE SUMMARY: Craft a compelling, high-level professional 'About Me' that highlights the user's unique value proposition.
