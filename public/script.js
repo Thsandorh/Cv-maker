@@ -1,24 +1,59 @@
+let currentMode = 'structured';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Add initial empty fields
     addExperience();
     addEducation();
+
+    // PayPal Skeleton (Commented out for future use)
+    /*
+    const initPayPal = () => {
+        // Mock PayPal SDK initialization
+        console.log("PayPal SDK Ready");
+    };
+    initPayPal();
+    */
 });
+
+function switchMode(mode) {
+    currentMode = mode;
+    const structuredBtn = document.getElementById('structuredModeBtn');
+    const bulkBtn = document.getElementById('bulkModeBtn');
+    const structuredSections = document.getElementById('structuredSections');
+    const bulkSection = document.getElementById('bulkSection');
+
+    if (mode === 'structured') {
+        structuredBtn.classList.add('mode-active');
+        structuredBtn.classList.remove('text-gray-500');
+        bulkBtn.classList.remove('mode-active');
+        bulkBtn.classList.add('text-gray-500');
+        structuredSections.classList.remove('hidden');
+        bulkSection.classList.add('hidden');
+    } else {
+        bulkBtn.classList.add('mode-active');
+        bulkBtn.classList.remove('text-gray-500');
+        structuredBtn.classList.remove('mode-active');
+        structuredBtn.classList.add('text-gray-500');
+        bulkSection.classList.remove('hidden');
+        structuredSections.classList.add('hidden');
+    }
+}
 
 function addExperience() {
     const container = document.getElementById('experienceList');
     const div = document.createElement('div');
-    div.className = 'experience-entry group';
+    div.className = 'experience-entry group animate-in fade-in duration-300';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Company Name" class="p-2 border rounded company focus:ring-2 focus:ring-indigo-200 outline-none" required>
-            <input type="text" placeholder="Job Title" class="p-2 border rounded title focus:ring-2 focus:ring-indigo-200 outline-none" required>
-            <input type="text" placeholder="Duration (e.g. 2020 - Present)" class="p-2 border rounded duration focus:ring-2 focus:ring-indigo-200 outline-none">
-            <input type="text" placeholder="Location" class="p-2 border rounded location focus:ring-2 focus:ring-indigo-200 outline-none">
+            <input type="text" placeholder="Company Name" class="p-3 bg-white/50 border border-gray-100 rounded-xl company focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Job Title" class="p-3 bg-white/50 border border-gray-100 rounded-xl title focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Duration (e.g. 2020 - Present)" class="p-3 bg-white/50 border border-gray-100 rounded-xl duration focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Location" class="p-3 bg-white/50 border border-gray-100 rounded-xl location focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
         </div>
-        <textarea placeholder="Key Responsibilities & Achievements" class="w-full mt-2 p-2 border rounded description focus:ring-2 focus:ring-indigo-200 outline-none" rows="2"></textarea>
+        <textarea placeholder="Key Responsibilities & Achievements" class="w-full mt-3 p-3 bg-white/50 border border-gray-100 rounded-xl description focus:ring-2 focus:ring-indigo-200 outline-none transition-all" rows="2"></textarea>
     `;
     container.appendChild(div);
 }
@@ -26,16 +61,16 @@ function addExperience() {
 function addEducation() {
     const container = document.getElementById('educationList');
     const div = document.createElement('div');
-    div.className = 'education-entry group';
+    div.className = 'education-entry group animate-in fade-in duration-300';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Institution" class="p-2 border rounded institution focus:ring-2 focus:ring-indigo-200 outline-none" required>
-            <input type="text" placeholder="Degree / Qualification" class="p-2 border rounded degree focus:ring-2 focus:ring-indigo-200 outline-none" required>
-            <input type="text" placeholder="Year of Graduation" class="p-2 border rounded year focus:ring-2 focus:ring-indigo-200 outline-none">
-            <input type="text" placeholder="Field of Study" class="p-2 border rounded field focus:ring-2 focus:ring-indigo-200 outline-none">
+            <input type="text" placeholder="Institution" class="p-3 bg-white/50 border border-gray-100 rounded-xl institution focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Degree / Qualification" class="p-3 bg-white/50 border border-gray-100 rounded-xl degree focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
+            <input type="text" placeholder="Year of Graduation" class="p-3 bg-white/50 border border-gray-100 rounded-xl year focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Field of Study" class="p-3 bg-white/50 border border-gray-100 rounded-xl field focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
         </div>
     `;
     container.appendChild(div);
@@ -53,32 +88,46 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
             email: formData.get('email'),
             phone: formData.get('phone'),
             location: formData.get('location'),
-            summary: formData.get('summary'),
-            skills: formData.get('skills'),
-            experience: [],
-            education: []
+            mode: currentMode
         };
 
-        // Gather Experience
-        document.querySelectorAll('.experience-entry').forEach(entry => {
-            userData.experience.push({
-                company: entry.querySelector('.company').value,
-                title: entry.querySelector('.title').value,
-                duration: entry.querySelector('.duration').value,
-                location: entry.querySelector('.location').value,
-                description: entry.querySelector('.description').value
-            });
-        });
+        if (currentMode === 'structured') {
+            userData.summary = formData.get('summary');
+            userData.skills = formData.get('skills');
+            userData.experience = [];
+            userData.education = [];
 
-        // Gather Education
-        document.querySelectorAll('.education-entry').forEach(entry => {
-            userData.education.push({
-                institution: entry.querySelector('.institution').value,
-                degree: entry.querySelector('.degree').value,
-                year: entry.querySelector('.year').value,
-                field: entry.querySelector('.field').value
+            // Gather Experience
+            document.querySelectorAll('.experience-entry').forEach(entry => {
+                const company = entry.querySelector('.company').value;
+                const title = entry.querySelector('.title').value;
+                if (company || title) {
+                    userData.experience.push({
+                        company: company,
+                        title: title,
+                        duration: entry.querySelector('.duration').value,
+                        location: entry.querySelector('.location').value,
+                        description: entry.querySelector('.description').value
+                    });
+                }
             });
-        });
+
+            // Gather Education
+            document.querySelectorAll('.education-entry').forEach(entry => {
+                const institution = entry.querySelector('.institution').value;
+                const degree = entry.querySelector('.degree').value;
+                if (institution || degree) {
+                    userData.education.push({
+                        institution: institution,
+                        degree: degree,
+                        year: entry.querySelector('.year').value,
+                        field: entry.querySelector('.field').value
+                    });
+                }
+            });
+        } else {
+            userData.bulkData = formData.get('bulkData');
+        }
 
         const theme = document.getElementById('theme').value;
         const profilePicture = document.getElementById('profilePicture').files[0];
@@ -102,14 +151,15 @@ document.getElementById('cvForm').addEventListener('submit', async (e) => {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to generate CV');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to generate CV');
         }
 
         const htmlContent = await response.text();
         displayCV(htmlContent);
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while generating your CV. Please try again.');
+        alert('An error occurred: ' + error.message);
     } finally {
         loadingOverlay.classList.add('hidden');
     }
@@ -128,6 +178,11 @@ function displayCV(html) {
     doc.close();
 
     document.getElementById('downloadPdf').classList.remove('hidden');
+
+    // Smooth scroll to preview on mobile
+    if (window.innerWidth < 1024) {
+        container.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 document.getElementById('downloadPdf').addEventListener('click', () => {

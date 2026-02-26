@@ -39,7 +39,12 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
         }
 
         const { userData, theme } = req.body;
-        const parsedUserData = JSON.parse(userData);
+        let parsedUserData;
+        try {
+            parsedUserData = JSON.parse(userData);
+        } catch (e) {
+            return res.status(400).send('Error: Invalid JSON in userData.');
+        }
 
         const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
@@ -58,8 +63,20 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
                 themeInstruction = "Use a sleek, modern professional design with indigo accents, clean sections, and high readability. Use a mix of weights for typography.";
         }
 
+        let dataContext = "";
+        if (parsedUserData.mode === 'bulk') {
+            dataContext = `The user has provided their information in a raw, unstructured bulk text format. Your first task is to carefully parse and extract the relevant details (Work Experience, Education, Skills, etc.) from this text. Here is the bulk data:\n\n${parsedUserData.bulkData}\n\nUser's Personal Info: ${JSON.stringify({
+                fullName: parsedUserData.fullName,
+                email: parsedUserData.email,
+                phone: parsedUserData.phone,
+                location: parsedUserData.location
+            })}`;
+        } else {
+            dataContext = `The CV should be based on the following structured user data: ${JSON.stringify(parsedUserData)}`;
+        }
+
         let prompt = `You are an expert CV writer. Create a professional, highly structured, and visually stunning CV in a single HTML file with embedded CSS.
-        The CV should be based on the following user data: ${JSON.stringify(parsedUserData)}.
+        ${dataContext}
 
         Theme Style: ${themeInstruction}
 
@@ -110,7 +127,7 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
                 if (err.status === 503 || err.status === 429) {
                     retries--;
                     if (retries === 0) throw err;
-                    console.log(`Gemini API busy, retrying... (${retries} attempts left)`);
+                    console.log(`AI Service busy, retrying... (${retries} attempts left)`);
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 } else {
                     throw err;

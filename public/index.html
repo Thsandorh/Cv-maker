@@ -3,119 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI CV Maker</title>
+    <title>CVPro AI - Premium CV Builder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .gradient-bg { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .btn-premium { background: linear-gradient(to right, #6366f1, #a855f7); transition: all 0.3s ease; }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4); }
+        .mode-toggle-btn { transition: all 0.2s ease; }
+        .mode-active { background-color: white; color: #4f46e5; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+<body class="gradient-bg min-h-screen pb-12">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Navigation / Logo -->
+        <nav class="flex justify-between items-center mb-10 px-4">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <span class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">CVPro AI</span>
+            </div>
+
+            <!-- PayPal Preparation (Placeholder) -->
+            <!--
+            <div id="paypal-container" class="hidden">
+                <button class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-2 px-6 rounded-full flex items-center space-x-2 transition duration-200">
+                    <span>Pay with</span>
+                    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal">
+                </button>
+            </div>
+            -->
+            <div class="text-sm font-medium text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full border border-indigo-100">
+                Premium Builder
+            </div>
+        </nav>
+
         <header class="text-center mb-12">
-            <h1 class="text-4xl font-extrabold text-indigo-600 mb-2">AI Professional CV Maker</h1>
-            <p class="text-gray-600">Create a modern, professional CV in seconds with Gemini AI</p>
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Create your <span class="text-indigo-600">dream career</span> today.</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Generate a high-impact, professional CV in seconds using our advanced AI engine. Achievement-oriented and print-ready.</p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <!-- Form Section -->
-            <section class="bg-white p-8 rounded-xl shadow-lg">
+            <section class="glass p-8 rounded-3xl shadow-2xl space-y-8">
+                <!-- Mode Toggle -->
+                <div class="flex justify-center">
+                    <div class="bg-gray-200 p-1 rounded-2xl flex w-full max-w-sm">
+                        <button type="button" id="structuredModeBtn" onclick="switchMode('structured')" class="mode-toggle-btn mode-active flex-1 py-2 px-4 rounded-xl text-sm font-bold">Structured Data</button>
+                        <button type="button" id="bulkModeBtn" onclick="switchMode('bulk')" class="mode-toggle-btn flex-1 py-2 px-4 rounded-xl text-sm font-bold text-gray-500">Bulk Input</button>
+                    </div>
+                </div>
+
                 <form id="cvForm" class="space-y-8">
-                    <!-- Personal Info -->
-                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <h2 class="text-xl font-semibold border-b border-gray-200 pb-2 text-gray-800">Personal Information</h2>
+                    <!-- Personal Info (Always shown) -->
+                    <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span>Personal Information</span>
+                        </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                                <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
+                                <label for="fullName" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" id="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
+                                <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Email Address</label>
+                                <input type="email" id="email" name="email" required class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <input type="text" id="phone" name="phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
+                                <label for="phone" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Phone Number</label>
+                                <input type="text" id="phone" name="phone" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                             <div>
-                                <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                                <input type="text" id="location" name="location" placeholder="City, Country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
+                                <label for="location" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Location</label>
+                                <input type="text" id="location" name="location" placeholder="City, Country" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent p-3 outline-none transition-all">
                             </div>
                         </div>
                         <div>
-                            <label for="profilePicture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
-                            <input type="file" id="profilePicture" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                        </div>
-                        <div>
-                            <label for="summary" class="block text-sm font-medium text-gray-700">About Me / Summary</label>
-                            <textarea id="summary" name="summary" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border" placeholder="Tell us about yourself..."></textarea>
+                            <label for="profilePicture" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Profile Photo</label>
+                            <input type="file" id="profilePicture" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition-all cursor-pointer">
                         </div>
                     </div>
 
-                    <!-- Experience -->
-                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <h2 class="text-xl font-semibold text-gray-800">Experience</h2>
-                            <button type="button" onclick="addExperience()" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-bold transition-colors">+ Add</button>
+                    <!-- Structured Sections -->
+                    <div id="structuredSections" class="space-y-8 animate-in fade-in duration-500">
+                        <!-- About Me -->
+                        <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
+                            <h2 class="text-xl font-bold text-gray-800">Professional Summary</h2>
+                            <textarea id="summary" name="summary" rows="3" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none" placeholder="Briefly describe your career goals and key strengths..."></textarea>
                         </div>
-                        <div id="experienceList" class="space-y-6 pt-2">
-                            <!-- Dynamic experience entries -->
+
+                        <!-- Experience -->
+                        <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold text-gray-800">Work Experience</h2>
+                                <button type="button" onclick="addExperience()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Add Role</button>
+                            </div>
+                            <div id="experienceList" class="space-y-6 pt-2">
+                                <!-- Dynamic experience entries -->
+                            </div>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold text-gray-800">Education</h2>
+                                <button type="button" onclick="addEducation()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md">+ Add Degree</button>
+                            </div>
+                            <div id="educationList" class="space-y-6 pt-2">
+                                <!-- Dynamic education entries -->
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60">
+                            <h2 class="text-xl font-bold text-gray-800">Skills & Expertise</h2>
+                            <input type="text" name="skills" placeholder="e.g. JavaScript, AWS, Project Management, Agile..." class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none">
                         </div>
                     </div>
 
-                    <!-- Education -->
-                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <h2 class="text-xl font-semibold text-gray-800">Education</h2>
-                            <button type="button" onclick="addEducation()" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-bold transition-colors">+ Add</button>
-                        </div>
-                        <div id="educationList" class="space-y-6 pt-2">
-                            <!-- Dynamic education entries -->
-                        </div>
+                    <!-- Bulk Mode Section -->
+                    <div id="bulkSection" class="hidden space-y-4 bg-white/50 p-6 rounded-2xl border border-white/60 animate-in fade-in duration-500">
+                        <h2 class="text-xl font-bold text-gray-800">Bulk Information</h2>
+                        <p class="text-sm text-gray-500 mb-2">Just paste everything here—your experience, education, skills, and summary. Our AI will sort it out.</p>
+                        <textarea id="bulkData" name="bulkData" rows="15" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-4 outline-none font-mono text-sm" placeholder="Work Experience:
+Software Engineer at Acme Corp (2020-2023)
+- Lead developer for the web team...
+
+Education:
+BS in Computer Science, University of Technology (2019)..."></textarea>
                     </div>
 
-                    <!-- Skills -->
-                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <h2 class="text-xl font-semibold border-b border-gray-200 pb-2 text-gray-800">Skills</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Skills (comma separated)</label>
-                            <input type="text" name="skills" placeholder="JavaScript, Python, Project Management..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
+                    <!-- Theme Selection & Generate -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div class="md:col-span-1">
+                            <label for="theme" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 ml-1">Template Style</label>
+                            <select id="theme" class="w-full bg-white/80 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 p-3 outline-none appearance-none transition-all">
+                                <option value="modern">Modern Professional</option>
+                                <option value="minimalist">Minimalist</option>
+                                <option value="creative">Creative</option>
+                                <option value="classic">Classic</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="w-full btn-premium text-white py-3.5 px-6 rounded-2xl font-bold text-lg shadow-xl">Generate Professional CV</button>
                         </div>
                     </div>
-
-                    <!-- Theme Selection -->
-                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <h2 class="text-xl font-semibold border-b border-gray-200 pb-2 text-gray-800">Theme</h2>
-                        <select id="theme" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 border">
-                            <option value="modern">Modern Professional</option>
-                            <option value="minimalist">Minimalist</option>
-                            <option value="creative">Creative</option>
-                            <option value="classic">Classic</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-bold hover:bg-indigo-700 transition duration-200">Generate CV</button>
                 </form>
             </section>
 
             <!-- Preview Section -->
-            <section class="flex flex-col space-y-4">
-                <div class="bg-white p-4 rounded-xl shadow-lg flex-grow flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold">CV Preview</h2>
-                        <button id="downloadPdf" class="hidden bg-green-600 text-white py-1 px-4 rounded-md font-medium hover:bg-green-700 transition duration-200">Print / Download PDF</button>
+            <section class="flex flex-col space-y-6">
+                <div class="glass p-6 rounded-3xl shadow-2xl flex-grow flex flex-col min-h-[700px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <span class="ml-2 text-sm font-bold text-gray-500 uppercase tracking-widest">Live Preview</span>
+                        </div>
+                        <button id="downloadPdf" class="hidden bg-emerald-500 text-white py-2 px-6 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 012 2v1H7v-1a2 2 0 012-2zM9 9h6v4H9V9z"></path></svg>
+                            <span>Download PDF</span>
+                        </button>
                     </div>
-                    <div id="previewContainer" class="border-2 border-dashed border-gray-200 rounded-lg flex-grow flex items-center justify-center bg-gray-50 min-h-[600px]">
-                        <p class="text-gray-400">Fill out the form and click "Generate" to see your CV</p>
+                    <div id="previewContainer" class="bg-gray-100/50 rounded-2xl flex-grow flex items-center justify-center border-2 border-dashed border-gray-300 relative overflow-hidden">
+                        <div class="text-center p-8">
+                            <div class="w-20 h-20 bg-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-indigo-400">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </div>
+                            <p class="text-gray-500 font-medium">Ready for your masterpiece?</p>
+                            <p class="text-sm text-gray-400">Your generated CV will appear right here.</p>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
-            <p class="text-gray-700 font-medium">Gemini is crafting your professional CV...</p>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-50">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm text-center">
+            <div class="relative w-20 h-20 mb-6">
+                <div class="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Crafting Perfection</h3>
+            <p class="text-gray-500">Our AI is analyzing your information to build a high-impact CV.</p>
         </div>
     </div>
 
