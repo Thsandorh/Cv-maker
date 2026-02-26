@@ -44,15 +44,15 @@ function addExperience() {
     div.className = 'experience-entry group animate-in fade-in duration-300';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Cégnév" class="p-3 bg-white/50 border border-gray-100 rounded-xl company focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Pozíció" class="p-3 bg-white/50 border border-gray-100 rounded-xl title focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Időtartam (pl. 2020 - Jelenleg)" class="p-3 bg-white/50 border border-gray-100 rounded-xl duration focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
-            <input type="text" placeholder="Helyszín" class="p-3 bg-white/50 border border-gray-100 rounded-xl location focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Cégnév" class="p-3 bg-white border-2 border-gray-200 rounded-lg company focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+            <input type="text" placeholder="Pozíció" class="p-3 bg-white border-2 border-gray-200 rounded-lg title focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+            <input type="text" placeholder="Időtartam (pl. 2020 - Jelenleg)" class="p-3 bg-white border-2 border-gray-200 rounded-lg duration focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
+            <input type="text" placeholder="Helyszín" class="p-3 bg-white border-2 border-gray-200 rounded-lg location focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
         </div>
-        <textarea placeholder="Főbb feladatok és eredmények" class="w-full mt-3 p-3 bg-white/50 border border-gray-100 rounded-xl description focus:ring-2 focus:ring-indigo-200 outline-none transition-all" rows="2"></textarea>
+        <textarea placeholder="Főbb feladatok és eredmények" class="w-full mt-3 p-3 bg-white border-2 border-gray-200 rounded-lg description focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium" rows="3"></textarea>
     `;
     container.appendChild(div);
 }
@@ -63,13 +63,13 @@ function addEducation() {
     div.className = 'education-entry group animate-in fade-in duration-300';
     div.innerHTML = `
         <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Intézmény" class="p-3 bg-white/50 border border-gray-100 rounded-xl institution focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Végzettség / Megnevezés" class="p-3 bg-white/50 border border-gray-100 rounded-xl degree focus:ring-2 focus:ring-indigo-200 outline-none transition-all" required>
-            <input type="text" placeholder="Végzés éve" class="p-3 bg-white/50 border border-gray-100 rounded-xl year focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
-            <input type="text" placeholder="Szak" class="p-3 bg-white/50 border border-gray-100 rounded-xl field focus:ring-2 focus:ring-indigo-200 outline-none transition-all">
+            <input type="text" placeholder="Intézmény" class="p-3 bg-white border-2 border-gray-200 rounded-lg institution focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+            <input type="text" placeholder="Végzettség / Megnevezés" class="p-3 bg-white border-2 border-gray-200 rounded-lg degree focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+            <input type="text" placeholder="Végzés éve" class="p-3 bg-white border-2 border-gray-200 rounded-lg year focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
+            <input type="text" placeholder="Szak" class="p-3 bg-white border-2 border-gray-200 rounded-lg field focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
         </div>
     `;
     container.appendChild(div);
