@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVPro AI - Prémium Önéletrajz Készítő</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.0.3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -170,8 +170,8 @@
 
                         <!-- Munkatapasztalat -->
                         <div class="space-y-4">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 border-b-4 border-brand-yellow pb-2 pr-2">
-                                <h2 class="text-2xl font-black uppercase flex items-center space-x-3">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 pb-2">
+                                <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                                     <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">3</span>
                                     <span>Tapasztalat</span>
                                 </h2>
@@ -187,8 +187,8 @@
 
                         <!-- Tanulmányok -->
                         <div class="space-y-4">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 border-b-4 border-brand-yellow pb-2 pr-2">
-                                <h2 class="text-2xl font-black uppercase flex items-center space-x-3">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 pb-2">
+                                <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                                     <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">4</span>
                                     <span>Tanulmányok</span>
                                 </h2>
@@ -295,6 +295,48 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Critical UI Interaction Logic - Inline for reliability
+        window.currentMode = 'structured';
+
+        window.switchMode = function(mode) {
+            try {
+                window.currentMode = mode;
+                const structuredBtn = document.getElementById('structuredModeBtn');
+                const bulkBtn = document.getElementById('bulkModeBtn');
+                const structuredSections = document.getElementById('structuredSections');
+                const bulkSection = document.getElementById('bulkSection');
+
+                if (!structuredBtn || !bulkBtn || !structuredSections || !bulkSection) {
+                    console.error('Hiányzó DOM elemek a módváltáshoz.');
+                    return;
+                }
+
+                if (mode === 'structured') {
+                    structuredBtn.classList.add('mode-active');
+                    structuredBtn.classList.remove('text-gray-500');
+                    bulkBtn.classList.remove('mode-active');
+                    bulkBtn.classList.add('text-gray-500');
+                    structuredSections.classList.remove('hidden');
+                    bulkSection.classList.add('hidden');
+                } else {
+                    bulkBtn.classList.add('mode-active');
+                    bulkBtn.classList.remove('text-gray-500');
+                    structuredBtn.classList.remove('mode-active');
+                    structuredBtn.classList.add('text-gray-500');
+                    bulkSection.classList.remove('hidden');
+                    structuredSections.classList.add('hidden');
+
+                    // Görgetés a szabad szöveg mezőhöz, hogy a felhasználó biztosan lássa
+                    setTimeout(() => {
+                        bulkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            } catch (error) {
+                console.error('Hiba a módváltás során:', error);
+            }
+        };
+    </script>
+    <script src="script.js?v=1.0.3"></script>
 </body>
 </html>
