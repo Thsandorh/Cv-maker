@@ -361,18 +361,33 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const container = document.getElementById('experienceList');
             if (!container) return;
             const div = document.createElement('div');
-            div.className = 'experience-entry group';
+            div.className = 'experience-entry relative border-2 border-brand-black p-4 rounded-lg bg-gray-50/50 mb-6';
             div.innerHTML = `
-                <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Törlés">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Cégnév" class="p-3 bg-white border-2 border-gray-200 rounded-lg company focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
-                    <input type="text" placeholder="Pozíció" class="p-3 bg-white border-2 border-gray-200 rounded-lg title focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
-                    <input type="text" placeholder="Időtartam (pl. 2020 - Jelenleg)" class="p-3 bg-white border-2 border-gray-200 rounded-lg duration focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
-                    <input type="text" placeholder="Helyszín" class="p-3 bg-white border-2 border-gray-200 rounded-lg location focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Cégnév</label>
+                        <input type="text" placeholder="pl. Google Inc." class="w-full p-3 bg-white border-2 border-brand-black rounded-lg company focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Pozíció</label>
+                        <input type="text" placeholder="pl. Senior Fejlesztő" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg title focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Időtartam</label>
+                        <input type="text" placeholder="pl. 2020 - Jelenleg" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg duration focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Helyszín</label>
+                        <input type="text" placeholder="pl. Budapest" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg location focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    </div>
                 </div>
-                <textarea placeholder="Főbb feladatok és eredmények" class="w-full mt-3 p-3 bg-white border-2 border-gray-200 rounded-lg description focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium" rows="3"></textarea>
+                <div class="mt-4 space-y-1">
+                    <label class="text-xs font-bold uppercase ml-1">Főbb feladatok</label>
+                    <textarea placeholder="Írd le a legfontosabb eredményeidet és feladataidat..." class="w-full p-3 bg-white border-2 border-brand-black rounded-lg description focus:shadow-neobrutalist outline-none transition-all font-medium min-h-[100px]" rows="3"></textarea>
+                </div>
             `;
             container.appendChild(div);
         };
@@ -381,16 +396,28 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const container = document.getElementById('educationList');
             if (!container) return;
             const div = document.createElement('div');
-            div.className = 'education-entry group';
+            div.className = 'education-entry relative border-2 border-brand-black p-4 rounded-lg bg-gray-50/50 mb-6';
             div.innerHTML = `
-                <button type="button" class="remove-btn opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.parentElement.remove()">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Törlés">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Intézmény" class="p-3 bg-white border-2 border-gray-200 rounded-lg institution focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
-                    <input type="text" placeholder="Végzettség / Megnevezés" class="p-3 bg-white border-2 border-gray-200 rounded-lg degree focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-bold" required>
-                    <input type="text" placeholder="Végzés éve" class="p-3 bg-white border-2 border-gray-200 rounded-lg year focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
-                    <input type="text" placeholder="Szak" class="p-3 bg-white border-2 border-gray-200 rounded-lg field focus:border-brand-black focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Intézmény</label>
+                        <input type="text" placeholder="pl. ELTE" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg institution focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Végzettség</label>
+                        <input type="text" placeholder="pl. BSc Programtervező" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg degree focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Végzés Éve</label>
+                        <input type="text" placeholder="pl. 2023" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg year focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase ml-1">Szakirány</label>
+                        <input type="text" placeholder="pl. Szoftverfejlesztés" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg field focus:shadow-neobrutalist outline-none transition-all font-medium">
+                    </div>
                 </div>
             `;
             container.appendChild(div);
