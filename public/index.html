@@ -677,11 +677,22 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 if (!iframeDoc || !iframeDoc.body) return;
 
                 ensureSinglePageStyles(iframeDoc);
-                const { a4 } = forceSinglePageLayout(iframeDoc);
+                const a4 = getA4Pixels();
+
+                // Preview should show true A4 canvas size, not double-scaled internal content.
+                iframeDoc.documentElement.style.width = `${a4.width}px`;
+                iframeDoc.documentElement.style.height = `${a4.height}px`;
+                iframeDoc.documentElement.style.overflow = 'hidden';
+                iframeDoc.body.style.margin = '0';
+                iframeDoc.body.style.width = `${a4.width}px`;
+                iframeDoc.body.style.minHeight = `${a4.height}px`;
+                iframeDoc.body.style.height = `${a4.height}px`;
+                iframeDoc.body.style.transform = 'none';
+                iframeDoc.body.style.transformOrigin = '';
+                iframeDoc.body.style.overflow = 'hidden';
 
                 const availableWidth = Math.max(viewport.clientWidth - 16, 1);
-                const availableHeight = Math.max(viewport.clientHeight - 16, 1);
-                const previewScale = Math.max(Math.min(availableWidth / a4.width, availableHeight / a4.height), 0.1);
+                const previewScale = Math.max(availableWidth / a4.width, 0.1);
 
                 iframe.style.width = `${a4.width}px`;
                 iframe.style.height = `${a4.height}px`;
