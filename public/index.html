@@ -563,101 +563,155 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
-        function displayCV(html) {
-            const container = document.getElementById('previewContainer');
-            if (!container) return;
+        function getA4Pixels() {
+            return { width: 794, height: 1123 };
+        }
 
-            container.innerHTML = ''; // Helyőrző törlése
+        function ensureSinglePageStyles(doc) {
+            if (!doc || !doc.head) return;
+            if (doc.getElementById('cv-single-page-style')) return;
 
-            const iframe = document.createElement('iframe');
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            container.appendChild(iframe);
-
-            const doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(html);
-
-            // --- INJECT AUTO-SCALING LOGIC & CSS ---
             const style = doc.createElement('style');
+            style.id = 'cv-single-page-style';
             style.textContent = `
                 @media screen {
                     html, body {
-                        width: 100%;
-                        height: 100%;
-                        margin: 0;
-                        padding: 0;
-                        overflow-x: hidden; /* Hide horizontal scrollbar */
-                        overflow-y: auto;   /* Allow vertical scroll */
-                    }
-                    #cv-scale-wrapper {
-                        transform-origin: top left;
-                        width: 210mm;
-                        min-height: 297mm;
-                        background-color: white; /* Ensure bg is opaque */
-                        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Nice drop shadow for paper effect */
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #fff !important;
                     }
                 }
                 @media print {
-                    @page { margin: 0; size: A4; }
+                    @page { size: A4; margin: 0; }
                     html, body {
-                        margin: 0;
-                        width: 210mm;
-                        height: auto;
-                        overflow: visible;
-                    }
-                    #cv-scale-wrapper {
-                        transform: none !important;
                         width: 210mm !important;
+                        height: 297mm !important;
                         margin: 0 !important;
-                        box-shadow: none !important;
+                        padding: 0 !important;
+                        overflow: hidden !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
                     }
                 }
             `;
             doc.head.appendChild(style);
+        }
 
-            // Wrap existing content in the scaling wrapper
-            const wrapper = doc.createElement('div');
-            wrapper.id = 'cv-scale-wrapper';
-            while (doc.body.firstChild) {
-                wrapper.appendChild(doc.body.firstChild);
-            }
-            doc.body.appendChild(wrapper);
+        function forceSinglePageLayout(doc) {
+            if (!doc || !doc.body || !doc.documentElement) return { scale: 1, a4: { width: 794, height: 1123 } };
 
-            const script = doc.createElement('script');
-            script.textContent = `
-                function resizeCV() {
-                    const width = document.documentElement.clientWidth;
-                    if (!width) return;
+            const a4 = getA4Pixels();
 
-                    // A4 width in pixels at 96 DPI is approx 794px.
-                    const a4width = 794;
+            doc.documentElement.style.zoom = '';
+            doc.documentElement.style.width = '';
+            doc.documentElement.style.height = '';
+            doc.documentElement.style.overflow = '';
+            doc.body.style.margin = '';
+            doc.body.style.transform = '';
+            doc.body.style.transformOrigin = '';
+            doc.body.style.width = '';
+            doc.body.style.height = '';
+            doc.body.style.minHeight = '';
+            doc.body.style.overflow = '';
 
-                    // Calculate scale to fit width
-                    const scale = (width) / a4width;
+            const contentWidth = Math.max(doc.documentElement.scrollWidth || 0, doc.body.scrollWidth || 0, a4.width);
+            const contentHeight = Math.max(doc.documentElement.scrollHeight || 0, doc.body.scrollHeight || 0, a4.height);
+            const scale = Math.min(1, a4.width / contentWidth, a4.height / contentHeight);
 
-                    const wrapper = document.getElementById('cv-scale-wrapper');
-                    if (wrapper) {
-                        wrapper.style.transform = 'scale(' + scale + ')';
-                        // We can also adjust the wrapper's height or bottom margin if needed
-                    }
-                }
+            doc.documentElement.style.width = `${a4.width}px`;
+            doc.documentElement.style.height = `${a4.height}px`;
+            doc.documentElement.style.overflow = 'hidden';
 
-                window.addEventListener('resize', resizeCV);
-                window.addEventListener('DOMContentLoaded', resizeCV);
-                window.onload = resizeCV;
-                setTimeout(resizeCV, 100);
-            `;
-            doc.head.appendChild(script);
-            // ---------------------------------------
+            doc.body.style.margin = '0';
+            doc.body.style.width = `${contentWidth}px`;
+            doc.body.style.height = `${contentHeight}px`;
+            doc.body.style.minHeight = `${contentHeight}px`;
+            doc.body.style.transformOrigin = 'top left';
+            doc.body.style.transform = `scale(${scale})`;
+            doc.body.style.overflow = 'hidden';
 
+            return { scale, a4 };
+        }
+
+        function displayCV(html) {
+            const container = document.getElementById('previewContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+            container.classList.add('overflow-hidden');
+
+            const viewport = document.createElement('div');
+            viewport.id = 'previewViewport';
+            viewport.style.width = '100%';
+            viewport.style.height = '100%';
+            viewport.style.overflow = 'auto';
+            viewport.style.display = 'flex';
+            viewport.style.justifyContent = 'center';
+            viewport.style.alignItems = 'flex-start';
+            viewport.style.padding = '8px';
+            viewport.style.boxSizing = 'border-box';
+            viewport.style.background = '#eef0f3';
+            container.appendChild(viewport);
+
+            const frame = document.createElement('div');
+            frame.id = 'previewFrame';
+            frame.style.position = 'relative';
+            frame.style.flex = '0 0 auto';
+            viewport.appendChild(frame);
+
+            const iframe = document.createElement('iframe');
+            iframe.style.border = 'none';
+            iframe.style.display = 'block';
+            iframe.style.transformOrigin = 'top left';
+            iframe.style.background = 'white';
+            iframe.setAttribute('title', 'CV előnézet');
+            frame.appendChild(iframe);
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(html);
             doc.close();
+
+            const resizePreview = () => {
+                const iframeDoc = iframe.contentWindow?.document;
+                if (!iframeDoc || !iframeDoc.body) return;
+
+                ensureSinglePageStyles(iframeDoc);
+                const { a4 } = forceSinglePageLayout(iframeDoc);
+
+                const availableWidth = Math.max(viewport.clientWidth - 16, 1);
+                const availableHeight = Math.max(viewport.clientHeight - 16, 1);
+                const previewScale = Math.max(Math.min(availableWidth / a4.width, availableHeight / a4.height), 0.1);
+
+                iframe.style.width = `${a4.width}px`;
+                iframe.style.height = `${a4.height}px`;
+                iframe.style.transform = `scale(${previewScale})`;
+
+                frame.style.width = `${a4.width * previewScale}px`;
+                frame.style.height = `${a4.height * previewScale}px`;
+            };
+
+            if (window.__cvPreviewResizeHandler) {
+                window.removeEventListener('resize', window.__cvPreviewResizeHandler);
+            }
+            window.__cvPreviewResizeHandler = resizePreview;
+            window.addEventListener('resize', window.__cvPreviewResizeHandler);
+
+            const onIframeReady = () => {
+                resizePreview();
+                setTimeout(resizePreview, 120);
+                setTimeout(resizePreview, 320);
+            };
+
+            if (iframe.contentWindow?.document?.readyState === 'complete') {
+                onIframeReady();
+            } else {
+                iframe.addEventListener('load', onIframeReady, { once: true });
+            }
 
             const downloadBtn = document.getElementById('downloadPdf');
             if (downloadBtn) downloadBtn.classList.remove('hidden');
 
-            // Mobilnézeten görgetés az előnézethez
             if (window.innerWidth < 1024) {
                 container.scrollIntoView({ behavior: 'smooth' });
             }
@@ -667,9 +721,14 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
                 const iframe = document.querySelector('#previewContainer iframe');
-                if (iframe) {
-                    iframe.contentWindow.print();
-                }
+                if (!iframe || !iframe.contentWindow) return;
+
+                const doc = iframe.contentWindow.document;
+                ensureSinglePageStyles(doc);
+                forceSinglePageLayout(doc);
+
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
             });
         }
     </script>

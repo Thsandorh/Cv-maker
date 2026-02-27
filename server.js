@@ -146,9 +146,17 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
            - ICONS: Use FontAwesome or SVG icons for Contact info (Phone, Email, Location).
 
         4. SINGLE PAGE CONSTRAINT:
-           - The CV must fit on ONE A4 PAGE.
-           - Strategy: If content is long, use a 2-column layout, reduce font size to 9pt/10pt, or condense spacing.
-           - CSS: @media print { @page { size: A4; margin: 0; } body { margin: 0; -webkit-print-color-adjust: exact; } }
+           - THIS IS CRITICAL: The CV MUST fit on EXACTLY ONE (1) A4 PAGE, no overflow, no second page.
+           - Hard rule: If content would exceed one page, you MUST aggressively compress layout/content density while preserving readability and professional quality.
+           - Mandatory tactics (use as needed):
+             * Prefer compact 2-column layout.
+             * Reduce font sizes safely (body down to 9pt if needed, headings proportionally).
+             * Tighten line-height, margins, paddings, and section gaps.
+             * Shorten bullet points to concise, high-impact statements.
+             * Prioritize strongest/relevant items and omit low-value verbosity.
+           - You MUST avoid any design that spills to page 2.
+           - CSS requirement for output: @media print { @page { size: A4; margin: 0; } html, body { width: 210mm; height: 297mm; margin: 0; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+           - Screen requirement: keep the same A4 aspect ratio baseline (210mm x 297mm) so preview and print match.
 
         5. PROFILE PICTURE LOGIC:
            - If a profile picture is provided, place it according to the design theme (e.g., circle in sidebar).
