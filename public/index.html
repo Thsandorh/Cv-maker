@@ -624,13 +624,20 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 const style = iframeDoc.createElement('style');
                 style.id = 'cv-pro-print-style';
                 style.textContent = `
+                    @media screen {
+                        html, body {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            background: #fff !important;
+                        }
+                    }
                     @media print {
                         @page { size: A4; margin: 0; }
                         html, body {
                             margin: 0 !important;
                             padding: 0 !important;
-                            width: auto !important;
-                            height: auto !important;
+                            width: 210mm !important;
+                            height: 297mm !important;
                             overflow: hidden !important;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
@@ -655,8 +662,9 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 const availableHeight = Math.max(viewport.clientHeight - 16, 1);
 
                 const widthScale = availableWidth / a4.width;
-                const heightScale = availableHeight / a4.height;
-                const isSinglePageContent = contentHeight <= (a4.height + 8);
+                const firstPageHeight = Math.min(contentHeight, a4.height);
+                const heightScale = availableHeight / firstPageHeight;
+                const isSinglePageContent = contentHeight <= (a4.height * 1.05);
                 const scale = Math.max(isSinglePageContent ? Math.min(widthScale, heightScale) : widthScale, 0.1);
 
                 iframe.style.width = `${a4.width}px`;
@@ -704,31 +712,42 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const scale = Math.min(1, a4.width / contentWidth, a4.height / contentHeight);
 
             const prev = {
+                htmlZoom: doc.documentElement.style.zoom,
+                htmlOverflow: doc.documentElement.style.overflow,
                 bodyTransform: doc.body.style.transform,
                 bodyTransformOrigin: doc.body.style.transformOrigin,
                 bodyWidth: doc.body.style.width,
+                bodyHeight: doc.body.style.height,
                 bodyMinHeight: doc.body.style.minHeight,
-                bodyMargin: doc.body.style.margin
+                bodyMargin: doc.body.style.margin,
+                bodyOverflow: doc.body.style.overflow
             };
 
+            doc.documentElement.style.overflow = 'hidden';
             doc.body.style.margin = '0';
+            doc.body.style.width = '210mm';
+            doc.body.style.height = '297mm';
             doc.body.style.minHeight = '297mm';
+            doc.body.style.overflow = 'hidden';
 
             if (scale < 1) {
-                doc.body.style.transformOrigin = 'top left';
-                doc.body.style.transform = `scale(${scale})`;
-                doc.body.style.width = `${100 / scale}%`;
-            } else {
+                doc.documentElement.style.zoom = String(scale);
                 doc.body.style.transform = 'none';
-                doc.body.style.width = '210mm';
+            } else {
+                doc.documentElement.style.zoom = '1';
+                doc.body.style.transform = 'none';
             }
 
             return () => {
+                doc.documentElement.style.zoom = prev.htmlZoom;
+                doc.documentElement.style.overflow = prev.htmlOverflow;
                 doc.body.style.transform = prev.bodyTransform;
                 doc.body.style.transformOrigin = prev.bodyTransformOrigin;
                 doc.body.style.width = prev.bodyWidth;
+                doc.body.style.height = prev.bodyHeight;
                 doc.body.style.minHeight = prev.bodyMinHeight;
                 doc.body.style.margin = prev.bodyMargin;
+                doc.body.style.overflow = prev.bodyOverflow;
             };
         }
 
