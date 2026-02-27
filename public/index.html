@@ -563,18 +563,74 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
-        function getA4Pixels(doc) {
-            const probe = doc.createElement('div');
-            probe.style.position = 'absolute';
-            probe.style.visibility = 'hidden';
-            probe.style.pointerEvents = 'none';
-            probe.style.width = '210mm';
-            probe.style.height = '297mm';
-            doc.body.appendChild(probe);
-            const width = probe.getBoundingClientRect().width || 794;
-            const height = probe.getBoundingClientRect().height || 1123;
-            probe.remove();
-            return { width, height };
+        function getA4Pixels() {
+            return { width: 794, height: 1123 };
+        }
+
+        function ensureSinglePageStyles(doc) {
+            if (!doc || !doc.head) return;
+            if (doc.getElementById('cv-single-page-style')) return;
+
+            const style = doc.createElement('style');
+            style.id = 'cv-single-page-style';
+            style.textContent = `
+                @media screen {
+                    html, body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #fff !important;
+                    }
+                }
+                @media print {
+                    @page { size: A4; margin: 0; }
+                    html, body {
+                        width: 210mm !important;
+                        height: 297mm !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        overflow: hidden !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                }
+            `;
+            doc.head.appendChild(style);
+        }
+
+        function forceSinglePageLayout(doc) {
+            if (!doc || !doc.body || !doc.documentElement) return { scale: 1, a4: { width: 794, height: 1123 } };
+
+            const a4 = getA4Pixels();
+
+            doc.documentElement.style.zoom = '';
+            doc.documentElement.style.width = '';
+            doc.documentElement.style.height = '';
+            doc.documentElement.style.overflow = '';
+            doc.body.style.margin = '';
+            doc.body.style.transform = '';
+            doc.body.style.transformOrigin = '';
+            doc.body.style.width = '';
+            doc.body.style.height = '';
+            doc.body.style.minHeight = '';
+            doc.body.style.overflow = '';
+
+            const contentWidth = Math.max(doc.documentElement.scrollWidth || 0, doc.body.scrollWidth || 0, a4.width);
+            const contentHeight = Math.max(doc.documentElement.scrollHeight || 0, doc.body.scrollHeight || 0, a4.height);
+            const scale = Math.min(1, a4.width / contentWidth, a4.height / contentHeight);
+
+            doc.documentElement.style.width = `${a4.width}px`;
+            doc.documentElement.style.height = `${a4.height}px`;
+            doc.documentElement.style.overflow = 'hidden';
+
+            doc.body.style.margin = '0';
+            doc.body.style.width = `${contentWidth}px`;
+            doc.body.style.height = `${contentHeight}px`;
+            doc.body.style.minHeight = `${contentHeight}px`;
+            doc.body.style.transformOrigin = 'top left';
+            doc.body.style.transform = `scale(${scale})`;
+            doc.body.style.overflow = 'hidden';
+
+            return { scale, a4 };
         }
 
         function displayCV(html) {
@@ -616,73 +672,32 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             doc.write(html);
             doc.close();
 
-            const ensurePrintCss = () => {
-                const iframeDoc = iframe.contentWindow?.document;
-                if (!iframeDoc || !iframeDoc.head) return;
-                if (iframeDoc.getElementById('cv-pro-print-style')) return;
-
-                const style = iframeDoc.createElement('style');
-                style.id = 'cv-pro-print-style';
-                style.textContent = `
-                    @media screen {
-                        html, body {
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            background: #fff !important;
-                        }
-                    }
-                    @media print {
-                        @page { size: A4; margin: 0; }
-                        html, body {
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            width: 210mm !important;
-                            height: 297mm !important;
-                            overflow: hidden !important;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                    }
-                `;
-                iframeDoc.head.appendChild(style);
-            };
-
             const resizePreview = () => {
                 const iframeDoc = iframe.contentWindow?.document;
                 if (!iframeDoc || !iframeDoc.body) return;
 
-                const a4 = getA4Pixels(iframeDoc);
-                const contentHeight = Math.max(
-                    iframeDoc.documentElement?.scrollHeight || 0,
-                    iframeDoc.body.scrollHeight || 0,
-                    a4.height
-                );
+                ensureSinglePageStyles(iframeDoc);
+                const { a4 } = forceSinglePageLayout(iframeDoc);
 
                 const availableWidth = Math.max(viewport.clientWidth - 16, 1);
                 const availableHeight = Math.max(viewport.clientHeight - 16, 1);
-
-                const widthScale = availableWidth / a4.width;
-                const firstPageHeight = Math.min(contentHeight, a4.height);
-                const heightScale = availableHeight / firstPageHeight;
-                const isSinglePageContent = contentHeight <= (a4.height * 1.05);
-                const scale = Math.max(isSinglePageContent ? Math.min(widthScale, heightScale) : widthScale, 0.1);
+                const previewScale = Math.max(Math.min(availableWidth / a4.width, availableHeight / a4.height), 0.1);
 
                 iframe.style.width = `${a4.width}px`;
-                iframe.style.height = `${contentHeight}px`;
-                iframe.style.transform = `scale(${scale})`;
+                iframe.style.height = `${a4.height}px`;
+                iframe.style.transform = `scale(${previewScale})`;
 
-                frame.style.width = `${a4.width * scale}px`;
-                frame.style.height = `${contentHeight * scale}px`;
+                frame.style.width = `${a4.width * previewScale}px`;
+                frame.style.height = `${a4.height * previewScale}px`;
             };
 
             if (window.__cvPreviewResizeHandler) {
                 window.removeEventListener('resize', window.__cvPreviewResizeHandler);
             }
             window.__cvPreviewResizeHandler = resizePreview;
-            window.addEventListener('resize', resizePreview);
+            window.addEventListener('resize', window.__cvPreviewResizeHandler);
 
             const onIframeReady = () => {
-                ensurePrintCss();
                 resizePreview();
                 setTimeout(resizePreview, 120);
                 setTimeout(resizePreview, 320);
@@ -757,12 +772,12 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 const iframe = document.querySelector('#previewContainer iframe');
                 if (!iframe || !iframe.contentWindow) return;
 
-                const restore = preparePrintScale(iframe);
+                const doc = iframe.contentWindow.document;
+                ensureSinglePageStyles(doc);
+                forceSinglePageLayout(doc);
+
                 iframe.contentWindow.focus();
                 iframe.contentWindow.print();
-                setTimeout(() => {
-                    if (typeof restore === 'function') restore();
-                }, 350);
             });
         }
     </script>
