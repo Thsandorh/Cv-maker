@@ -567,6 +567,9 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const container = document.getElementById('previewContainer');
             if (!container) return;
 
+            const A4_WIDTH_PX = 794;
+            const A4_HEIGHT_PX = 1123;
+
             container.innerHTML = '';
             container.classList.add('overflow-hidden');
 
@@ -578,7 +581,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             viewport.style.display = 'flex';
             viewport.style.justifyContent = 'center';
             viewport.style.alignItems = 'flex-start';
-            viewport.style.padding = '8px';
+            viewport.style.padding = '10px';
             viewport.style.boxSizing = 'border-box';
             viewport.style.background = '#eef0f3';
             container.appendChild(viewport);
@@ -593,6 +596,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             iframe.style.border = 'none';
             iframe.style.display = 'block';
             iframe.style.transformOrigin = 'top left';
+            iframe.style.background = 'white';
             iframe.setAttribute('title', 'CV előnézet');
             frame.appendChild(iframe);
 
@@ -601,29 +605,52 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             doc.write(html);
             doc.close();
 
+            const ensurePrintCss = () => {
+                const iframeDoc = iframe.contentWindow?.document;
+                if (!iframeDoc || !iframeDoc.head) return;
+                if (iframeDoc.getElementById('cv-pro-print-style')) return;
+
+                const style = iframeDoc.createElement('style');
+                style.id = 'cv-pro-print-style';
+                style.textContent = `
+                    @media print {
+                        @page { size: A4; margin: 0; }
+                        html, body {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            width: auto !important;
+                            height: auto !important;
+                            overflow: visible !important;
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
+                        }
+                        body {
+                            transform: none !important;
+                            zoom: 1 !important;
+                        }
+                    }
+                `;
+                iframeDoc.head.appendChild(style);
+            };
+
             const resizePreview = () => {
                 const iframeDoc = iframe.contentWindow?.document;
                 if (!iframeDoc || !iframeDoc.body) return;
 
-                const contentWidth = Math.max(
-                    iframeDoc.documentElement?.scrollWidth || 0,
-                    iframeDoc.body.scrollWidth || 0,
-                    794
-                );
                 const contentHeight = Math.max(
                     iframeDoc.documentElement?.scrollHeight || 0,
                     iframeDoc.body.scrollHeight || 0,
-                    1123
+                    A4_HEIGHT_PX
                 );
 
-                const availableWidth = Math.max(viewport.clientWidth - 16, 1);
-                const scale = Math.max(availableWidth / contentWidth, 0.1);
+                const availableWidth = Math.max(viewport.clientWidth - 20, 1);
+                const scale = Math.max(availableWidth / A4_WIDTH_PX, 0.1);
 
-                iframe.style.width = `${contentWidth}px`;
+                iframe.style.width = `${A4_WIDTH_PX}px`;
                 iframe.style.height = `${contentHeight}px`;
                 iframe.style.transform = `scale(${scale})`;
 
-                frame.style.width = `${contentWidth * scale}px`;
+                frame.style.width = `${A4_WIDTH_PX * scale}px`;
                 frame.style.height = `${contentHeight * scale}px`;
             };
 
@@ -634,9 +661,10 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             window.addEventListener('resize', resizePreview);
 
             const onIframeReady = () => {
+                ensurePrintCss();
                 resizePreview();
-                setTimeout(resizePreview, 120);
-                setTimeout(resizePreview, 400);
+                setTimeout(resizePreview, 150);
+                setTimeout(resizePreview, 450);
             };
 
             if (iframe.contentWindow?.document?.readyState === 'complete') {
@@ -711,12 +739,8 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             downloadBtn.addEventListener('click', () => {
                 const iframe = document.querySelector('#previewContainer iframe');
                 if (!iframe || !iframe.contentWindow) return;
-
-                const restore = prepareSinglePagePrint(iframe);
+                iframe.contentWindow.focus();
                 iframe.contentWindow.print();
-                setTimeout(() => {
-                    if (typeof restore === 'function') restore();
-                }, 350);
             });
         }
     </script>
