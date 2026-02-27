@@ -588,28 +588,37 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                         height: 100%;
                         margin: 0;
                         padding: 0;
-                        overflow-x: hidden; /* Hide horizontal scrollbar */
-                        overflow-y: auto;   /* Allow vertical scroll */
+                        overflow: hidden;
+                    }
+                    body {
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: center;
+                        background: #f3f4f6;
                     }
                     #cv-scale-wrapper {
                         transform-origin: top left;
                         width: 210mm;
                         min-height: 297mm;
-                        background-color: white; /* Ensure bg is opaque */
-                        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Nice drop shadow for paper effect */
+                        background-color: white;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                        will-change: transform;
                     }
                 }
                 @media print {
                     @page { margin: 0; size: A4; }
                     html, body {
                         margin: 0;
-                        width: 210mm;
+                        width: auto;
                         height: auto;
                         overflow: visible;
+                        background: white !important;
+                        display: block !important;
                     }
                     #cv-scale-wrapper {
                         transform: none !important;
                         width: 210mm !important;
+                        min-height: 297mm !important;
                         margin: 0 !important;
                         box-shadow: none !important;
                     }
@@ -625,34 +634,43 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
             doc.body.appendChild(wrapper);
 
-            const script = doc.createElement('script');
-            script.textContent = `
-                function resizeCV() {
-                    const width = document.documentElement.clientWidth;
-                    if (!width) return;
+            const resizePreview = () => {
+                const iframeDoc = iframe.contentWindow && iframe.contentWindow.document;
+                const scaleWrapper = iframeDoc && iframeDoc.getElementById('cv-scale-wrapper');
+                if (!scaleWrapper) return;
 
-                    // A4 width in pixels at 96 DPI is approx 794px.
-                    const a4width = 794;
+                const previewWidth = container.clientWidth;
+                const previewHeight = container.clientHeight;
+                if (!previewWidth || !previewHeight) return;
 
-                    // Calculate scale to fit width
-                    const scale = (width) / a4width;
+                const a4Probe = iframeDoc.createElement('div');
+                a4Probe.style.position = 'absolute';
+                a4Probe.style.visibility = 'hidden';
+                a4Probe.style.width = '210mm';
+                a4Probe.style.height = '297mm';
+                iframeDoc.body.appendChild(a4Probe);
 
-                    const wrapper = document.getElementById('cv-scale-wrapper');
-                    if (wrapper) {
-                        wrapper.style.transform = 'scale(' + scale + ')';
-                        // We can also adjust the wrapper's height or bottom margin if needed
-                    }
-                }
+                const a4WidthPx = a4Probe.getBoundingClientRect().width || 794;
+                const a4HeightPx = a4Probe.getBoundingClientRect().height || 1123;
+                a4Probe.remove();
 
-                window.addEventListener('resize', resizeCV);
-                window.addEventListener('DOMContentLoaded', resizeCV);
-                window.onload = resizeCV;
-                setTimeout(resizeCV, 100);
-            `;
-            doc.head.appendChild(script);
+                const widthScale = previewWidth / a4WidthPx;
+                const heightScale = previewHeight / a4HeightPx;
+                const scale = Math.min(widthScale, heightScale);
+
+                scaleWrapper.style.transform = `scale(${scale})`;
+            };
+
+            iframe.addEventListener('load', () => {
+                resizePreview();
+                setTimeout(resizePreview, 120);
+            });
+
+            window.addEventListener('resize', resizePreview);
             // ---------------------------------------
 
             doc.close();
+            setTimeout(resizePreview, 60);
 
             const downloadBtn = document.getElementById('downloadPdf');
             if (downloadBtn) downloadBtn.classList.remove('hidden');
@@ -668,7 +686,17 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             downloadBtn.addEventListener('click', () => {
                 const iframe = document.querySelector('#previewContainer iframe');
                 if (iframe) {
+                    const wrapper = iframe.contentWindow?.document?.getElementById('cv-scale-wrapper');
+                    const previousTransform = wrapper ? wrapper.style.transform : '';
+                    if (wrapper) wrapper.style.transform = 'none';
+
                     iframe.contentWindow.print();
+
+                    if (wrapper) {
+                        setTimeout(() => {
+                            wrapper.style.transform = previousTransform;
+                        }, 200);
+                    }
                 }
             });
         }
