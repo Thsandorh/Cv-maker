@@ -563,12 +563,23 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
+        function getA4Pixels(doc) {
+            const probe = doc.createElement('div');
+            probe.style.position = 'absolute';
+            probe.style.visibility = 'hidden';
+            probe.style.pointerEvents = 'none';
+            probe.style.width = '210mm';
+            probe.style.height = '297mm';
+            doc.body.appendChild(probe);
+            const width = probe.getBoundingClientRect().width || 794;
+            const height = probe.getBoundingClientRect().height || 1123;
+            probe.remove();
+            return { width, height };
+        }
+
         function displayCV(html) {
             const container = document.getElementById('previewContainer');
             if (!container) return;
-
-            const A4_WIDTH_PX = 794;
-            const A4_HEIGHT_PX = 1123;
 
             container.innerHTML = '';
             container.classList.add('overflow-hidden');
@@ -581,7 +592,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             viewport.style.display = 'flex';
             viewport.style.justifyContent = 'center';
             viewport.style.alignItems = 'flex-start';
-            viewport.style.padding = '10px';
+            viewport.style.padding = '8px';
             viewport.style.boxSizing = 'border-box';
             viewport.style.background = '#eef0f3';
             container.appendChild(viewport);
@@ -620,13 +631,9 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                             padding: 0 !important;
                             width: auto !important;
                             height: auto !important;
-                            overflow: visible !important;
+                            overflow: hidden !important;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
-                        }
-                        body {
-                            transform: none !important;
-                            zoom: 1 !important;
                         }
                     }
                 `;
@@ -637,20 +644,26 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 const iframeDoc = iframe.contentWindow?.document;
                 if (!iframeDoc || !iframeDoc.body) return;
 
+                const a4 = getA4Pixels(iframeDoc);
                 const contentHeight = Math.max(
                     iframeDoc.documentElement?.scrollHeight || 0,
                     iframeDoc.body.scrollHeight || 0,
-                    A4_HEIGHT_PX
+                    a4.height
                 );
 
-                const availableWidth = Math.max(viewport.clientWidth - 20, 1);
-                const scale = Math.max(availableWidth / A4_WIDTH_PX, 0.1);
+                const availableWidth = Math.max(viewport.clientWidth - 16, 1);
+                const availableHeight = Math.max(viewport.clientHeight - 16, 1);
 
-                iframe.style.width = `${A4_WIDTH_PX}px`;
+                const widthScale = availableWidth / a4.width;
+                const heightScale = availableHeight / a4.height;
+                const isSinglePageContent = contentHeight <= (a4.height + 8);
+                const scale = Math.max(isSinglePageContent ? Math.min(widthScale, heightScale) : widthScale, 0.1);
+
+                iframe.style.width = `${a4.width}px`;
                 iframe.style.height = `${contentHeight}px`;
                 iframe.style.transform = `scale(${scale})`;
 
-                frame.style.width = `${A4_WIDTH_PX * scale}px`;
+                frame.style.width = `${a4.width * scale}px`;
                 frame.style.height = `${contentHeight * scale}px`;
             };
 
@@ -663,8 +676,8 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             const onIframeReady = () => {
                 ensurePrintCss();
                 resizePreview();
-                setTimeout(resizePreview, 150);
-                setTimeout(resizePreview, 450);
+                setTimeout(resizePreview, 120);
+                setTimeout(resizePreview, 320);
             };
 
             if (iframe.contentWindow?.document?.readyState === 'complete') {
@@ -681,28 +694,16 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
-        function prepareSinglePagePrint(iframe) {
+        function preparePrintScale(iframe) {
             const doc = iframe?.contentWindow?.document;
             if (!doc || !doc.body || !doc.documentElement) return null;
 
-            const probe = doc.createElement('div');
-            probe.style.position = 'absolute';
-            probe.style.visibility = 'hidden';
-            probe.style.pointerEvents = 'none';
-            probe.style.width = '210mm';
-            probe.style.height = '297mm';
-            doc.body.appendChild(probe);
-
-            const a4WidthPx = probe.getBoundingClientRect().width || 794;
-            const a4HeightPx = probe.getBoundingClientRect().height || 1123;
-            probe.remove();
-
-            const contentWidth = Math.max(doc.documentElement.scrollWidth || 0, doc.body.scrollWidth || 0, a4WidthPx);
-            const contentHeight = Math.max(doc.documentElement.scrollHeight || 0, doc.body.scrollHeight || 0, a4HeightPx);
-            const scale = Math.min(1, a4WidthPx / contentWidth, a4HeightPx / contentHeight);
+            const a4 = getA4Pixels(doc);
+            const contentWidth = Math.max(doc.documentElement.scrollWidth || 0, doc.body.scrollWidth || 0, a4.width);
+            const contentHeight = Math.max(doc.documentElement.scrollHeight || 0, doc.body.scrollHeight || 0, a4.height);
+            const scale = Math.min(1, a4.width / contentWidth, a4.height / contentHeight);
 
             const prev = {
-                htmlOverflow: doc.documentElement.style.overflow,
                 bodyTransform: doc.body.style.transform,
                 bodyTransformOrigin: doc.body.style.transformOrigin,
                 bodyWidth: doc.body.style.width,
@@ -710,7 +711,6 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 bodyMargin: doc.body.style.margin
             };
 
-            doc.documentElement.style.overflow = 'hidden';
             doc.body.style.margin = '0';
             doc.body.style.minHeight = '297mm';
 
@@ -724,7 +724,6 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
 
             return () => {
-                doc.documentElement.style.overflow = prev.htmlOverflow;
                 doc.body.style.transform = prev.bodyTransform;
                 doc.body.style.transformOrigin = prev.bodyTransformOrigin;
                 doc.body.style.width = prev.bodyWidth;
@@ -733,14 +732,18 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             };
         }
 
-
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
                 const iframe = document.querySelector('#previewContainer iframe');
                 if (!iframe || !iframe.contentWindow) return;
+
+                const restore = preparePrintScale(iframe);
                 iframe.contentWindow.focus();
                 iframe.contentWindow.print();
+                setTimeout(() => {
+                    if (typeof restore === 'function') restore();
+                }, 350);
             });
         }
     </script>
