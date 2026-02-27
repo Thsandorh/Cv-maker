@@ -717,6 +717,55 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             }
         }
 
+        function preparePrintScale(iframe) {
+            const doc = iframe?.contentWindow?.document;
+            if (!doc || !doc.body || !doc.documentElement) return null;
+
+            const a4 = getA4Pixels(doc);
+            const contentWidth = Math.max(doc.documentElement.scrollWidth || 0, doc.body.scrollWidth || 0, a4.width);
+            const contentHeight = Math.max(doc.documentElement.scrollHeight || 0, doc.body.scrollHeight || 0, a4.height);
+            const scale = Math.min(1, a4.width / contentWidth, a4.height / contentHeight);
+
+            const prev = {
+                htmlZoom: doc.documentElement.style.zoom,
+                htmlOverflow: doc.documentElement.style.overflow,
+                bodyTransform: doc.body.style.transform,
+                bodyTransformOrigin: doc.body.style.transformOrigin,
+                bodyWidth: doc.body.style.width,
+                bodyHeight: doc.body.style.height,
+                bodyMinHeight: doc.body.style.minHeight,
+                bodyMargin: doc.body.style.margin,
+                bodyOverflow: doc.body.style.overflow
+            };
+
+            doc.documentElement.style.overflow = 'hidden';
+            doc.body.style.margin = '0';
+            doc.body.style.width = '210mm';
+            doc.body.style.height = '297mm';
+            doc.body.style.minHeight = '297mm';
+            doc.body.style.overflow = 'hidden';
+
+            if (scale < 1) {
+                doc.documentElement.style.zoom = String(scale);
+                doc.body.style.transform = 'none';
+            } else {
+                doc.documentElement.style.zoom = '1';
+                doc.body.style.transform = 'none';
+            }
+
+            return () => {
+                doc.documentElement.style.zoom = prev.htmlZoom;
+                doc.documentElement.style.overflow = prev.htmlOverflow;
+                doc.body.style.transform = prev.bodyTransform;
+                doc.body.style.transformOrigin = prev.bodyTransformOrigin;
+                doc.body.style.width = prev.bodyWidth;
+                doc.body.style.height = prev.bodyHeight;
+                doc.body.style.minHeight = prev.bodyMinHeight;
+                doc.body.style.margin = prev.bodyMargin;
+                doc.body.style.overflow = prev.bodyOverflow;
+            };
+        }
+
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
