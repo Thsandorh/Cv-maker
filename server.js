@@ -69,8 +69,12 @@ const CV_TTL_MS = Number(process.env.CV_TTL_MS || 24 * 60 * 60 * 1000);
 const CV_PRICE_CENTS = Number(process.env.CV_PRICE_CENTS || 1990);
 const CV_CURRENCY = String(process.env.CV_CURRENCY || 'huf').toLowerCase();
 
-setInterval(() => {
-    purgeExpiredCvRecords(CV_TTL_MS);
+setInterval(async () => {
+    try {
+        await purgeExpiredCvRecords(CV_TTL_MS);
+    } catch (error) {
+        console.error('Failed to purge expired CV records:', error);
+    }
 }, 5 * 60 * 1000).unref();
 
 function getStripeMinimumAmount(currency) {
@@ -333,11 +337,9 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
             html = html.replace(/src="[^"]*(?:profile|avatar|user|portrait)[^"]*"/gi, `src="${dataUri}"`);
         }
 
-        const cvId = saveCvRecord(html);
+        const cvId = await saveCvRecord(html);
         const paymentEnabled = Boolean(stripe && stripePublishableKey);
         const previewHtml = paymentEnabled ? addPreviewWatermark(html) : html;
-
-        const checkoutAmount = getCheckoutUnitAmount();
 
         res.json({
             cvId,
@@ -362,7 +364,7 @@ app.post('/api/payments/stripe/create-checkout-session', async (req, res) => {
         }
 
         const { cvId } = req.body || {};
-        const record = getCvRecord(cvId, CV_TTL_MS);
+        const record = await getCvRecord(cvId, CV_TTL_MS);
         if (!record) {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
         }
@@ -398,7 +400,7 @@ app.post('/api/payments/stripe/create-checkout-session', async (req, res) => {
             }
         });
 
-        setCheckoutSessionId(cvId, session.id);
+        await setCheckoutSessionId(cvId, session.id);
 
         res.json({
             sessionId: session.id,
@@ -410,7 +412,7 @@ app.post('/api/payments/stripe/create-checkout-session', async (req, res) => {
     }
 });
 
-app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     try {
         if (!stripe || !stripeWebhookSecret) {
             return res.status(503).send('Stripe webhook is not configured on the server.');
@@ -429,7 +431,7 @@ app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' 
             return res.status(400).send(`Webhook signature error: ${error.message}`);
         }
 
-        if (isStripeEventProcessed(event.id)) {
+        if (await isStripeEventProcessed(event.id)) {
             return res.json({ received: true, duplicate: true });
         }
 
@@ -438,15 +440,15 @@ app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' 
             let cvId = session?.metadata?.cvId || null;
 
             if (!cvId && session?.id) {
-                cvId = findCvIdByCheckoutSessionId(session.id);
+                cvId = await findCvIdByCheckoutSessionId(session.id);
             }
 
             if (cvId) {
-                markCvPaid(cvId);
+                await markCvPaid(cvId);
             }
         }
 
-        markStripeEventProcessed(event.id);
+        await markStripeEventProcessed(event.id);
         res.json({ received: true });
     } catch (error) {
         console.error('Stripe webhook processing failed:', error);
@@ -468,10 +470,10 @@ app.get('/api/payments/stripe/verify', async (req, res) => {
         const session = await stripe.checkout.sessions.retrieve(sessionId);
         const paid = session.payment_status === 'paid';
         const cvIdFromMetadata = session.metadata?.cvId || null;
-        const cvId = cvIdFromMetadata || findCvIdByCheckoutSessionId(session.id);
+        const cvId = cvIdFromMetadata || await findCvIdByCheckoutSessionId(session.id);
 
         if (paid && cvId) {
-            markCvPaid(cvId);
+            await markCvPaid(cvId);
         }
 
         res.json({ paid, cvId });
@@ -481,19 +483,24 @@ app.get('/api/payments/stripe/verify', async (req, res) => {
     }
 });
 
-app.get('/api/cv/:cvId/full', (req, res) => {
-    const { cvId } = req.params;
-    const record = getCvRecord(cvId, CV_TTL_MS);
+app.get('/api/cv/:cvId/full', async (req, res) => {
+    try {
+        const { cvId } = req.params;
+        const record = await getCvRecord(cvId, CV_TTL_MS);
 
-    if (!record) {
-        return res.status(404).send('CV not found or expired. Please generate it again.');
+        if (!record) {
+            return res.status(404).send('CV not found or expired. Please generate it again.');
+        }
+
+        if (!record.paid) {
+            return res.status(402).send('Payment required before downloading full CV.');
+        }
+
+        res.type('html').send(record.fullHtml);
+    } catch (error) {
+        console.error('Failed to fetch full CV:', error);
+        res.status(500).send('Failed to fetch full CV.');
     }
-
-    if (!record.paid) {
-        return res.status(402).send('Payment required before downloading full CV.');
-    }
-
-    res.type('html').send(record.fullHtml);
 });
 
 app.get('/', (req, res) => {
