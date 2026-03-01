@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVPro AI - Prémium Önéletrajz Készítő</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3"></script>
     <link rel="stylesheet" href="style.css?v=1.0.3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -259,7 +260,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
 
             <!-- Előnézet Szekció -->
             <section class="flex flex-col space-y-6 sticky top-8">
-                <div class="neobrutalist-card p-2 rounded-xl flex-grow flex flex-col min-h-[800px] bg-brand-black">
+                <div class="neobrutalist-card p-2 rounded-xl flex flex-col bg-brand-black">
                     <div class="flex justify-between items-center mb-4 px-4 pt-4 text-white">
                         <div class="flex items-center space-x-2">
                             <div class="w-3 h-3 bg-red-500 rounded-full border border-black"></div>
@@ -267,12 +268,16 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                             <div class="w-3 h-3 bg-green-500 rounded-full border border-black"></div>
                             <span class="ml-3 text-xs font-bold uppercase tracking-widest text-gray-400">Élő előnézet</span>
                         </div>
+                        <button id="unlockCv" class="hidden bg-brand-yellow text-brand-black border-2 border-white px-4 py-1.5 rounded font-bold hover:bg-yellow-300 transition-all shadow-none hover:translate-y-0.5 text-xs uppercase flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 00-6 0v1m8 3H7a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2z"></path></svg>
+                            Feloldas Fizetessel
+                        </button>
                         <button id="downloadPdf" class="hidden bg-emerald-500 text-white border-2 border-white px-4 py-1.5 rounded font-bold hover:bg-emerald-600 transition-all shadow-none hover:translate-y-0.5 text-xs uppercase flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             PDF Mentése
                         </button>
                     </div>
-                    <div id="previewContainer" class="bg-white rounded-lg flex-grow flex items-center justify-center overflow-hidden relative border-2 border-gray-800 m-1">
+                    <div id="previewContainer" class="bg-white rounded-lg w-full aspect-[794/1123] flex items-center justify-center overflow-hidden relative border-2 border-gray-800 m-1">
                         <div class="text-center p-12 max-w-sm">
                             <div class="w-24 h-24 bg-gray-100 border-4 border-dashed border-gray-300 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -298,6 +303,29 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
     <script>
         // Critical UI Interaction Logic - Inline for reliability
         window.currentMode = 'structured';
+        window.currentCvId = null;
+        window.previewLocked = false;
+        window.hasGeneratedCv = false;
+
+        function updateActionButtons() {
+            const downloadBtn = document.getElementById('downloadPdf');
+            const unlockBtn = document.getElementById('unlockCv');
+            if (!downloadBtn || !unlockBtn) return;
+
+            if (!window.hasGeneratedCv) {
+                downloadBtn.classList.add('hidden');
+                unlockBtn.classList.add('hidden');
+                return;
+            }
+
+            if (window.previewLocked) {
+                downloadBtn.classList.add('hidden');
+                unlockBtn.classList.remove('hidden');
+            } else {
+                unlockBtn.classList.add('hidden');
+                downloadBtn.classList.remove('hidden');
+            }
+        }
 
         window.switchMode = function(mode) {
             try {
@@ -457,6 +485,113 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             } else {
                 console.error("Critical Error: CV Form not found!");
             }
+
+            const unlockBtn = document.getElementById('unlockCv');
+            if (unlockBtn) {
+                unlockBtn.addEventListener('click', startStripeCheckout);
+            }
+
+            window.currentCvId = localStorage.getItem('lastCvId');
+            updateActionButtons();
+            handlePaymentReturn();
+        }
+
+        async function loadUnlockedCv(cvId) {
+            if (!cvId) throw new Error('Missing CV identifier.');
+
+            const fullResponse = await fetch(`/api/cv/${encodeURIComponent(cvId)}/full`);
+            if (!fullResponse.ok) {
+                const errorText = await fullResponse.text();
+                throw new Error(errorText || 'A teljes CV letöltése sikertelen.');
+            }
+
+            const fullHtml = await fullResponse.text();
+            window.previewLocked = false;
+            window.currentCvId = cvId;
+            localStorage.setItem('lastCvId', cvId);
+            displayCV(fullHtml, { locked: false });
+        }
+
+        async function startStripeCheckout() {
+            try {
+                if (!window.currentCvId) {
+                    throw new Error('Nincs aktív CV. Előbb generálj egyet.');
+                }
+
+                if (typeof window.Stripe !== 'function') {
+                    throw new Error('Stripe script nem töltődött be.');
+                }
+
+                const response = await fetch('/api/payments/stripe/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cvId: window.currentCvId })
+                });
+
+                const payload = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(payload.error || 'Stripe fizetés indítása sikertelen.');
+                }
+
+                if (payload.alreadyPaid) {
+                    await loadUnlockedCv(payload.cvId || window.currentCvId);
+                    return;
+                }
+
+                const stripe = window.Stripe(payload.publishableKey);
+                const result = await stripe.redirectToCheckout({ sessionId: payload.sessionId });
+                if (result && result.error) {
+                    throw new Error(result.error.message || 'Stripe checkout átirányítás sikertelen.');
+                }
+            } catch (error) {
+                console.error('Stripe checkout error:', error);
+                alert('Fizetési hiba: ' + error.message);
+            }
+        }
+
+        async function handlePaymentReturn() {
+            const params = new URLSearchParams(window.location.search);
+            const paymentState = params.get('payment');
+            const sessionId = params.get('session_id');
+
+            if (paymentState === 'cancelled') {
+                alert('A fizetés megszakadt. A preview továbbra is vízjeles.');
+                params.delete('payment');
+                params.delete('session_id');
+                const nextQuery = params.toString();
+                const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
+                window.history.replaceState({}, '', nextUrl);
+                return;
+            }
+
+            if (paymentState !== 'success' || !sessionId) {
+                return;
+            }
+
+            try {
+                const verifyResponse = await fetch(`/api/payments/stripe/verify?session_id=${encodeURIComponent(sessionId)}`);
+                const verifyPayload = await verifyResponse.json().catch(() => ({}));
+
+                if (!verifyResponse.ok) {
+                    throw new Error(verifyPayload.error || 'Fizetés ellenőrzése sikertelen.');
+                }
+
+                if (!verifyPayload.paid || !verifyPayload.cvId) {
+                    throw new Error('A Stripe fizetés még nem teljesült.');
+                }
+
+                await loadUnlockedCv(verifyPayload.cvId);
+                alert('Sikeres fizetés. A teljes CV feloldva.');
+            } catch (error) {
+                console.error('Payment verification error:', error);
+                alert('Fizetés ellenőrzési hiba: ' + error.message);
+            } finally {
+                params.delete('payment');
+                params.delete('session_id');
+                const nextQuery = params.toString();
+                const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
+                window.history.replaceState({}, '', nextUrl);
+            }
         }
 
         if (document.readyState === 'loading') {
@@ -553,8 +688,27 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                     throw new Error(errorText || 'Hiba történt a generálás során');
                 }
 
-                const htmlContent = await response.text();
-                displayCV(htmlContent);
+                const contentType = response.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const data = await response.json();
+                    if (!data.previewHtml) {
+                        throw new Error('A szerver nem adott vissza előnézeti HTML-t.');
+                    }
+
+                    window.currentCvId = data.cvId || null;
+                    window.previewLocked = Boolean(data.locked);
+                    window.hasGeneratedCv = true;
+                    if (window.currentCvId) {
+                        localStorage.setItem('lastCvId', window.currentCvId);
+                    }
+
+                    displayCV(data.previewHtml, { locked: window.previewLocked });
+                } else {
+                    const htmlContent = await response.text();
+                    window.previewLocked = false;
+                    window.hasGeneratedCv = true;
+                    displayCV(htmlContent, { locked: false });
+                }
             } catch (error) {
                 console.error('Hiba:', error);
                 alert('Hiba történt: ' + error.message);
@@ -633,9 +787,14 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             return { scale, a4 };
         }
 
-        function displayCV(html) {
+        function displayCV(html, options = {}) {
             const container = document.getElementById('previewContainer');
             if (!container) return;
+
+            if (typeof options.locked === 'boolean') {
+                window.previewLocked = options.locked;
+            }
+            window.hasGeneratedCv = true;
 
             container.innerHTML = '';
             container.classList.add('overflow-hidden');
@@ -647,7 +806,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             viewport.style.overflow = 'auto';
             viewport.style.display = 'flex';
             viewport.style.justifyContent = 'center';
-            viewport.style.alignItems = 'flex-start';
+            viewport.style.alignItems = 'center';
             viewport.style.padding = '8px';
             viewport.style.boxSizing = 'border-box';
             viewport.style.background = '#eef0f3';
@@ -692,7 +851,8 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 iframeDoc.body.style.overflow = 'hidden';
 
                 const availableWidth = Math.max(viewport.clientWidth - 16, 1);
-                const previewScale = Math.max(availableWidth / a4.width, 0.1);
+                const availableHeight = Math.max(viewport.clientHeight - 16, 1);
+                const previewScale = Math.max(Math.min(availableWidth / a4.width, availableHeight / a4.height), 0.1);
 
                 iframe.style.width = `${a4.width}px`;
                 iframe.style.height = `${a4.height}px`;
@@ -720,8 +880,7 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 iframe.addEventListener('load', onIframeReady, { once: true });
             }
 
-            const downloadBtn = document.getElementById('downloadPdf');
-            if (downloadBtn) downloadBtn.classList.remove('hidden');
+            updateActionButtons();
 
             if (window.innerWidth < 1024) {
                 container.scrollIntoView({ behavior: 'smooth' });
@@ -780,6 +939,11 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
+                if (window.previewLocked) {
+                    alert('A letöltés fizetés után elérhető.');
+                    return;
+                }
+
                 const iframe = document.querySelector('#previewContainer iframe');
                 if (!iframe || !iframe.contentWindow) return;
 

@@ -33,6 +33,8 @@ describe('API Test', () => {
       .field('theme', 'modern');
 
     expect(res.statusCode).toEqual(200);
-    expect(res.text).toContain('Hungarian CV content');
+    expect(res.body).toHaveProperty('cvId');
+    expect(res.body).toHaveProperty('previewHtml');
+    expect(res.body.previewHtml).toContain('Hungarian CV content');
   });
 });

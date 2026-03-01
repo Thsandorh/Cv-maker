@@ -2,12 +2,35 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const {
+    saveCvRecord,
+    getCvRecord,
+    markCvPaid,
+    setCheckoutSessionId,
+    findCvIdByCheckoutSessionId,
+    purgeExpiredCvRecords,
+    isStripeEventProcessed,
+    markStripeEventProcessed
+} = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
+const jsonParser = express.json();
+app.use((req, res, next) => {
+    if (req.path === '/api/payments/stripe/webhook') {
+        return next();
+    }
+    return jsonParser(req, res, next);
+});
+
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        return res.status(400).json({ error: 'Invalid JSON body.' });
+    }
+    next(err);
+});
 
 // Serve static files with explicit MIME types
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -36,6 +59,88 @@ const upload = multer({
 });
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const stripe = stripeSecretKey ? require('stripe')(stripeSecretKey) : null;
+
+const CV_TTL_MS = Number(process.env.CV_TTL_MS || 24 * 60 * 60 * 1000);
+const CV_PRICE_CENTS = Number(process.env.CV_PRICE_CENTS || 1990);
+const CV_CURRENCY = String(process.env.CV_CURRENCY || 'huf').toLowerCase();
+
+setInterval(() => {
+    purgeExpiredCvRecords(CV_TTL_MS);
+}, 5 * 60 * 1000).unref();
+
+function getStripeMinimumAmount(currency) {
+    if (currency === 'huf') return 175;
+    return 50;
+}
+
+function getCurrencyUnitMultiplier(currency) {
+    // Stripe may treat HUF as 2-decimal in current API/account context.
+    if (currency === 'huf') return 100;
+    return 1;
+}
+
+function getCheckoutUnitAmount() {
+    const normalized = Number.isFinite(CV_PRICE_CENTS) ? Math.round(CV_PRICE_CENTS) : 0;
+    const multiplier = getCurrencyUnitMultiplier(CV_CURRENCY);
+    const configuredUnits = CV_CURRENCY === 'huf' ? normalized * multiplier : normalized;
+    const minimumUnits = getStripeMinimumAmount(CV_CURRENCY) * multiplier;
+    return Math.max(configuredUnits, minimumUnits);
+}
+
+function getDisplayAmount() {
+    const normalized = Number.isFinite(CV_PRICE_CENTS) ? Math.round(CV_PRICE_CENTS) : 0;
+    return Math.max(normalized, getStripeMinimumAmount(CV_CURRENCY));
+}
+
+function addPreviewWatermark(html) {
+    const overlayStyles = `
+<style id="cv-preview-watermark-style">
+    #cv-preview-watermark-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2147483647;
+        background: repeating-linear-gradient(
+            -30deg,
+            rgba(220, 38, 38, 0.14) 0,
+            rgba(220, 38, 38, 0.14) 90px,
+            rgba(255, 255, 255, 0) 90px,
+            rgba(255, 255, 255, 0) 180px
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #cv-preview-watermark-overlay .cv-preview-watermark-label {
+        font-family: Arial, sans-serif;
+        font-weight: 800;
+        font-size: 40px;
+        color: rgba(127, 29, 29, 0.25);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transform: rotate(-24deg);
+        border: 4px solid rgba(127, 29, 29, 0.25);
+        padding: 16px 28px;
+        background: rgba(255, 255, 255, 0.45);
+    }
+</style>`;
+
+    const overlayMarkup = `
+<div id="cv-preview-watermark-overlay" aria-hidden="true">
+    <div class="cv-preview-watermark-label">Preview / Fizetés Szükséges</div>
+</div>`;
+
+    const withBodyOverlay = /<\/body>/i.test(html)
+        ? html.replace(/<\/body>/i, `${overlayStyles}${overlayMarkup}</body>`)
+        : `${html}${overlayStyles}${overlayMarkup}`;
+
+    return withBodyOverlay;
+}
 
 app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) => {
     try {
@@ -228,12 +333,167 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
             html = html.replace(/src="[^"]*(?:profile|avatar|user|portrait)[^"]*"/gi, `src="${dataUri}"`);
         }
 
-        res.send(html);
+        const cvId = saveCvRecord(html);
+        const paymentEnabled = Boolean(stripe && stripePublishableKey);
+        const previewHtml = paymentEnabled ? addPreviewWatermark(html) : html;
+
+        const checkoutAmount = getCheckoutUnitAmount();
+
+        res.json({
+            cvId,
+            previewHtml,
+            locked: paymentEnabled,
+            price: {
+                amount: getDisplayAmount(),
+                currency: CV_CURRENCY
+            }
+        });
     } catch (error) {
         console.error('Error generating CV:', error);
         const status = error.name === 'MulterError' ? 400 : 500;
         res.status(status).send('Error generating CV: ' + error.message);
     }
+});
+
+app.post('/api/payments/stripe/create-checkout-session', async (req, res) => {
+    try {
+        if (!stripe || !stripePublishableKey) {
+            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
+        }
+
+        const { cvId } = req.body || {};
+        const record = getCvRecord(cvId, CV_TTL_MS);
+        if (!record) {
+            return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
+        }
+
+        if (record.paid) {
+            return res.json({ alreadyPaid: true, cvId });
+        }
+
+        const appBaseUrl = process.env.APP_BASE_URL || `${req.protocol}://${req.get('host')}`;
+        const successUrl = `${appBaseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+        const cancelUrl = `${appBaseUrl}/?payment=cancelled&cvId=${encodeURIComponent(cvId)}`;
+
+        const checkoutAmount = getCheckoutUnitAmount();
+
+        const session = await stripe.checkout.sessions.create({
+            mode: 'payment',
+            payment_method_types: ['card'],
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+            line_items: [{
+                quantity: 1,
+                price_data: {
+                    currency: CV_CURRENCY,
+                    unit_amount: checkoutAmount,
+                    product_data: {
+                        name: 'CV feloldas es letoltes',
+                        description: 'Teljes, vizjel nelkuli oneletrajz'
+                    }
+                }
+            }],
+            metadata: {
+                cvId
+            }
+        });
+
+        setCheckoutSessionId(cvId, session.id);
+
+        res.json({
+            sessionId: session.id,
+            publishableKey: stripePublishableKey
+        });
+    } catch (error) {
+        console.error('Stripe checkout creation failed:', error);
+        res.status(500).json({ error: 'Failed to create Stripe checkout session.' });
+    }
+});
+
+app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+    try {
+        if (!stripe || !stripeWebhookSecret) {
+            return res.status(503).send('Stripe webhook is not configured on the server.');
+        }
+
+        const signature = req.headers['stripe-signature'];
+        if (!signature) {
+            return res.status(400).send('Missing stripe-signature header.');
+        }
+
+        let event;
+        try {
+            event = stripe.webhooks.constructEvent(req.body, signature, stripeWebhookSecret);
+        } catch (error) {
+            console.error('Invalid Stripe webhook signature:', error.message);
+            return res.status(400).send(`Webhook signature error: ${error.message}`);
+        }
+
+        if (isStripeEventProcessed(event.id)) {
+            return res.json({ received: true, duplicate: true });
+        }
+
+        if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
+            const session = event.data.object;
+            let cvId = session?.metadata?.cvId || null;
+
+            if (!cvId && session?.id) {
+                cvId = findCvIdByCheckoutSessionId(session.id);
+            }
+
+            if (cvId) {
+                markCvPaid(cvId);
+            }
+        }
+
+        markStripeEventProcessed(event.id);
+        res.json({ received: true });
+    } catch (error) {
+        console.error('Stripe webhook processing failed:', error);
+        res.status(500).send('Webhook processing failed.');
+    }
+});
+
+app.get('/api/payments/stripe/verify', async (req, res) => {
+    try {
+        if (!stripe) {
+            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
+        }
+
+        const sessionId = req.query.session_id;
+        if (!sessionId) {
+            return res.status(400).json({ error: 'Missing session_id query parameter.' });
+        }
+
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        const paid = session.payment_status === 'paid';
+        const cvIdFromMetadata = session.metadata?.cvId || null;
+        const cvId = cvIdFromMetadata || findCvIdByCheckoutSessionId(session.id);
+
+        if (paid && cvId) {
+            markCvPaid(cvId);
+        }
+
+        res.json({ paid, cvId });
+    } catch (error) {
+        console.error('Stripe verification failed:', error);
+        res.status(500).json({ error: 'Failed to verify payment status.' });
+    }
+});
+
+app.get('/api/cv/:cvId/full', (req, res) => {
+    const { cvId } = req.params;
+    const record = getCvRecord(cvId, CV_TTL_MS);
+
+    if (!record) {
+        return res.status(404).send('CV not found or expired. Please generate it again.');
+    }
+
+    if (!record.paid) {
+        return res.status(402).send('Payment required before downloading full CV.');
+    }
+
+    res.type('html').send(record.fullHtml);
 });
 
 app.get('/', (req, res) => {
