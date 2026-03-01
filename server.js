@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const { rateLimit } = require('express-rate-limit');
 const {
     saveCvRecord,
     getCvRecord,
@@ -15,6 +16,7 @@ const {
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.set('trust proxy', 1);
 
 // Middleware
 const jsonParser = express.json();
@@ -64,10 +66,30 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = stripeSecretKey ? require('stripe')(stripeSecretKey) : null;
+const recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || '';
+const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY || '';
 
 const CV_TTL_MS = Number(process.env.CV_TTL_MS || 24 * 60 * 60 * 1000);
 const CV_PRICE_CENTS = Number(process.env.CV_PRICE_CENTS || 1990);
 const CV_CURRENCY = String(process.env.CV_CURRENCY || 'huf').toLowerCase();
+const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000);
+const RATE_LIMIT_GENERATE_MAX = Number(process.env.RATE_LIMIT_GENERATE_MAX || 10);
+const RATE_LIMIT_CHECKOUT_MAX = Number(process.env.RATE_LIMIT_CHECKOUT_MAX || 5);
+const RATE_LIMIT_VERIFY_MAX = Number(process.env.RATE_LIMIT_VERIFY_MAX || 20);
+
+function createLimiter(max, message) {
+    return rateLimit({
+        windowMs: RATE_LIMIT_WINDOW_MS,
+        max,
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: { error: message }
+    });
+}
+
+const generateCvLimiter = createLimiter(RATE_LIMIT_GENERATE_MAX, 'Too many CV generations. Please try again later.');
+const checkoutLimiter = createLimiter(RATE_LIMIT_CHECKOUT_MAX, 'Too many payment attempts. Please try again later.');
+const verifyLimiter = createLimiter(RATE_LIMIT_VERIFY_MAX, 'Too many verification attempts. Please try again later.');
 
 setInterval(async () => {
     try {
@@ -99,6 +121,49 @@ function getCheckoutUnitAmount() {
 function getDisplayAmount() {
     const normalized = Number.isFinite(CV_PRICE_CENTS) ? Math.round(CV_PRICE_CENTS) : 0;
     return Math.max(normalized, getStripeMinimumAmount(CV_CURRENCY));
+}
+
+function isRecaptchaEnabled() {
+    return Boolean(recaptchaSiteKey && recaptchaSecretKey);
+}
+
+async function verifyRecaptchaToken(token, remoteIp) {
+    if (!isRecaptchaEnabled()) {
+        return { ok: true, skipped: true };
+    }
+
+    if (!token) {
+        return { ok: false, reason: 'missing-token' };
+    }
+
+    const body = new URLSearchParams({
+        secret: recaptchaSecretKey,
+        response: token
+    });
+    if (remoteIp) {
+        body.set('remoteip', remoteIp);
+    }
+
+    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body
+    });
+
+    if (!response.ok) {
+        return { ok: false, reason: 'verify-request-failed', status: response.status };
+    }
+
+    const payload = await response.json();
+    if (!payload.success) {
+        return {
+            ok: false,
+            reason: 'verify-failed',
+            details: payload['error-codes'] || []
+        };
+    }
+
+    return { ok: true, payload };
 }
 
 function addPreviewWatermark(html) {
@@ -146,8 +211,14 @@ function addPreviewWatermark(html) {
     return withBodyOverlay;
 }
 
-app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) => {
+app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'), async (req, res) => {
     try {
+        const recaptchaToken = req.body?.recaptchaToken;
+        const recaptcha = await verifyRecaptchaToken(recaptchaToken, req.ip);
+        if (!recaptcha.ok) {
+            return res.status(400).json({ error: 'reCAPTCHA verification failed.' });
+        }
+
         if (!process.env.GEMINI_API_KEY) {
             throw new Error("GEMINI_API_KEY is not configured in environment variables.");
         }
@@ -357,7 +428,7 @@ app.post('/api/generate-cv', upload.single('profilePicture'), async (req, res) =
     }
 });
 
-app.post('/api/payments/stripe/create-checkout-session', async (req, res) => {
+app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async (req, res) => {
     try {
         if (!stripe || !stripePublishableKey) {
             return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
@@ -456,7 +527,7 @@ app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' 
     }
 });
 
-app.get('/api/payments/stripe/verify', async (req, res) => {
+app.get('/api/payments/stripe/verify', verifyLimiter, async (req, res) => {
     try {
         if (!stripe) {
             return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
@@ -480,6 +551,41 @@ app.get('/api/payments/stripe/verify', async (req, res) => {
     } catch (error) {
         console.error('Stripe verification failed:', error);
         res.status(500).json({ error: 'Failed to verify payment status.' });
+    }
+});
+
+app.get('/api/public-config', (req, res) => {
+    res.json({
+        recaptchaSiteKey: recaptchaSiteKey || null,
+        recaptchaEnabled: Boolean(recaptchaSiteKey)
+    });
+});
+
+app.get('/api/cv/:cvId/preview', async (req, res) => {
+    try {
+        const { cvId } = req.params;
+        const record = await getCvRecord(cvId, CV_TTL_MS);
+
+        if (!record) {
+            return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
+        }
+
+        if (record.paid) {
+            return res.json({
+                cvId,
+                locked: false,
+                previewHtml: record.fullHtml
+            });
+        }
+
+        return res.json({
+            cvId,
+            locked: true,
+            previewHtml: addPreviewWatermark(record.fullHtml)
+        });
+    } catch (error) {
+        console.error('Failed to fetch preview CV:', error);
+        res.status(500).json({ error: 'Failed to fetch preview CV.' });
     }
 });
 
