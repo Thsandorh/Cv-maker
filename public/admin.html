@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVKeszito Admin</title>
+    <meta name="robots" content="noindex,nofollow">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+    <div class="mx-auto max-w-6xl px-4 py-8">
+        <header class="mb-8 rounded-2xl border border-slate-700 bg-slate-900/70 p-6 backdrop-blur">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-cyan-300">Admin</p>
+                    <h1 class="text-3xl font-black">CVKeszito Dashboard</h1>
+                    <p class="text-sm text-slate-400">Security first admin panel for analytics and Stripe logs.</p>
+                </div>
+                <button id="logoutBtn" class="hidden rounded-lg border border-slate-600 bg-slate-800 px-4 py-2 text-sm font-semibold hover:bg-slate-700">Logout</button>
+            </div>
+        </header>
+
+        <section id="loginSection" class="mx-auto max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6">
+            <h2 class="mb-2 text-xl font-bold">Admin Login</h2>
+            <p class="mb-4 text-sm text-slate-400">Use your ADMIN_PANEL_TOKEN.</p>
+            <form id="loginForm" class="space-y-3">
+                <input id="adminToken" type="password" autocomplete="off" class="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2" placeholder="Admin token" required>
+                <button type="submit" class="w-full rounded-lg bg-cyan-500 px-4 py-2 font-bold text-slate-950 hover:bg-cyan-400">Sign In</button>
+            </form>
+            <p id="loginMessage" class="mt-3 text-sm text-rose-300"></p>
+        </section>
+
+        <section id="panelSection" class="hidden space-y-6">
+            <nav class="flex flex-wrap gap-2">
+                <button data-tab="analytics" class="tab-btn rounded-lg border border-cyan-400 bg-cyan-500 px-4 py-2 text-sm font-bold text-slate-950">Analytics</button>
+                <button data-tab="stripe-events" class="tab-btn rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-sm font-semibold">Stripe Events</button>
+                <button data-tab="stripe-sessions" class="tab-btn rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-sm font-semibold">Stripe Sessions</button>
+                <button data-tab="tools" class="tab-btn rounded-lg border border-slate-600 bg-slate-900 px-4 py-2 text-sm font-semibold">Tools</button>
+            </nav>
+
+            <article id="tab-analytics" class="tab-panel rounded-2xl border border-slate-700 bg-slate-900 p-6">
+                <div class="mb-4 flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-bold">Analytics Summary</h2>
+                    <button id="refreshAnalyticsBtn" class="rounded-lg border border-slate-600 px-3 py-1 text-sm hover:bg-slate-800">Refresh</button>
+                </div>
+                <div id="analyticsCards" class="grid grid-cols-1 gap-4 md:grid-cols-5"></div>
+            </article>
+
+            <article id="tab-stripe-events" class="tab-panel hidden rounded-2xl border border-slate-700 bg-slate-900 p-6">
+                <div class="mb-4 flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-bold">Stripe Events</h2>
+                    <button id="refreshEventsBtn" class="rounded-lg border border-slate-600 px-3 py-1 text-sm hover:bg-slate-800">Refresh</button>
+                </div>
+                <pre id="stripeEventsOutput" class="max-h-[28rem] overflow-auto rounded-lg border border-slate-700 bg-slate-950 p-4 text-xs"></pre>
+            </article>
+
+            <article id="tab-stripe-sessions" class="tab-panel hidden rounded-2xl border border-slate-700 bg-slate-900 p-6">
+                <div class="mb-4 flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-bold">Stripe Checkout Sessions</h2>
+                    <button id="refreshSessionsBtn" class="rounded-lg border border-slate-600 px-3 py-1 text-sm hover:bg-slate-800">Refresh</button>
+                </div>
+                <pre id="stripeSessionsOutput" class="max-h-[28rem] overflow-auto rounded-lg border border-slate-700 bg-slate-950 p-4 text-xs"></pre>
+            </article>
+
+            <article id="tab-tools" class="tab-panel hidden rounded-2xl border border-slate-700 bg-slate-900 p-6 space-y-4">
+                <h2 class="text-xl font-bold">Admin Tools</h2>
+                <div class="grid gap-3 md:grid-cols-[1fr_auto]">
+                    <input id="trackedCvId" type="text" class="rounded-lg border border-slate-600 bg-slate-950 px-3 py-2" placeholder="CV ID for tracked download link">
+                    <button id="createTrackedBtn" class="rounded-lg bg-cyan-500 px-4 py-2 font-bold text-slate-950 hover:bg-cyan-400">Create Tracked Link</button>
+                </div>
+                <input id="trackedLink" type="text" readonly class="w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2" placeholder="Tracked link appears here">
+                <p id="toolsMessage" class="text-sm text-slate-400"></p>
+            </article>
+        </section>
+    </div>
+
+    <script>
+        const loginSection = document.getElementById('loginSection');
+        const panelSection = document.getElementById('panelSection');
+        const loginMessage = document.getElementById('loginMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        async function apiFetch(url, options = {}) {
+            const response = await fetch(url, {
+                credentials: 'include',
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                }
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || 'Request failed');
+            }
+            return payload;
+        }
+
+        function setAuthedUi(isAuthed) {
+            loginSection.classList.toggle('hidden', isAuthed);
+            panelSection.classList.toggle('hidden', !isAuthed);
+            logoutBtn.classList.toggle('hidden', !isAuthed);
+        }
+
+        function setActiveTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach((btn) => {
+                const active = btn.dataset.tab === tabId;
+                btn.classList.toggle('bg-cyan-500', active);
+                btn.classList.toggle('border-cyan-400', active);
+                btn.classList.toggle('text-slate-950', active);
+                btn.classList.toggle('bg-slate-900', !active);
+                btn.classList.toggle('border-slate-600', !active);
+                btn.classList.toggle('text-slate-100', !active);
+            });
+
+            document.querySelectorAll('.tab-panel').forEach((panel) => {
+                panel.classList.toggle('hidden', panel.id !== `tab-${tabId}`);
+            });
+        }
+
+        function renderAnalytics(summary) {
+            const cards = [
+                { label: 'Generations', value: summary.generated || 0 },
+                { label: 'Checkout Starts', value: summary.checkoutStarted || 0 },
+                { label: 'Payments', value: summary.paymentSuccess || 0 },
+                { label: 'Downloads', value: summary.downloads || 0 },
+                { label: 'Conversion', value: `${summary.conversionRate || 0}%` }
+            ];
+
+            document.getElementById('analyticsCards').innerHTML = cards.map((card) => `
+                <div class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                    <p class="text-xs uppercase tracking-wider text-slate-400">${card.label}</p>
+                    <p class="mt-2 text-2xl font-black">${card.value}</p>
+                </div>
+            `).join('');
+        }
+
+        async function loadAnalytics() {
+            const now = Date.now();
+            const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+            const data = await apiFetch(`/api/admin/analytics/summary?from=${thirtyDaysAgo}&to=${now}`);
+            renderAnalytics(data.summary || {});
+        }
+
+        async function loadStripeEvents() {
+            const data = await apiFetch('/api/admin/stripe/logs?kind=events&limit=30');
+            document.getElementById('stripeEventsOutput').textContent = JSON.stringify(data.items || [], null, 2);
+        }
+
+        async function loadStripeSessions() {
+            const data = await apiFetch('/api/admin/stripe/logs?kind=sessions&limit=30');
+            document.getElementById('stripeSessionsOutput').textContent = JSON.stringify(data.items || [], null, 2);
+        }
+
+        async function bootstrapAdminPanel() {
+            try {
+                await apiFetch('/api/admin/me');
+                setAuthedUi(true);
+                await Promise.all([loadAnalytics(), loadStripeEvents(), loadStripeSessions()]);
+                setActiveTab('analytics');
+            } catch {
+                setAuthedUi(false);
+                setActiveTab('analytics');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            loginMessage.textContent = '';
+
+            try {
+                const token = document.getElementById('adminToken').value.trim();
+                await apiFetch('/api/admin/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ token })
+                });
+                document.getElementById('adminToken').value = '';
+                await bootstrapAdminPanel();
+            } catch (error) {
+                loginMessage.textContent = error.message;
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await apiFetch('/api/admin/logout', { method: 'POST' });
+            } catch {
+                // Ignore logout API errors and force local state reset.
+            }
+            setAuthedUi(false);
+            loginMessage.textContent = '';
+        });
+
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+            btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+        });
+
+        document.getElementById('refreshAnalyticsBtn').addEventListener('click', async () => {
+            try {
+                await loadAnalytics();
+            } catch (error) {
+                alert(`Analytics error: ${error.message}`);
+            }
+        });
+
+        document.getElementById('refreshEventsBtn').addEventListener('click', async () => {
+            try {
+                await loadStripeEvents();
+            } catch (error) {
+                alert(`Stripe events error: ${error.message}`);
+            }
+        });
+
+        document.getElementById('refreshSessionsBtn').addEventListener('click', async () => {
+            try {
+                await loadStripeSessions();
+            } catch (error) {
+                alert(`Stripe sessions error: ${error.message}`);
+            }
+        });
+
+        document.getElementById('createTrackedBtn').addEventListener('click', async () => {
+            const cvId = document.getElementById('trackedCvId').value.trim();
+            const message = document.getElementById('toolsMessage');
+            message.textContent = '';
+
+            if (!cvId) {
+                message.textContent = 'Please provide a CV ID.';
+                return;
+            }
+
+            try {
+                const data = await apiFetch('/api/admin/cv/tracked-download-link', {
+                    method: 'POST',
+                    body: JSON.stringify({ cvId })
+                });
+                document.getElementById('trackedLink').value = data.url || '';
+                message.textContent = 'Tracked link generated successfully.';
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+
+        bootstrapAdminPanel();
+    </script>
+</body>
+</html>

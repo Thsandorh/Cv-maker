@@ -3,7 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cvkeszito.eu</title>
+    <title>CVPro AI &gt; CVK&eacute;sz&iacute;tĹ‘.eu</title>
+    <meta name="description" content="AI &ouml;n&eacute;letrajz k&eacute;sz&iacute;tĹ‘ magyarul: profi CV gener&aacute;l&aacute;s, &eacute;lĹ‘ preview, sablonv&aacute;laszt&aacute;s, biztons&aacute;gos fizet&eacute;ssel feloldhat&oacute; let&ouml;lt&eacute;s &eacute;s gyors PDF export.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+    <meta name="theme-color" content="#5E17EB">
+    <meta name="author" content="CVK&eacute;sz&iacute;tĹ‘.eu">
+    <link rel="canonical" href="https://cvkeszito.eu/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="hu_HU">
+    <meta property="og:site_name" content="CVK&eacute;sz&iacute;tĹ‘.eu">
+    <meta property="og:url" content="https://cvkeszito.eu/">
+    <meta property="og:title" content="CVPro AI | CVK&eacute;sz&iacute;tĹ‘.eu">
+    <meta property="og:description" content="K&eacute;sz&iacute;ts profi &ouml;n&eacute;letrajzot AI seg&iacute;ts&eacute;ggel percek alatt, magyar nyelven.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="CVPro AI | CVK&eacute;sz&iacute;tĹ‘.eu">
+    <meta name="twitter:description" content="AI &ouml;n&eacute;letrajz k&eacute;sz&iacute;tĹ‘: gyors gener&aacute;l&aacute;s, &eacute;lĹ‘ elĹ‘n&eacute;zet, azonnali PDF.">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "WebSite",
+                    "name": "CVKeszito.eu",
+                    "url": "https://cvkeszito.eu/",
+                    "inLanguage": "hu-HU"
+                },
+                {
+                    "@type": "SoftwareApplication",
+                    "name": "CVPro AI",
+                    "applicationCategory": "BusinessApplication",
+                    "operatingSystem": "Web",
+                    "url": "https://cvkeszito.eu/",
+                    "inLanguage": "hu-HU",
+                    "description": "AI-alapu oneletrajz keszito szolgaltatas magyar allaskeresoknek."
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": "Ingyenes a CV generalas?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Igen, a CV generalasa ingyenes. A teljes, letoltheto valtozat a fizetes utan erheto el."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Mennyi ido alatt keszul el az oneletrajz?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "A rendszer altalaban nehany masodperc alatt general egy nyomtatasra kesz valtozatot."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Mukodik magyar nyelvu adatokkal is?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Igen, a CVPro AI magyar szoveggel is hasznalhato es magyar allaspalyazatokhoz optimalizalhato."
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.stripe.com/v3"></script>
     <link rel="stylesheet" href="style.css?v=1.0.3">
@@ -99,8 +164,8 @@
 
         <header class="text-center mb-16 max-w-4xl mx-auto">
             <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-tight">
-                Ă‰PĂŤTSD A JĂ–VĹD <br>
-                <span class="bg-brand-blue text-white px-2 decoration-clone shadow-neobrutalist transform -skew-x-6 inline-block">MOST RĂ–GTĂ–N</span>
+                AI &Ouml;N&Eacute;LETRAJZ K&Eacute;SZ&Iacute;TĹ <br>
+                <span class="bg-brand-blue text-white px-2 decoration-clone shadow-neobrutalist transform -skew-x-6 inline-block">CVPRO AI / CVK&Eacute;SZ&Iacute;TĹ.EU</span>
             </h1>
             <p class="text-xl md:text-2xl font-medium text-gray-700 max-w-2xl mx-auto border-l-4 border-brand-yellow pl-6 py-2 bg-white shadow-sm">
                 Profi, meggyĹ‘zĹ‘ Ă¶nĂ©letrajz mĂˇsodpercek alatt. <br>
@@ -293,6 +358,129 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
                 </div>
             </section>
         </main>
+
+        <section class="mt-12 grid grid-cols-1 xl:grid-cols-2 gap-8" aria-label="Halado funkciok">
+            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
+                <h2 class="text-2xl font-black uppercase">ATS ellenorzes</h2>
+                <p class="text-sm text-gray-700">Adj meg pozicioleirast, es kapsz pontszamot kulcsszo, struktura es olvashatosag szerint.</p>
+                <textarea id="atsJobDescription" rows="5" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Masold be az allashirdetest ide..."></textarea>
+                <button type="button" onclick="analyzeAtsScore()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">ATS elemzes</button>
+                <div id="atsResult" class="text-sm text-gray-800 bg-gray-50 border-2 border-brand-black rounded-lg p-3 min-h-[120px]"></div>
+            </article>
+
+            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
+                <h2 class="text-2xl font-black uppercase">Tobbnyelvu export</h2>
+                <p class="text-sm text-gray-700">Egy kattintasos HU / EN / DE valtozat, nyelvi finomhangolassal.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <select id="exportLanguage" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
+                        <option value="hu">Magyar (HU)</option>
+                        <option value="en">English (EN)</option>
+                        <option value="de">Deutsch (DE)</option>
+                    </select>
+                    <select id="exportTone" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
+                        <option value="professional">Professional</option>
+                        <option value="concise">Concise</option>
+                        <option value="confident">Confident</option>
+                    </select>
+                    <input id="exportRegion" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="pl. UK / DACH">
+                </div>
+                <button type="button" onclick="exportLanguageVersion()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Nyelvi valtozat generalas</button>
+                <div id="exportResult" class="text-sm text-gray-800 bg-gray-50 border-2 border-brand-black rounded-lg p-3 min-h-[70px]"></div>
+            </article>
+
+            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
+                <h2 class="text-2xl font-black uppercase">Pozicio-specifikus verziok</h2>
+                <p class="text-sm text-gray-700">Ugyanabbol az alap CV-bol ments celzott valtozatokat.</p>
+                <input id="targetJobTitle" type="text" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Celpozicio neve">
+                <textarea id="targetJobDescription" rows="4" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Pozicio leiras / elvarasok"></textarea>
+                <input id="targetFocusAreas" type="text" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Fokusz: pl. leadership, React, B2B sales">
+                <button type="button" onclick="createTargetedVersion()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Celzott verzio keszitese</button>
+                <div>
+                    <h3 class="text-sm font-black uppercase mb-2">Mentett valtozatok</h3>
+                    <div id="cvVersionList" class="space-y-2 text-sm"></div>
+                </div>
+            </article>
+
+            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
+                <h2 class="text-2xl font-black uppercase">Cover letter generator</h2>
+                <p class="text-sm text-gray-700">A CV adatai es allashirdetes alapjan szemelyre szabott motivacios level.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input id="clJobTitle" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Pozicio">
+                    <input id="clCompany" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Ceg neve">
+                </div>
+                <textarea id="clJobDescription" rows="4" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Allashirdetes / rovid brief"></textarea>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <select id="clLanguage" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
+                        <option value="hu">Magyar</option>
+                        <option value="en">English</option>
+                        <option value="de">Deutsch</option>
+                    </select>
+                    <select id="clTone" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
+                        <option value="professional">Professional</option>
+                        <option value="friendly">Friendly</option>
+                        <option value="assertive">Assertive</option>
+                    </select>
+                </div>
+                <button type="button" onclick="generateCoverLetter()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Cover letter generalas</button>
+                <textarea id="coverLetterOutput" rows="10" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Itt jelenik meg a level..." readonly></textarea>
+            </article>
+
+        </section>
+
+        <section class="mt-16 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-benefits">
+            <h2 id="seo-benefits" class="text-3xl font-black uppercase mb-4">Mi&eacute;rt a CVK&eacute;sz&iacute;tĹ‘.eu?</h2>
+            <p class="text-gray-700 font-medium mb-6">A CVPro AI seg&iacute;t gyorsan, struktur&aacute;ltan &eacute;s professzion&aacute;lis minĹ‘s&eacute;gben elk&eacute;sz&iacute;teni az &ouml;n&eacute;letrajzodat magyar nyelven.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">Gyors AI Gener&aacute;l&aacute;s</h3>
+                    <p class="text-sm text-gray-700">Szem&eacute;lyes adataidb&oacute;l &eacute;s tapasztalataidb&oacute;l p&aacute;r m&aacute;sodperc alatt k&eacute;sz&uuml;l el a CV.</p>
+                </article>
+                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">ATS-Bar&aacute;t Fel&eacute;p&iacute;t&eacute;s</h3>
+                    <p class="text-sm text-gray-700">Az elrendez&eacute;s &aacute;tl&aacute;that&oacute;, nyomtathat&oacute; &eacute;s modern toborz&aacute;si rendszerekhez is alkalmas.</p>
+                </article>
+                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">Val&oacute;s IdejĹ± ElĹ‘n&eacute;zet</h3>
+                    <p class="text-sm text-gray-700">Azonnal l&aacute;tod a v&eacute;geredm&eacute;nyt, &iacute;gy gyorsan tudsz jav&iacute;tani a tartalmon.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="mt-10 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-how">
+            <h2 id="seo-how" class="text-3xl font-black uppercase mb-4">Hogyan MĹ±k&ouml;dik?</h2>
+            <ol class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">1. Adataid Megad&aacute;sa</h3>
+                    <p class="text-sm text-gray-700">T&ouml;ltsd ki az Ĺ±rlapot vagy m&aacute;sold be a teljes sz&ouml;veget a szabad mezĹ‘be.</p>
+                </li>
+                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">2. CV Gener&aacute;l&aacute;s</h3>
+                    <p class="text-sm text-gray-700">Az AI rendezi az inform&aacute;ci&oacute;t &eacute;s elk&eacute;sz&iacute;ti a nyomtathat&oacute; v&aacute;ltozatot.</p>
+                </li>
+                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-black uppercase mb-2">3. Fizet&eacute;s &eacute;s Let&ouml;lt&eacute;s</h3>
+                    <p class="text-sm text-gray-700">ElĹ‘n&eacute;zet ut&aacute;n Stripe fizet&eacute;ssel feloldhatod a teljes PDF let&ouml;lt&eacute;st.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section class="mt-10 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-faq">
+            <h2 id="seo-faq" class="text-3xl font-black uppercase mb-4">Gyakori K&eacute;rd&eacute;sek</h2>
+            <div class="space-y-4">
+                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <summary class="font-black cursor-pointer">Ingyenes a CV gener&aacute;l&aacute;s?</summary>
+                    <p class="mt-2 text-sm text-gray-700">Igen. A gener&aacute;l&aacute;s &eacute;s az elĹ‘n&eacute;zet ingyenes, a teljes let&ouml;lt&eacute;s fizet&eacute;shez k&ouml;t&ouml;tt.</p>
+                </details>
+                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <summary class="font-black cursor-pointer">Mennyi idĹ‘ alatt k&eacute;sz&uuml;l el?</summary>
+                    <p class="mt-2 text-sm text-gray-700">A legt&ouml;bb esetben n&eacute;h&aacute;ny m&aacute;sodperc alatt elk&eacute;sz&uuml;l az AI &aacute;ltal gener&aacute;lt CV.</p>
+                </details>
+                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
+                    <summary class="font-black cursor-pointer">MĹ±k&ouml;dik magyar nyelvĹ± p&aacute;ly&aacute;zathoz?</summary>
+                    <p class="mt-2 text-sm text-gray-700">Igen, a platform magyar nyelvĹ± tartalommal is j&oacute;l haszn&aacute;lhat&oacute;.</p>
+                </details>
+            </div>
+        </section>
     </div>
 
     <!-- BetĂ¶ltĂ©si RĂ©teg -->
@@ -313,6 +501,34 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
         window.recaptchaSiteKey = null;
         window.recaptchaWidgetId = null;
         window.recaptchaLoaded = false;
+        window.cvVersions = [];
+
+        function ensureActiveCv() {
+            if (!window.currentCvId) {
+                throw new Error('Nincs aktiv CV. Elobb generalj egyet.');
+            }
+        }
+
+        function setResultBox(id, text, isError = false) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = text;
+            el.classList.toggle('text-red-700', Boolean(isError));
+            el.classList.toggle('text-gray-800', !isError);
+        }
+
+        async function postJson(url, body) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body || {})
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || 'API hiba.');
+            }
+            return payload;
+        }
 
         async function loadPublicConfig() {
             try {
@@ -556,6 +772,8 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
                 unlockBtn.addEventListener('click', startStripeCheckout);
             }
 
+            renderCvVersions([]);
+
             (async () => {
                 await loadPublicConfig();
                 await ensureRecaptchaReady();
@@ -583,6 +801,7 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
             window.currentCvId = cvId;
             localStorage.setItem('lastCvId', cvId);
             displayCV(fullHtml, { locked: false });
+            await loadCvVersions();
         }
 
         async function loadPreviewCv(cvId) {
@@ -603,12 +822,62 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
             window.previewLocked = Boolean(payload.locked);
             window.hasGeneratedCv = true;
             displayCV(payload.previewHtml, { locked: window.previewLocked });
+            await loadCvVersions();
+        }
+
+        function renderCvVersions(items) {
+            const container = document.getElementById('cvVersionList');
+            if (!container) return;
+            if (!items || items.length === 0) {
+                container.innerHTML = '<div class="text-gray-500">Meg nincs mentett alternativ verzio.</div>';
+                return;
+            }
+
+            container.innerHTML = items.map((item) => {
+                const created = new Date(item.createdAt).toLocaleString();
+                const lockInfo = item.locked ? 'zart' : 'nyitott';
+                return `
+                    <button type="button"
+                        class="w-full text-left border-2 border-brand-black rounded-lg p-3 bg-gray-50 hover:bg-brand-yellow/20 transition-colors"
+                        onclick="openCvVersion('${item.cvId}')">
+                        <div class="font-bold">${item.variantLabel || 'CV valtozat'} (${(item.language || 'hu').toUpperCase()})</div>
+                        <div class="text-xs text-gray-600">${created} - ${lockInfo}</div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        async function loadCvVersions() {
+            try {
+                ensureActiveCv();
+                const payload = await fetch(`/api/cv/${encodeURIComponent(window.currentCvId)}/versions`);
+                const data = await payload.json().catch(() => ({}));
+                if (!payload.ok) {
+                    throw new Error(data.error || 'CV verziok betoltese sikertelen.');
+                }
+                window.cvVersions = data.versions || [];
+                renderCvVersions(window.cvVersions);
+            } catch (error) {
+                console.warn('Version list load failed:', error.message);
+            }
+        }
+
+        window.openCvVersion = async function(cvId) {
+            try {
+                await loadPreviewCv(cvId);
+                const params = new URLSearchParams(window.location.search);
+                params.set('cvId', cvId);
+                const nextUrl = `${window.location.pathname}?${params.toString()}`;
+                window.history.replaceState({}, '', nextUrl);
+            } catch (error) {
+                alert('Verzio megnyitasi hiba: ' + error.message);
+            }
         }
 
         async function restorePreviewFromUrlOrCache() {
             const params = new URLSearchParams(window.location.search);
             const cvIdFromUrl = params.get('cvId');
-            const cvIdToLoad = cvIdFromUrl || window.currentCvId;
+            const cvIdToLoad = cvIdFromUrl;
             if (!cvIdToLoad) return;
 
             try {
@@ -617,6 +886,117 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
                 console.warn('Preview restore skipped:', error.message);
             }
         }
+
+        window.analyzeAtsScore = async function() {
+            try {
+                ensureActiveCv();
+                const jobDescription = document.getElementById('atsJobDescription')?.value || '';
+                setResultBox('atsResult', 'Elemzes folyamatban...');
+
+                const report = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/analyze-ats`, {
+                    jobDescription
+                });
+
+                const tipText = (report.tips || []).map((tip, index) => `${index + 1}. ${tip}`).join('\n');
+                const text = [
+                    `Osszpontszam: ${report.overallScore}/100`,
+                    `Kulcsszo: ${report.breakdown?.keywordScore || 0}/100`,
+                    `Struktura: ${report.breakdown?.structureScore || 0}/100`,
+                    `Olvashatosag: ${report.breakdown?.readabilityScore || 0}/100`,
+                    '',
+                    `Talalt kulcsszavak: ${(report.matchedKeywords || []).join(', ') || '-'}`,
+                    '',
+                    'Javitasi tippek:',
+                    tipText || 'Nincs konkret javaslat.'
+                ].join('\n');
+
+                setResultBox('atsResult', text);
+            } catch (error) {
+                setResultBox('atsResult', `ATS hiba: ${error.message}`, true);
+            }
+        };
+
+        window.exportLanguageVersion = async function() {
+            try {
+                ensureActiveCv();
+                setResultBox('exportResult', 'Nyelvi export folyamatban...');
+
+                const language = document.getElementById('exportLanguage')?.value || 'hu';
+                const tone = document.getElementById('exportTone')?.value || 'professional';
+                const region = document.getElementById('exportRegion')?.value || '';
+
+                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/export-language`, {
+                    language,
+                    tone,
+                    region
+                });
+
+                if (!result.cvId || !result.previewHtml) {
+                    throw new Error('A szerver nem adott vissza uj verzio adatot.');
+                }
+
+                window.currentCvId = result.cvId;
+                localStorage.setItem('lastCvId', result.cvId);
+                displayCV(result.previewHtml, { locked: Boolean(result.locked) });
+                await loadCvVersions();
+
+                setResultBox('exportResult', `Uj nyelvi verzio kesz: ${result.variantLabel || ''} (${(result.language || language).toUpperCase()})`);
+            } catch (error) {
+                setResultBox('exportResult', `Nyelvi export hiba: ${error.message}`, true);
+            }
+        };
+
+        window.createTargetedVersion = async function() {
+            try {
+                ensureActiveCv();
+                const jobTitle = document.getElementById('targetJobTitle')?.value || '';
+                const jobDescription = document.getElementById('targetJobDescription')?.value || '';
+                const focusAreas = document.getElementById('targetFocusAreas')?.value || '';
+
+                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/create-version`, {
+                    jobTitle,
+                    jobDescription,
+                    focusAreas
+                });
+
+                if (!result.cvId || !result.previewHtml) {
+                    throw new Error('A szerver nem adott vissza uj verzio adatot.');
+                }
+
+                window.currentCvId = result.cvId;
+                localStorage.setItem('lastCvId', result.cvId);
+                displayCV(result.previewHtml, { locked: Boolean(result.locked) });
+                await loadCvVersions();
+            } catch (error) {
+                alert('Celzott verzio hiba: ' + error.message);
+            }
+        };
+
+        window.generateCoverLetter = async function() {
+            try {
+                ensureActiveCv();
+                const jobTitle = document.getElementById('clJobTitle')?.value || '';
+                const companyName = document.getElementById('clCompany')?.value || '';
+                const jobDescription = document.getElementById('clJobDescription')?.value || '';
+                const language = document.getElementById('clLanguage')?.value || 'hu';
+                const tone = document.getElementById('clTone')?.value || 'professional';
+
+                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/cover-letter`, {
+                    jobTitle,
+                    companyName,
+                    jobDescription,
+                    language,
+                    tone
+                });
+
+                const output = document.getElementById('coverLetterOutput');
+                if (output) {
+                    output.value = `Targy: ${result.subject || '-'}\n\n${result.body || ''}`;
+                }
+            } catch (error) {
+                alert('Cover letter hiba: ' + error.message);
+            }
+        };
 
         async function startStripeCheckout() {
             try {
@@ -813,6 +1193,7 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
                     }
 
                     displayCV(data.previewHtml, { locked: window.previewLocked });
+                    await loadCvVersions();
                 } else {
                     const htmlContent = await response.text();
                     window.previewLocked = false;
@@ -1049,10 +1430,18 @@ KovĂˇcs JĂˇnos vagyok, szoftverfejlesztĹ‘kĂ©nt dolgoztam 3 Ă©vet a Te
 
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
-            downloadBtn.addEventListener('click', () => {
+            downloadBtn.addEventListener('click', async () => {
                 if (window.previewLocked) {
                     alert('A letĂ¶ltĂ©s fizetĂ©s utĂˇn elĂ©rhetĹ‘.');
                     return;
+                }
+
+                if (window.currentCvId) {
+                    try {
+                        await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/download-event`, {});
+                    } catch (error) {
+                        console.warn('Download tracking failed:', error.message);
+                    }
                 }
 
                 const iframe = document.querySelector('#previewContainer iframe');
