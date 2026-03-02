@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -172,7 +172,7 @@ async function verifyRecaptchaToken(token, remoteIp) {
     }
 
     const payload = await response.json();
-    if (!payload.success) {
+        if (!payload?.success) {
         return {
             ok: false,
             reason: 'verify-failed',
@@ -321,8 +321,8 @@ function normalizeLanguage(input) {
 function htmlToPlainText(html) {
     if (!html) return '';
     return String(html)
-        .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<script[\s\S]*<\/script>/gi, ' ')
+        .replace(/<style[\s\S]*<\/style>/gi, ' ')
         .replace(/<[^>]+>/g, ' ')
         .replace(/&nbsp;/gi, ' ')
         .replace(/&amp;/gi, '&')
@@ -338,7 +338,7 @@ function extractKeywords(text, limit = 20) {
     if (!text) return [];
 
     const stopWords = new Set([
-        'hogy', 'vagy', 'mert', 'volt', 'lesz', 'egy', 'az', 'a', 'Ă©s', 'is', 'de', 'ha', 'mint', 'nem',
+        'hogy', 'vagy', 'mert', 'volt', 'lesz', 'egy', 'az', 'a', 'es', 'is', 'de', 'ha', 'mint', 'nem',
         'with', 'from', 'this', 'that', 'your', 'you', 'for', 'and', 'the', 'are', 'was', 'were', 'have',
         'will', 'job', 'role', 'position', 'work', 'skills', 'experience', 'about'
     ]);
@@ -377,7 +377,7 @@ function computeAtsReport(cvHtml, jobDescription) {
     const hasPhone = /(?:\+?\d[\d\s\-()]{7,}\d)/.test(cvText);
     const hasExperience = /tapasztalat|experience|professional/i.test(cvText);
     const hasEducation = /tanulm|education|degree|egyetem|iskola/i.test(cvText);
-    const hasSkills = /k[Ă©e]szs[Ă©e]g|skills?|technolog/i.test(cvText);
+    const hasSkills = /k[ee]szs[ee]g|skills|technolog/i.test(cvText);
     const hasSummary = /bemutatkoz|profil|about|summary/i.test(cvText);
     const hasDates = /(19|20)\d{2}/.test(cvText);
 
@@ -412,13 +412,13 @@ function computeAtsReport(cvHtml, jobDescription) {
     const tips = [];
     if (jdKeywords.length > 0 && matchedKeywords.length < jdKeywords.length) {
         const missing = jdKeywords.filter((keyword) => !matchedKeywords.includes(keyword)).slice(0, 6);
-        tips.push(`Adj hozza legalabb 3-5 hianyzĂł kulcsszot: ${missing.join(', ')}.`);
+        tips.push(`Adj hozza legalabb 3-5 hianyzo kulcsszot: ${missing.join(', ')}.`);
     }
     if (!hasExperience || !hasSkills || !hasEducation) {
         tips.push('Hasznalj egyertelmu szekciocimeket: Szakmai Tapasztalat, Tanulmanyok, Keszsegek.');
     }
     if (!hasEmail || !hasPhone) {
-        tips.push('A fejlĂ©cben mindig szerepeljen email cim es telefonszam.');
+        tips.push('A fejlecben mindig szerepeljen email cim es telefonszam.');
     }
     if (avgSentenceLength > 24) {
         tips.push('Roviditsd a mondatokat, torekedj 12-20 szavas bullet pontokra.');
@@ -473,7 +473,7 @@ async function generateWithRetries(model, parts, retries = 3) {
         try {
             return await model.generateContent(parts);
         } catch (error) {
-            const isRetryable = error?.status === 429 || error?.status === 503;
+            const isRetryable = error.status === 429 || error.status === 503;
             remaining -= 1;
             if (!isRetryable || remaining <= 0) {
                 throw error;
@@ -619,16 +619,16 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
         CRITICAL REQUIREMENTS (35-POINT QUALITY CHECK):
         1. LANGUAGE: Output MUST be in HUNGARIAN (Magyar). Translate Section Headers:
            - "Experience" -> "Szakmai Tapasztalat"
-           - "Education" -> "Tanulmďż˝nyok"
-           - "Skills" -> "Kďż˝szsďż˝gek"
+           - "Education" -> "Tanulmanyok"
+           - "Skills" -> "Keszsegek"
            - "Contact" -> "Kapcsolat"
-           - "About Me" -> "Rďż˝lam" or "Bemutatkozďż˝s"
+           - "About Me" -> "Rolam" or "Bemutatkozas"
 
         2. CONTENT REFINEMENT (The "STAR" Method):
            - Do NOT just copy the input descriptions.
            - REWRITE work experiences to be achievement-oriented.
-           - Use the formula: "Action Verb + Task + Result" (e.g., "Nďż˝velte az eladďż˝sokat 20%-kal...").
-           - Use professional Hungarian action verbs (e.g., "Koordinďż˝lta", "Fejlesztette", "Vezette").
+           - Use the formula: "Action Verb + Task + Result" (e.g., "Novelte az eladasokat 20%-kal...").
+           - Use professional Hungarian action verbs (e.g., "Koordinalta", "Fejlesztette", "Vezette").
            - If the input is sparse, expand it professionally without hallucinating specific lies.
 
         3. DESIGN & TECH SPECS:
@@ -695,9 +695,9 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
             html = html.replace(/\{\{PROFILE_PICTURE_DATA_URI\}\}/g, dataUri);
 
             // Fallback: Replace common placeholders that Gemini might use instead of the requested placeholder
-            html = html.replace(/https?:\/\/via\.placeholder\.com\/[^\s"'>]+/g, dataUri);
-            html = html.replace(/https?:\/\/placehold\.co\/[^\s"'>]+/g, dataUri);
-            html = html.replace(/https?:\/\/picsum\.photos\/[^\s"'>]+/g, dataUri);
+            html = html.replace(/https:\/\/via\.placeholder\.com\/[^\s"'>]+/g, dataUri);
+            html = html.replace(/https:\/\/placehold\.co\/[^\s"'>]+/g, dataUri);
+            html = html.replace(/https:\/\/picsum\.photos\/[^\s"'>]+/g, dataUri);
 
             // Even broader fallback: if we still see a likely profile image tag with a dummy src
             // but didn't find the specific placeholder, let's try to find any img tag and if there's only one, replace its src.
@@ -718,7 +718,7 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
         await trackAnalyticsEvent('cv_generated', {
             cvId,
             metadata: {
-                mode: parsedUserData?.mode || 'structured',
+                mode: parsedUserData.mode || 'structured',
                 theme: theme || 'modern'
             }
         });
@@ -757,8 +757,8 @@ app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async 
         }
 
         const appBaseUrl = getAppBaseUrl(req);
-        const successUrl = `${appBaseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`;
-        const cancelUrl = `${appBaseUrl}/?payment=cancelled&cvId=${encodeURIComponent(cvId)}`;
+        const successUrl = `${appBaseUrl}/payment=success&session_id={CHECKOUT_SESSION_ID}`;
+        const cancelUrl = `${appBaseUrl}/payment=cancelled&cvId=${encodeURIComponent(cvId)}`;
 
         const checkoutAmount = getCheckoutUnitAmount();
 
@@ -918,7 +918,7 @@ app.post('/api/admin/login', extendedLimiter, (req, res) => {
             return res.status(503).json({ error: 'Admin panel is not configured on the server.' });
         }
 
-        const token = String(req.body?.token || '');
+        const token = String(req.body.token || '');
         if (!timingSafeEqualString(token, ADMIN_PANEL_TOKEN)) {
             return res.status(401).json({ error: 'Invalid admin token.' });
         }
@@ -942,7 +942,7 @@ app.post('/api/admin/logout', (req, res) => {
 });
 
 app.get('/api/admin/me', requireAdminAuth, (req, res) => {
-    res.json({ authenticated: true, method: req.admin?.method || 'unknown' });
+    res.json({ authenticated: true, method: req.admin.method || 'unknown' });
 });
 
 app.get('/api/cv/:cvId/preview', async (req, res) => {
@@ -1063,7 +1063,7 @@ app.post('/api/cv/:cvId/analyze-ats', extendedLimiter, async (req, res) => {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
         }
 
-        const jobDescription = String(req.body?.jobDescription || '');
+        const jobDescription = String(req.body.jobDescription || '');
         const report = computeAtsReport(record.fullHtml, jobDescription);
         res.json(report);
     } catch (error) {
@@ -1080,9 +1080,9 @@ app.post('/api/cv/:cvId/export-language', extendedLimiter, async (req, res) => {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
         }
 
-        const targetLanguage = normalizeLanguage(req.body?.language);
-        const tone = String(req.body?.tone || 'professional');
-        const region = String(req.body?.region || '');
+        const targetLanguage = normalizeLanguage(req.body.language);
+        const tone = String(req.body.tone || 'professional');
+        const region = String(req.body.region || '');
         const languageLabel = targetLanguage === 'en'
             ? 'English'
             : targetLanguage === 'de'
@@ -1150,10 +1150,10 @@ app.post('/api/cv/:cvId/create-version', extendedLimiter, async (req, res) => {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
         }
 
-        const jobTitle = String(req.body?.jobTitle || '').trim();
-        const jobDescription = String(req.body?.jobDescription || '').trim();
-        const focusAreas = String(req.body?.focusAreas || '').trim();
-        const targetLanguage = normalizeLanguage(req.body?.language || record.language || 'hu');
+        const jobTitle = String(req.body.jobTitle || '').trim();
+        const jobDescription = String(req.body.jobDescription || '').trim();
+        const focusAreas = String(req.body.focusAreas || '').trim();
+        const targetLanguage = normalizeLanguage(req.body.language || record.language || 'hu');
 
         if (!jobTitle && !jobDescription) {
             return res.status(400).json({ error: 'Provide jobTitle or jobDescription for targeted version.' });
@@ -1236,11 +1236,11 @@ app.post('/api/cv/:cvId/cover-letter', extendedLimiter, async (req, res) => {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
         }
 
-        const jobTitle = String(req.body?.jobTitle || '').trim();
-        const companyName = String(req.body?.companyName || '').trim();
-        const jobDescription = String(req.body?.jobDescription || '').trim();
-        const language = normalizeLanguage(req.body?.language || record.language || 'hu');
-        const tone = String(req.body?.tone || 'professional').trim();
+        const jobTitle = String(req.body.jobTitle || '').trim();
+        const companyName = String(req.body.companyName || '').trim();
+        const jobDescription = String(req.body.jobDescription || '').trim();
+        const language = normalizeLanguage(req.body.language || record.language || 'hu');
+        const tone = String(req.body.tone || 'professional').trim();
 
         const model = getGeminiModel();
         const prompt = `
@@ -1447,7 +1447,7 @@ app.get('/api/admin/stripe/logs', requireAdminAuth, extendedLimiter, async (req,
 
 app.post('/api/admin/cv/tracked-download-link', requireAdminAuth, extendedLimiter, async (req, res) => {
     try {
-        const cvId = String(req.body?.cvId || '').trim();
+        const cvId = String(req.body.cvId || '').trim();
         if (!cvId) {
             return res.status(400).json({ error: 'Missing cvId.' });
         }
