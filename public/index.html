@@ -306,6 +306,92 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
         window.currentCvId = null;
         window.previewLocked = false;
         window.hasGeneratedCv = false;
+        window.publicConfig = {
+            recaptchaEnabled: false,
+            recaptchaSiteKey: null,
+            paymentEnabled: false
+        };
+        window.publicConfigLoaded = false;
+        window.recaptchaScriptPromise = null;
+
+        async function loadPublicConfig() {
+            const response = await fetch('/api/public-config', {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!response.ok) {
+                throw new Error('A publikus konfiguráció betöltése sikertelen.');
+            }
+
+            const payload = await response.json();
+            window.publicConfig = {
+                recaptchaEnabled: Boolean(payload?.recaptchaEnabled && payload?.recaptchaSiteKey),
+                recaptchaSiteKey: payload?.recaptchaSiteKey || null,
+                paymentEnabled: Boolean(payload?.paymentEnabled)
+            };
+            window.publicConfigLoaded = true;
+        }
+
+        function ensureRecaptchaScript(siteKey) {
+            if (!siteKey) {
+                return Promise.reject(new Error('Hiányzó reCAPTCHA site key.'));
+            }
+
+            if (window.grecaptcha && typeof window.grecaptcha.execute === 'function') {
+                return Promise.resolve();
+            }
+
+            if (window.recaptchaScriptPromise) {
+                return window.recaptchaScriptPromise;
+            }
+
+            window.recaptchaScriptPromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
+                script.async = true;
+                script.defer = true;
+                script.onload = () => resolve();
+                script.onerror = () => {
+                    window.recaptchaScriptPromise = null;
+                    reject(new Error('A reCAPTCHA script betöltése sikertelen.'));
+                };
+                document.head.appendChild(script);
+            });
+
+            return window.recaptchaScriptPromise;
+        }
+
+        async function getRecaptchaToken(action) {
+            if (!window.publicConfigLoaded) {
+                await loadPublicConfig();
+            }
+
+            const { recaptchaEnabled, recaptchaSiteKey } = window.publicConfig || {};
+            if (!recaptchaEnabled) {
+                return null;
+            }
+
+            await ensureRecaptchaScript(recaptchaSiteKey);
+
+            return new Promise((resolve, reject) => {
+                if (!window.grecaptcha || typeof window.grecaptcha.ready !== 'function') {
+                    reject(new Error('A reCAPTCHA nem inicializálódott.'));
+                    return;
+                }
+
+                window.grecaptcha.ready(async () => {
+                    try {
+                        const token = await window.grecaptcha.execute(recaptchaSiteKey, { action });
+                        if (!token) {
+                            reject(new Error('A reCAPTCHA nem adott vissza tokent.'));
+                            return;
+                        }
+                        resolve(token);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
 
         function updateActionButtons() {
             const downloadBtn = document.getElementById('downloadPdf');
@@ -496,6 +582,17 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
             handlePaymentReturn();
         }
 
+        async function bootstrapPublicConfig() {
+            try {
+                await loadPublicConfig();
+                if (window.publicConfig.recaptchaEnabled) {
+                    await ensureRecaptchaScript(window.publicConfig.recaptchaSiteKey);
+                }
+            } catch (error) {
+                console.error('Public config bootstrap error:', error);
+            }
+        }
+
         async function loadUnlockedCv(cvId) {
             if (!cvId) throw new Error('Missing CV identifier.');
 
@@ -595,9 +692,13 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
         }
 
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
+            document.addEventListener('DOMContentLoaded', () => {
+                init();
+                bootstrapPublicConfig();
+            });
         } else {
             init();
+            bootstrapPublicConfig();
         }
 
         window.handleFormSubmit = async function(e) {
@@ -676,6 +777,11 @@ Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél
                 payload.append('theme', theme);
                 if (profilePicture) {
                     payload.append('profilePicture', profilePicture);
+                }
+
+                const recaptchaToken = await getRecaptchaToken('generate_cv');
+                if (recaptchaToken) {
+                    payload.append('recaptchaToken', recaptchaToken);
                 }
 
                 const response = await fetch('/api/generate-cv', {

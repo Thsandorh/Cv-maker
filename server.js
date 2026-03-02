@@ -172,7 +172,7 @@ async function verifyRecaptchaToken(token, remoteIp) {
     }
 
     const payload = await response.json();
-        if (!payload?.success) {
+    if (!payload?.success) {
         return {
             ok: false,
             reason: 'verify-failed',
@@ -534,6 +534,12 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
         const recaptchaToken = req.body?.recaptchaToken;
         const recaptcha = await verifyRecaptchaToken(recaptchaToken, req.ip);
         if (!recaptcha.ok) {
+            console.warn('reCAPTCHA verification failed', {
+                reason: recaptcha.reason || 'unknown',
+                details: recaptcha.details || [],
+                status: recaptcha.status || null,
+                ip: req.ip
+            });
             return res.status(400).json({ error: 'reCAPTCHA verification failed.' });
         }
 
@@ -900,8 +906,8 @@ app.get('/api/payments/stripe/verify', verifyLimiter, async (req, res) => {
 
 app.get('/api/public-config', (req, res) => {
     res.json({
-        recaptchaSiteKey: recaptchaSiteKey || null,
-        recaptchaEnabled: Boolean(recaptchaSiteKey),
+        recaptchaSiteKey: isRecaptchaEnabled() ? recaptchaSiteKey : null,
+        recaptchaEnabled: isRecaptchaEnabled(),
         paymentEnabled: Boolean(stripe && stripePublishableKey),
         supportedExportLanguages: ['hu', 'en', 'de']
     });
