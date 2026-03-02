@@ -1,74 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVK&#233;sz&#237;t&#337;</title>
-    <meta name="description" content="AI oneletrajz keszito magyarul: profi CV gener&aacute;l&aacute;s, elo preview, sablonv&aacute;laszt&aacute;s, biztons&aacute;gos fizet&eacute;ssel feloldhat&oacute; let&ouml;lt&eacute;s &eacute;s gyors PDF export.">
-    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
-    <meta name="theme-color" content="#5E17EB">
-    <meta name="author" content="CVKeszito.eu">
-    <link rel="canonical" href="https://cvkeszito.eu/">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="hu_HU">
-    <meta property="og:site_name" content="CVKeszito.eu">
-    <meta property="og:url" content="https://cvkeszito.eu/">
-    <meta property="og:title" content="CVPro AI | CVKeszito.eu">
-    <meta property="og:description" content="K&eacute;sz&iacute;ts profi &ouml;n&eacute;letrajzot AI seg&iacute;ts&eacute;ggel percek alatt, magyar nyelven.">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="CVPro AI | CVKeszito.eu">
-    <meta name="twitter:description" content="AI oneletrajz keszito: gyors gener&aacute;l&aacute;s, elo elonezet, azonnali PDF.">
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@graph": [
-                {
-                    "@type": "WebSite",
-                    "name": "CVKeszito.eu",
-                    "url": "https://cvkeszito.eu/",
-                    "inLanguage": "hu-HU"
-                },
-                {
-                    "@type": "SoftwareApplication",
-                    "name": "CVPro AI",
-                    "applicationCategory": "BusinessApplication",
-                    "operatingSystem": "Web",
-                    "url": "https://cvkeszito.eu/",
-                    "inLanguage": "hu-HU",
-                    "description": "AI-alapu oneletrajz keszito szolgaltatas magyar allaskeresoknek."
-                },
-                {
-                    "@type": "FAQPage",
-                    "mainEntity": [
-                        {
-                            "@type": "Question",
-                            "name": "Ingyenes a CV generalas",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Igen, a CV generalasa ingyenes. A teljes, letoltheto valtozat a fizetes utan erheto el."
-                            }
-                        },
-                        {
-                            "@type": "Question",
-                            "name": "Mennyi ido alatt keszul el az oneletrajz",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "A rendszer altalaban nehany masodperc alatt general egy nyomtatasra kesz valtozatot."
-                            }
-                        },
-                        {
-                            "@type": "Question",
-                            "name": "Mukodik magyar nyelvu adatokkal is",
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Igen, a CVPro AI magyar szoveggel is hasznalhato es magyar allaspalyazatokhoz optimalizalhato."
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.stripe.com/v3"></script>
     <link rel="stylesheet" href="style.css?v=1.0.3">
@@ -139,48 +74,48 @@
 </head>
 <body class="min-h-screen pb-12 text-brand-black">
     <div class="container mx-auto px-4 py-8">
-        <!-- Navigacio / Logo -->
+        <!-- Navigáció / Logó -->
         <nav class="flex justify-between items-center mb-12 px-2 border-b-2 border-brand-black pb-4">
             <div class="flex items-center space-x-3">
                 <div class="w-12 h-12 bg-brand-blue border-2 border-brand-black shadow-neobrutalist flex items-center justify-center">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </div>
-                <span class="text-3xl font-black tracking-tighter uppercase">CVPro AI</span>
+                <span class="text-3xl font-black tracking-tighter uppercase">CVK&#233;sz&#237;t&#337;.eu</span>
             </div>
 
-            <!-- PayPal Elokeszites (Helyorzo) -->
+            <!-- PayPal Előkészítés (Helyőrző) -->
             <!--
             <div id="paypal-container" class="hidden">
                 <button class="bg-brand-yellow neobrutalist-btn py-2 px-6 rounded-lg flex items-center space-x-2">
-                    <span>Fizetes</span>
+                    <span>Fizetés</span>
                     <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-5">
                 </button>
             </div>
             -->
             <div class="text-sm font-bold bg-brand-yellow border-2 border-brand-black px-4 py-2 shadow-neobrutalist uppercase tracking-wide transform rotate-2 hover:rotate-0 transition-transform cursor-default">
-                Premium Keszito
+                Prémium Készítő
             </div>
         </nav>
 
         <header class="text-center mb-16 max-w-4xl mx-auto">
             <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-tight">
-                AI &Ouml;N&Eacute;LETRAJZ K&Eacute;SZ&Iacute;TO <br>
-                <span class="bg-brand-blue text-white px-2 decoration-clone shadow-neobrutalist transform -skew-x-6 inline-block">CVPRO AI / CVK&Eacute;SZ&Iacute;TO.EU</span>
+                ÉPÍTSD A JÖVŐD <br>
+                <span class="bg-brand-blue text-white px-2 decoration-clone shadow-neobrutalist transform -skew-x-6 inline-block">MOST RÖGTÖN</span>
             </h1>
             <p class="text-xl md:text-2xl font-medium text-gray-700 max-w-2xl mx-auto border-l-4 border-brand-yellow pl-6 py-2 bg-white shadow-sm">
-                Profi, meggyozo oneletrajz masodpercek alatt. <br>
-                Fejlett AI motor, teljesitmeny-orientalt, nyomtatasra kesz.
+                Profi, meggyőző önéletrajz másodpercek alatt. <br>
+                Fejlett AI motor, teljesítmény-orientált, nyomtatásra kész.
             </p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <!-- Urlap Szekcio -->
+            <!-- Űrlap Szekció -->
             <div class="space-y-6 relative z-40">
-                <!-- Mod Kapcsolo (Kiemelve a kartyabol a biztos kattinthatosagert) -->
+                <!-- Mód Kapcsoló (Kiemelve a kártyából a biztos kattinthatóságért) -->
                 <div class="flex justify-center relative z-50">
                     <div class="border-2 border-brand-black p-1 rounded-xl flex w-full bg-white shadow-neobrutalist relative z-50">
-                        <button type="button" id="structuredModeBtn" onclick="switchMode('structured')" class="mode-toggle-btn mode-active flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-transparent hover:border-brand-black transition-all cursor-pointer relative z-50">STRUKTURALT ADATOK</button>
-                        <button type="button" id="bulkModeBtn" onclick="switchMode('bulk')" class="mode-toggle-btn flex-1 py-3 px-4 rounded-lg text-sm font-bold text-gray-500 hover:text-brand-black border-2 border-transparent hover:border-brand-black transition-all cursor-pointer relative z-50">SZABAD SZOVEG</button>
+                        <button type="button" id="structuredModeBtn" onclick="switchMode('structured')" class="mode-toggle-btn mode-active flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-transparent hover:border-brand-black transition-all cursor-pointer relative z-50">STRUKTURÁLT ADATOK</button>
+                        <button type="button" id="bulkModeBtn" onclick="switchMode('bulk')" class="mode-toggle-btn flex-1 py-3 px-4 rounded-lg text-sm font-bold text-gray-500 hover:text-brand-black border-2 border-transparent hover:border-brand-black transition-all cursor-pointer relative z-50">SZABAD SZÖVEG</button>
                     </div>
                 </div>
 
@@ -188,50 +123,50 @@
                     <div class="absolute top-0 right-0 w-32 h-32 bg-brand-yellow rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
                     <form id="cvForm" class="space-y-10" onsubmit="return handleFormSubmit(event)">
-                    <!-- Szemelyes Adatok (Mindig lathato) -->
+                    <!-- Személyes Adatok (Mindig látható) -->
                     <div class="space-y-6">
                         <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                             <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">1</span>
-                            <span>Szemelyes Adatok</span>
+                            <span>Személyes Adatok</span>
                         </h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="fullName" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Teljes Nev</label>
+                                <label for="fullName" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Teljes Név</label>
                                 <input type="text" id="fullName" name="fullName" required class="w-full bg-gray-50 p-3 neobrutalist-input font-bold text-lg">
                             </div>
                             <div>
-                                <label for="email" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">E-mail Cim</label>
+                                <label for="email" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">E-mail Cím</label>
                                 <input type="email" id="email" name="email" required class="w-full bg-gray-50 p-3 neobrutalist-input font-medium">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="phone" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Telefonszam</label>
+                                <label for="phone" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Telefonszám</label>
                                 <input type="text" id="phone" name="phone" class="w-full bg-gray-50 p-3 neobrutalist-input font-medium">
                             </div>
                             <div>
-                                <label for="location" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Helyszin</label>
-                                <input type="text" id="location" name="location" placeholder="Varos, Orszag" class="w-full bg-gray-50 p-3 neobrutalist-input font-medium">
+                                <label for="location" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Helyszín</label>
+                                <input type="text" id="location" name="location" placeholder="Város, Ország" class="w-full bg-gray-50 p-3 neobrutalist-input font-medium">
                             </div>
                         </div>
                         <div>
-                            <label for="profilePicture" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Profilkep</label>
+                            <label for="profilePicture" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Profilkép</label>
                             <div class="relative">
                                 <input type="file" id="profilePicture" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 md:file:py-3 file:px-4 md:file:px-6 file:rounded-lg file:border-2 file:border-brand-black file:text-sm file:font-bold file:bg-white file:text-brand-black hover:file:bg-brand-yellow file:transition-colors file:cursor-pointer neobrutalist-input cursor-pointer">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Strukturalt Szekciok -->
+                    <!-- Strukturált Szekciók -->
                     <div id="structuredSections" class="space-y-10">
-                        <!-- Szakmai Bemutatkozas -->
+                        <!-- Szakmai Bemutatkozás -->
                         <div class="space-y-4">
                             <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                                 <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">2</span>
-                                <span>Bemutatkozas</span>
+                                <span>Bemutatkozás</span>
                             </h2>
-                            <textarea id="summary" name="summary" rows="4" class="w-full bg-gray-50 p-4 neobrutalist-input font-medium" placeholder="Ird le roviden a karrierceljaidat es erossegeidet..."></textarea>
+                            <textarea id="summary" name="summary" rows="4" class="w-full bg-gray-50 p-4 neobrutalist-input font-medium" placeholder="Írd le röviden a karriercéljaidat és erősségeidet..."></textarea>
                         </div>
 
                         <!-- Munkatapasztalat -->
@@ -243,67 +178,67 @@
                                 </h2>
                                 <button type="button" onclick="addExperience()" class="w-full sm:w-auto bg-white hover:bg-brand-yellow text-brand-black border-2 border-brand-black px-4 py-2 rounded text-xs font-bold transition-all shadow-neobrutalist hover:shadow-neobrutalist-hover uppercase flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                                    Uj pozicio
+                                    Új pozíció
                                 </button>
                             </div>
                             <div id="experienceList" class="space-y-8 pt-4">
-                                <!-- Dinamikus bejegyzesek -->
+                                <!-- Dinamikus bejegyzések -->
                             </div>
                         </div>
 
-                        <!-- Tanulmanyok -->
+                        <!-- Tanulmányok -->
                         <div class="space-y-4">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 pb-2">
                                 <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                                     <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">4</span>
-                                    <span>Tanulmanyok</span>
+                                    <span>Tanulmányok</span>
                                 </h2>
                                 <button type="button" onclick="addEducation()" class="w-full sm:w-auto bg-white hover:bg-brand-yellow text-brand-black border-2 border-brand-black px-4 py-2 rounded text-xs font-bold transition-all shadow-neobrutalist hover:shadow-neobrutalist-hover uppercase flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                                    Uj vegzettseg
+                                    Új végzettség
                                 </button>
                             </div>
                             <div id="educationList" class="space-y-8 pt-4">
-                                <!-- Dinamikus bejegyzesek -->
+                                <!-- Dinamikus bejegyzések -->
                             </div>
                         </div>
 
-                        <!-- Keszsegek -->
+                        <!-- Készségek -->
                         <div class="space-y-4">
                             <h2 class="text-2xl font-black uppercase flex items-center space-x-3 border-b-4 border-brand-yellow pb-2 w-fit pr-6">
                                 <span class="bg-brand-black text-white w-8 h-8 flex items-center justify-center rounded text-sm">5</span>
-                                <span>Keszsegek</span>
+                                <span>Készségek</span>
                             </h2>
                             <input type="text" name="skills" placeholder="pl. JavaScript, AWS, Projektmenedzsment, Agile..." class="w-full bg-gray-50 p-4 neobrutalist-input font-bold text-lg">
                         </div>
                     </div>
 
-                    <!-- Szabad Szoveg Szekcio -->
+                    <!-- Szabad Szöveg Szekció -->
                     <div id="bulkSection" class="hidden space-y-6">
                         <div class="bg-brand-yellow/10 border-2 border-brand-black p-6 rounded-lg">
                             <h2 class="text-2xl font-black uppercase mb-4 flex items-center space-x-3">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                <span>Gyors Generalas</span>
+                                <span>Gyors Generálás</span>
                             </h2>
                             <p class="text-sm font-medium text-gray-700 mb-4 leading-relaxed">
-                                Nincs kedved mezoket toltogetni Csak masold be ide az egesz oneletrajzodat, LinkedIn profilodat vagy jegyzeteidet. Az AI intelligensen kivalogatja es rendszerezi az adatokat.
+                                Nincs kedved mezőket töltögetni? Csak másold be ide az egész önéletrajzodat, LinkedIn profilodat vagy jegyzeteidet. Az AI intelligensen kiválogatja és rendszerezi az adatokat.
                             </p>
-                            <textarea id="bulkData" name="bulkData" rows="15" class="w-full bg-white p-4 neobrutalist-input font-mono text-sm leading-relaxed" placeholder="Masold ide a szoveget...
-Pelda:
-Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."></textarea>
+                            <textarea id="bulkData" name="bulkData" rows="15" class="w-full bg-white p-4 neobrutalist-input font-mono text-sm leading-relaxed" placeholder="Másold ide a szöveget...
+Példa:
+Kovács János vagyok, szoftverfejlesztőként dolgoztam 3 évet a Tech Kft-nél..."></textarea>
                         </div>
                     </div>
 
-                    <!-- Sablon Valasztas & Generalas -->
+                    <!-- Sablon Választás & Generálás -->
                     <div class="pt-8 border-t-4 border-brand-black border-dashed">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                             <div class="md:col-span-1">
-                                <label for="theme" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Dizajn Stilus</label>
+                                <label for="theme" class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Dizájn Stílus</label>
                                 <div class="relative">
                                     <select id="theme" class="w-full bg-white p-3 pr-10 neobrutalist-input appearance-none font-bold cursor-pointer">
                                         <option value="modern">Modern Profi</option>
                                         <option value="minimalist">Minimalista</option>
-                                        <option value="creative">Kreativ</option>
+                                        <option value="creative">Kreatív</option>
                                         <option value="classic">Klasszikus</option>
                                     </select>
                                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-brand-black">
@@ -313,21 +248,17 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                             </div>
                             <div class="md:col-span-2">
                                 <button type="submit" class="w-full neobrutalist-btn bg-brand-blue text-white py-4 px-6 rounded-lg text-xl shadow-neobrutalist hover:bg-indigo-700 flex items-center justify-center space-x-3 group relative z-40">
-                                    <span>GENERALAS INDITASA</span>
+                                    <span>GENERÁLÁS INDÍTÁSA</span>
                                     <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </button>
                             </div>
-                        </div>
-                        <div id="recaptchaSection" class="hidden mt-6">
-                            <label class="block text-xs font-bold uppercase tracking-wider mb-2 ml-1">Biztonsagi Ellenorzes</label>
-                            <div id="recaptchaWidget" class="min-h-[78px]"></div>
                         </div>
                     </div>
                 </form>
             </section>
             </div>
 
-            <!-- Elonezet Szekcio -->
+            <!-- Előnézet Szekció -->
             <section class="flex flex-col space-y-6 sticky top-8">
                 <div class="neobrutalist-card p-2 rounded-xl flex flex-col bg-brand-black">
                     <div class="flex justify-between items-center mb-4 px-4 pt-4 text-white">
@@ -335,7 +266,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                             <div class="w-3 h-3 bg-red-500 rounded-full border border-black"></div>
                             <div class="w-3 h-3 bg-yellow-500 rounded-full border border-black"></div>
                             <div class="w-3 h-3 bg-green-500 rounded-full border border-black"></div>
-                            <span class="ml-3 text-xs font-bold uppercase tracking-widest text-gray-400">Elo elonezet</span>
+                            <span class="ml-3 text-xs font-bold uppercase tracking-widest text-gray-400">Élő előnézet</span>
                         </div>
                         <button id="unlockCv" class="hidden bg-brand-yellow text-brand-black border-2 border-white px-4 py-1.5 rounded font-bold hover:bg-yellow-300 transition-all shadow-none hover:translate-y-0.5 text-xs uppercase flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 00-6 0v1m8 3H7a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2z"></path></svg>
@@ -343,7 +274,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                         </button>
                         <button id="downloadPdf" class="hidden bg-emerald-500 text-white border-2 border-white px-4 py-1.5 rounded font-bold hover:bg-emerald-600 transition-all shadow-none hover:translate-y-0.5 text-xs uppercase flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            PDF Mentese
+                            PDF Mentése
                         </button>
                     </div>
                     <div id="previewContainer" class="bg-white rounded-lg w-full aspect-[794/1123] flex items-center justify-center overflow-hidden relative border-2 border-gray-800 m-1">
@@ -351,144 +282,21 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                             <div class="w-24 h-24 bg-gray-100 border-4 border-dashed border-gray-300 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             </div>
-                            <h3 class="text-2xl font-black text-gray-900 mb-2 uppercase">Keszen allsz</h3>
-                            <p class="text-gray-500 font-medium leading-relaxed">Toltsd ki az adatokat bal oldalt, es az AI pillanatok alatt generalja a profi oneletrajzodat.</p>
+                            <h3 class="text-2xl font-black text-gray-900 mb-2 uppercase">Készen állsz?</h3>
+                            <p class="text-gray-500 font-medium leading-relaxed">Töltsd ki az adatokat bal oldalt, és az AI pillanatok alatt generálja a profi önéletrajzodat.</p>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-
-        <section class="mt-12 grid grid-cols-1 xl:grid-cols-2 gap-8" aria-label="Halado funkciok">
-            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
-                <h2 class="text-2xl font-black uppercase">ATS ellenorzes</h2>
-                <p class="text-sm text-gray-700">Adj meg pozicioleirast, es kapsz pontszamot kulcsszo, struktura es olvashatosag szerint.</p>
-                <textarea id="atsJobDescription" rows="5" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Masold be az allashirdetest ide..."></textarea>
-                <button type="button" onclick="analyzeAtsScore()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">ATS elemzes</button>
-                <div id="atsResult" class="text-sm text-gray-800 bg-gray-50 border-2 border-brand-black rounded-lg p-3 min-h-[120px]"></div>
-            </article>
-
-            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
-                <h2 class="text-2xl font-black uppercase">Tobbnyelvu export</h2>
-                <p class="text-sm text-gray-700">Egy kattintasos HU / EN / DE valtozat, nyelvi finomhangolassal.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <select id="exportLanguage" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
-                        <option value="hu">Magyar (HU)</option>
-                        <option value="en">English (EN)</option>
-                        <option value="de">Deutsch (DE)</option>
-                    </select>
-                    <select id="exportTone" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
-                        <option value="professional">Professional</option>
-                        <option value="concise">Concise</option>
-                        <option value="confident">Confident</option>
-                    </select>
-                    <input id="exportRegion" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="pl. UK / DACH">
-                </div>
-                <button type="button" onclick="exportLanguageVersion()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Nyelvi valtozat generalas</button>
-                <div id="exportResult" class="text-sm text-gray-800 bg-gray-50 border-2 border-brand-black rounded-lg p-3 min-h-[70px]"></div>
-            </article>
-
-            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
-                <h2 class="text-2xl font-black uppercase">Pozicio-specifikus verziok</h2>
-                <p class="text-sm text-gray-700">Ugyanabbol az alap CV-bol ments celzott valtozatokat.</p>
-                <input id="targetJobTitle" type="text" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Celpozicio neve">
-                <textarea id="targetJobDescription" rows="4" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Pozicio leiras / elvarasok"></textarea>
-                <input id="targetFocusAreas" type="text" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Fokusz: pl. leadership, React, B2B sales">
-                <button type="button" onclick="createTargetedVersion()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Celzott verzio keszitese</button>
-                <div>
-                    <h3 class="text-sm font-black uppercase mb-2">Mentett valtozatok</h3>
-                    <div id="cvVersionList" class="space-y-2 text-sm"></div>
-                </div>
-            </article>
-
-            <article class="neobrutalist-card p-6 rounded-xl bg-white space-y-4">
-                <h2 class="text-2xl font-black uppercase">Cover letter generator</h2>
-                <p class="text-sm text-gray-700">A CV adatai es allashirdetes alapjan szemelyre szabott motivacios level.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input id="clJobTitle" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Pozicio">
-                    <input id="clCompany" type="text" class="bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Ceg neve">
-                </div>
-                <textarea id="clJobDescription" rows="4" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Allashirdetes / rovid brief"></textarea>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <select id="clLanguage" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
-                        <option value="hu">Magyar</option>
-                        <option value="en">English</option>
-                        <option value="de">Deutsch</option>
-                    </select>
-                    <select id="clTone" class="bg-gray-50 p-3 neobrutalist-input text-sm font-bold">
-                        <option value="professional">Professional</option>
-                        <option value="friendly">Friendly</option>
-                        <option value="assertive">Assertive</option>
-                    </select>
-                </div>
-                <button type="button" onclick="generateCoverLetter()" class="neobrutalist-btn bg-white px-4 py-2 rounded-lg text-sm">Cover letter generalas</button>
-                <textarea id="coverLetterOutput" rows="10" class="w-full bg-gray-50 p-3 neobrutalist-input text-sm" placeholder="Itt jelenik meg a level..." readonly></textarea>
-            </article>
-
-        </section>
-
-        <section class="mt-16 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-benefits">
-            <h2 id="seo-benefits" class="text-3xl font-black uppercase mb-4">Mi&eacute;rt a CVKeszito.eu</h2>
-            <p class="text-gray-700 font-medium mb-6">A CVPro AI seg&iacute;t gyorsan, struktur&aacute;ltan &eacute;s professzion&aacute;lis minos&eacute;gben elk&eacute;sz&iacute;teni az &ouml;n&eacute;letrajzodat magyar nyelven.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">Gyors AI Gener&aacute;l&aacute;s</h3>
-                    <p class="text-sm text-gray-700">Szem&eacute;lyes adataidb&oacute;l &eacute;s tapasztalataidb&oacute;l p&aacute;r m&aacute;sodperc alatt k&eacute;sz&uuml;l el a CV.</p>
-                </article>
-                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">ATS-Bar&aacute;t Fel&eacute;p&iacute;t&eacute;s</h3>
-                    <p class="text-sm text-gray-700">Az elrendez&eacute;s &aacute;tl&aacute;that&oacute;, nyomtathat&oacute; &eacute;s modern toborz&aacute;si rendszerekhez is alkalmas.</p>
-                </article>
-                <article class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">Val&oacute;s Ideju Elon&eacute;zet</h3>
-                    <p class="text-sm text-gray-700">Azonnal l&aacute;tod a v&eacute;geredm&eacute;nyt, &iacute;gy gyorsan tudsz jav&iacute;tani a tartalmon.</p>
-                </article>
-            </div>
-        </section>
-
-        <section class="mt-10 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-how">
-            <h2 id="seo-how" class="text-3xl font-black uppercase mb-4">Hogyan Muk&ouml;dik</h2>
-            <ol class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">1. Adataid Megad&aacute;sa</h3>
-                    <p class="text-sm text-gray-700">T&ouml;ltsd ki az urlapot vagy m&aacute;sold be a teljes sz&ouml;veget a szabad mezobe.</p>
-                </li>
-                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">2. CV Gener&aacute;l&aacute;s</h3>
-                    <p class="text-sm text-gray-700">Az AI rendezi az inform&aacute;ci&oacute;t &eacute;s elk&eacute;sz&iacute;ti a nyomtathat&oacute; v&aacute;ltozatot.</p>
-                </li>
-                <li class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-black uppercase mb-2">3. Fizet&eacute;s &eacute;s Let&ouml;lt&eacute;s</h3>
-                    <p class="text-sm text-gray-700">Elon&eacute;zet ut&aacute;n Stripe fizet&eacute;ssel feloldhatod a teljes PDF let&ouml;lt&eacute;st.</p>
-                </li>
-            </ol>
-        </section>
-
-        <section class="mt-10 neobrutalist-card p-8 rounded-xl bg-white" aria-labelledby="seo-faq">
-            <h2 id="seo-faq" class="text-3xl font-black uppercase mb-4">Gyakori K&eacute;rd&eacute;sek</h2>
-            <div class="space-y-4">
-                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <summary class="font-black cursor-pointer">Ingyenes a CV gener&aacute;l&aacute;s</summary>
-                    <p class="mt-2 text-sm text-gray-700">Igen. A gener&aacute;l&aacute;s &eacute;s az elonezet ingyenes, a teljes let&ouml;lt&eacute;s fizet&eacute;shez k&ouml;t&ouml;tt.</p>
-                </details>
-                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <summary class="font-black cursor-pointer">Mennyi ido alatt k&eacute;sz&uuml;l el</summary>
-                    <p class="mt-2 text-sm text-gray-700">A legt&ouml;bb esetben n&eacute;h&aacute;ny m&aacute;sodperc alatt elk&eacute;sz&uuml;l az AI &aacute;ltal gener&aacute;lt CV.</p>
-                </details>
-                <details class="border-2 border-brand-black rounded-lg p-4 bg-gray-50">
-                    <summary class="font-black cursor-pointer">Muk&ouml;dik magyar nyelvu p&aacute;ly&aacute;zathoz</summary>
-                    <p class="mt-2 text-sm text-gray-700">Igen, a platform magyar nyelvu tartalommal is j&oacute;l haszn&aacute;lhat&oacute;.</p>
-                </details>
-            </div>
-        </section>
     </div>
 
-    <!-- Betoltesi Reteg -->
+    <!-- Betöltési Réteg -->
     <div id="loadingOverlay" class="fixed inset-0 bg-brand-black/90 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white p-12 rounded-none border-4 border-brand-yellow shadow-[8px_8px_0px_0px_rgba(255,222,89,1)] flex flex-col items-center max-w-md text-center">
             <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-brand-black mb-6"></div>
             <h3 class="text-3xl font-black text-brand-black mb-2 uppercase tracking-tighter">AI Dolgozik...</h3>
-            <p class="text-lg text-gray-600 font-medium">Optimalizaljuk a karrieredet.</p>
+            <p class="text-lg text-gray-600 font-medium">Optimalizáljuk a karrieredet.</p>
         </div>
     </div>
 
@@ -498,95 +306,6 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
         window.currentCvId = null;
         window.previewLocked = false;
         window.hasGeneratedCv = false;
-        window.recaptchaSiteKey = null;
-        window.recaptchaWidgetId = null;
-        window.recaptchaLoaded = false;
-        window.cvVersions = [];
-
-        function ensureActiveCv() {
-            if (!window.currentCvId) {
-                throw new Error('Nincs aktiv CV. Elobb generalj egyet.');
-            }
-        }
-
-        function setResultBox(id, text, isError = false) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.textContent = text;
-            el.classList.toggle('text-red-700', Boolean(isError));
-            el.classList.toggle('text-gray-800', !isError);
-        }
-
-        async function postJson(url, body) {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body || {})
-            });
-            const payload = await response.json().catch(() => ({}));
-            if (!response.ok) {
-                throw new Error(payload.error || 'API hiba.');
-            }
-            return payload;
-        }
-
-        async function loadPublicConfig() {
-            try {
-                const response = await fetch('/api/public-config');
-                if (!response.ok) return;
-                const config = await response.json();
-                window.recaptchaSiteKey = config.recaptchaSiteKey || null;
-            } catch (error) {
-                console.warn('Public config load failed:', error.message);
-            }
-        }
-
-        async function ensureRecaptchaReady() {
-            if (!window.recaptchaSiteKey) return;
-            const section = document.getElementById('recaptchaSection');
-            const widget = document.getElementById('recaptchaWidget');
-            if (!section || !widget) return;
-
-            section.classList.remove('hidden');
-
-            if (!window.recaptchaLoaded) {
-                await new Promise((resolve, reject) => {
-                    const script = document.createElement('script');
-                    script.src = 'https://www.google.com/recaptcha/api.jsrender=explicit';
-                    script.async = true;
-                    script.defer = true;
-                    script.onload = () => resolve();
-                    script.onerror = () => reject(new Error('reCAPTCHA script failed to load.'));
-                    document.head.appendChild(script);
-                });
-                window.recaptchaLoaded = true;
-            }
-
-            if (window.recaptchaWidgetId === null && window.grecaptcha && typeof window.grecaptcha.render === 'function') {
-                window.recaptchaWidgetId = window.grecaptcha.render(widget, {
-                    sitekey: window.recaptchaSiteKey
-                });
-            }
-        }
-
-        async function getRecaptchaToken() {
-            if (!window.recaptchaSiteKey) return '';
-            await ensureRecaptchaReady();
-            if (window.recaptchaWidgetId === null || !window.grecaptcha) {
-                throw new Error('reCAPTCHA nem elerheto.');
-            }
-            const token = window.grecaptcha.getResponse(window.recaptchaWidgetId);
-            if (!token) {
-                throw new Error('Kerlek igazold, hogy nem vagy robot.');
-            }
-            return token;
-        }
-
-        function resetRecaptcha() {
-            if (window.recaptchaWidgetId !== null && window.grecaptcha && typeof window.grecaptcha.reset === 'function') {
-                window.grecaptcha.reset(window.recaptchaWidgetId);
-            }
-        }
 
         function updateActionButtons() {
             const downloadBtn = document.getElementById('downloadPdf');
@@ -627,7 +346,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 ];
 
                 if (!structuredBtn || !bulkBtn || !structuredSections || !bulkSection) {
-                    console.error('Hianyzo DOM elemek a modvaltashoz.');
+                    console.error('Hiányzó DOM elemek a módváltáshoz.');
                     return;
                 }
 
@@ -664,13 +383,13 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                         document.querySelectorAll(selector).forEach(el => el.removeAttribute('required'));
                     });
 
-                    // Gorgetes a szabad szoveg mezohoz, hogy a felhasznalo biztosan lassa
+                    // Görgetés a szabad szöveg mezőhöz, hogy a felhasználó biztosan lássa
                     setTimeout(() => {
                         bulkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
                 }
             } catch (error) {
-                console.error('Hiba a modvaltas soran:', error);
+                console.error('Hiba a módváltás során:', error);
             }
         };
 
@@ -680,30 +399,30 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             const div = document.createElement('div');
             div.className = 'experience-entry relative border-2 border-brand-black p-4 rounded-lg bg-gray-50/50 mb-6';
             div.innerHTML = `
-                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Torles">
+                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Törlés">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Cegnev</label>
+                        <label class="text-xs font-bold uppercase ml-1">Cégnév</label>
                         <input type="text" placeholder="pl. Google Inc." class="w-full p-3 bg-white border-2 border-brand-black rounded-lg company focus:shadow-neobrutalist outline-none transition-all font-bold" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Pozicio</label>
-                        <input type="text" placeholder="pl. Senior Fejleszto" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg title focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                        <label class="text-xs font-bold uppercase ml-1">Pozíció</label>
+                        <input type="text" placeholder="pl. Senior Fejlesztő" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg title focus:shadow-neobrutalist outline-none transition-all font-bold" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Idotartam</label>
+                        <label class="text-xs font-bold uppercase ml-1">Időtartam</label>
                         <input type="text" placeholder="pl. 2020 - Jelenleg" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg duration focus:shadow-neobrutalist outline-none transition-all font-medium">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Helyszin</label>
+                        <label class="text-xs font-bold uppercase ml-1">Helyszín</label>
                         <input type="text" placeholder="pl. Budapest" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg location focus:shadow-neobrutalist outline-none transition-all font-medium">
                     </div>
                 </div>
                 <div class="mt-4 space-y-1">
-                    <label class="text-xs font-bold uppercase ml-1">Fobb feladatok</label>
-                    <textarea placeholder="Ird le a legfontosabb eredmenyeidet es feladataidat..." class="w-full p-3 bg-white border-2 border-brand-black rounded-lg description focus:shadow-neobrutalist outline-none transition-all font-medium min-h-[100px]" rows="3"></textarea>
+                    <label class="text-xs font-bold uppercase ml-1">Főbb feladatok</label>
+                    <textarea placeholder="Írd le a legfontosabb eredményeidet és feladataidat..." class="w-full p-3 bg-white border-2 border-brand-black rounded-lg description focus:shadow-neobrutalist outline-none transition-all font-medium min-h-[100px]" rows="3"></textarea>
                 </div>
             `;
             container.appendChild(div);
@@ -715,25 +434,25 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             const div = document.createElement('div');
             div.className = 'education-entry relative border-2 border-brand-black p-4 rounded-lg bg-gray-50/50 mb-6';
             div.innerHTML = `
-                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Torles">
+                <button type="button" class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white border-2 border-brand-black p-1.5 rounded-lg shadow-neobrutalist hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all z-10" onclick="this.parentElement.remove()" title="Törlés">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Intezmeny</label>
+                        <label class="text-xs font-bold uppercase ml-1">Intézmény</label>
                         <input type="text" placeholder="pl. ELTE" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg institution focus:shadow-neobrutalist outline-none transition-all font-bold" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Vegzettseg</label>
-                        <input type="text" placeholder="pl. BSc Programtervezo" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg degree focus:shadow-neobrutalist outline-none transition-all font-bold" required>
+                        <label class="text-xs font-bold uppercase ml-1">Végzettség</label>
+                        <input type="text" placeholder="pl. BSc Programtervező" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg degree focus:shadow-neobrutalist outline-none transition-all font-bold" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Vegzes Eve</label>
+                        <label class="text-xs font-bold uppercase ml-1">Végzés Éve</label>
                         <input type="text" placeholder="pl. 2023" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg year focus:shadow-neobrutalist outline-none transition-all font-medium">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-bold uppercase ml-1">Szakirany</label>
-                        <input type="text" placeholder="pl. Szoftverfejlesztes" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg field focus:shadow-neobrutalist outline-none transition-all font-medium">
+                        <label class="text-xs font-bold uppercase ml-1">Szakirány</label>
+                        <input type="text" placeholder="pl. Szoftverfejlesztés" class="w-full p-3 bg-white border-2 border-brand-black rounded-lg field focus:shadow-neobrutalist outline-none transition-all font-medium">
                     </div>
                 </div>
             `;
@@ -745,7 +464,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
         function init() {
             console.log("Initialization started. readyState:", document.readyState);
 
-            // Esemenykezelok hozzaadasa a gombokhoz
+            // Eseménykezelők hozzáadása a gombokhoz
             const structuredBtn = document.getElementById('structuredModeBtn');
             const bulkBtn = document.getElementById('bulkModeBtn');
 
@@ -756,7 +475,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 bulkBtn.addEventListener('click', () => window.switchMode('bulk'));
             }
 
-            // Kezdeti ures mezok hozzaadasa
+            // Kezdeti üres mezők hozzáadása
             if (typeof window.addExperience === 'function') window.addExperience();
             if (typeof window.addEducation === 'function') window.addEducation();
 
@@ -772,19 +491,9 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 unlockBtn.addEventListener('click', startStripeCheckout);
             }
 
-            renderCvVersions([]);
-
-            (async () => {
-                await loadPublicConfig();
-                await ensureRecaptchaReady();
-
-                window.currentCvId = localStorage.getItem('lastCvId');
-                updateActionButtons();
-                const paymentState = await handlePaymentReturn();
-                if (paymentState !== 'success') {
-                    await restorePreviewFromUrlOrCache();
-                }
-            })();
+            window.currentCvId = localStorage.getItem('lastCvId');
+            updateActionButtons();
+            handlePaymentReturn();
         }
 
         async function loadUnlockedCv(cvId) {
@@ -793,7 +502,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             const fullResponse = await fetch(`/api/cv/${encodeURIComponent(cvId)}/full`);
             if (!fullResponse.ok) {
                 const errorText = await fullResponse.text();
-                throw new Error(errorText || 'A teljes CV letoltese sikertelen.');
+                throw new Error(errorText || 'A teljes CV letöltése sikertelen.');
             }
 
             const fullHtml = await fullResponse.text();
@@ -801,211 +510,16 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             window.currentCvId = cvId;
             localStorage.setItem('lastCvId', cvId);
             displayCV(fullHtml, { locked: false });
-            await loadCvVersions();
         }
-
-        async function loadPreviewCv(cvId) {
-            if (!cvId) throw new Error('Missing CV identifier.');
-
-            const previewResponse = await fetch(`/api/cv/${encodeURIComponent(cvId)}/preview`);
-            const payload = await previewResponse.json().catch(() => ({}));
-            if (!previewResponse.ok) {
-                throw new Error(payload.error || 'A preview betoltese sikertelen.');
-            }
-
-            if (!payload.previewHtml) {
-                throw new Error('A szerver nem adott vissza preview HTML-t.');
-            }
-
-            window.currentCvId = cvId;
-            localStorage.setItem('lastCvId', cvId);
-            window.previewLocked = Boolean(payload.locked);
-            window.hasGeneratedCv = true;
-            displayCV(payload.previewHtml, { locked: window.previewLocked });
-            await loadCvVersions();
-        }
-
-        function renderCvVersions(items) {
-            const container = document.getElementById('cvVersionList');
-            if (!container) return;
-            if (!items || items.length === 0) {
-                container.innerHTML = '<div class="text-gray-500">Meg nincs mentett alternativ verzio.</div>';
-                return;
-            }
-
-            container.innerHTML = items.map((item) => {
-                const created = new Date(item.createdAt).toLocaleString();
-                const lockInfo = item.locked  'zart' : 'nyitott';
-                return `
-                    <button type="button"
-                        class="w-full text-left border-2 border-brand-black rounded-lg p-3 bg-gray-50 hover:bg-brand-yellow/20 transition-colors"
-                        onclick="openCvVersion('${item.cvId}')">
-                        <div class="font-bold">${item.variantLabel || 'CV valtozat'} (${(item.language || 'hu').toUpperCase()})</div>
-                        <div class="text-xs text-gray-600">${created} - ${lockInfo}</div>
-                    </button>
-                `;
-            }).join('');
-        }
-
-        async function loadCvVersions() {
-            try {
-                ensureActiveCv();
-                const payload = await fetch(`/api/cv/${encodeURIComponent(window.currentCvId)}/versions`);
-                const data = await payload.json().catch(() => ({}));
-                if (!payload.ok) {
-                    throw new Error(data.error || 'CV verziok betoltese sikertelen.');
-                }
-                window.cvVersions = data.versions || [];
-                renderCvVersions(window.cvVersions);
-            } catch (error) {
-                console.warn('Version list load failed:', error.message);
-            }
-        }
-
-        window.openCvVersion = async function(cvId) {
-            try {
-                await loadPreviewCv(cvId);
-                const params = new URLSearchParams(window.location.search);
-                params.set('cvId', cvId);
-                const nextUrl = `${window.location.pathname}${params.toString()}`;
-                window.history.replaceState({}, '', nextUrl);
-            } catch (error) {
-                alert('Verzio megnyitasi hiba: ' + error.message);
-            }
-        }
-
-        async function restorePreviewFromUrlOrCache() {
-            const params = new URLSearchParams(window.location.search);
-            const cvIdFromUrl = params.get('cvId');
-            const cvIdToLoad = cvIdFromUrl;
-            if (!cvIdToLoad) return;
-
-            try {
-                await loadPreviewCv(cvIdToLoad);
-            } catch (error) {
-                console.warn('Preview restore skipped:', error.message);
-            }
-        }
-
-        window.analyzeAtsScore = async function() {
-            try {
-                ensureActiveCv();
-                const jobDescription = document.getElementById('atsJobDescription').value || '';
-                setResultBox('atsResult', 'Elemzes folyamatban...');
-
-                const report = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/analyze-ats`, {
-                    jobDescription
-                });
-
-                const tipText = (report.tips || []).map((tip, index) => `${index + 1}. ${tip}`).join('\n');
-                const text = [
-                    `Osszpontszam: ${report.overallScore}/100`,
-                    `Kulcsszo: ${report.breakdown.keywordScore || 0}/100`,
-                    `Struktura: ${report.breakdown.structureScore || 0}/100`,
-                    `Olvashatosag: ${report.breakdown.readabilityScore || 0}/100`,
-                    '',
-                    `Talalt kulcsszavak: ${(report.matchedKeywords || []).join(', ') || '-'}`,
-                    '',
-                    'Javitasi tippek:',
-                    tipText || 'Nincs konkret javaslat.'
-                ].join('\n');
-
-                setResultBox('atsResult', text);
-            } catch (error) {
-                setResultBox('atsResult', `ATS hiba: ${error.message}`, true);
-            }
-        };
-
-        window.exportLanguageVersion = async function() {
-            try {
-                ensureActiveCv();
-                setResultBox('exportResult', 'Nyelvi export folyamatban...');
-
-                const language = document.getElementById('exportLanguage').value || 'hu';
-                const tone = document.getElementById('exportTone').value || 'professional';
-                const region = document.getElementById('exportRegion').value || '';
-
-                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/export-language`, {
-                    language,
-                    tone,
-                    region
-                });
-
-                if (!result.cvId || !result.previewHtml) {
-                    throw new Error('A szerver nem adott vissza uj verzio adatot.');
-                }
-
-                window.currentCvId = result.cvId;
-                localStorage.setItem('lastCvId', result.cvId);
-                displayCV(result.previewHtml, { locked: Boolean(result.locked) });
-                await loadCvVersions();
-
-                setResultBox('exportResult', `Uj nyelvi verzio kesz: ${result.variantLabel || ''} (${(result.language || language).toUpperCase()})`);
-            } catch (error) {
-                setResultBox('exportResult', `Nyelvi export hiba: ${error.message}`, true);
-            }
-        };
-
-        window.createTargetedVersion = async function() {
-            try {
-                ensureActiveCv();
-                const jobTitle = document.getElementById('targetJobTitle').value || '';
-                const jobDescription = document.getElementById('targetJobDescription').value || '';
-                const focusAreas = document.getElementById('targetFocusAreas').value || '';
-
-                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/create-version`, {
-                    jobTitle,
-                    jobDescription,
-                    focusAreas
-                });
-
-                if (!result.cvId || !result.previewHtml) {
-                    throw new Error('A szerver nem adott vissza uj verzio adatot.');
-                }
-
-                window.currentCvId = result.cvId;
-                localStorage.setItem('lastCvId', result.cvId);
-                displayCV(result.previewHtml, { locked: Boolean(result.locked) });
-                await loadCvVersions();
-            } catch (error) {
-                alert('Celzott verzio hiba: ' + error.message);
-            }
-        };
-
-        window.generateCoverLetter = async function() {
-            try {
-                ensureActiveCv();
-                const jobTitle = document.getElementById('clJobTitle').value || '';
-                const companyName = document.getElementById('clCompany').value || '';
-                const jobDescription = document.getElementById('clJobDescription').value || '';
-                const language = document.getElementById('clLanguage').value || 'hu';
-                const tone = document.getElementById('clTone').value || 'professional';
-
-                const result = await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/cover-letter`, {
-                    jobTitle,
-                    companyName,
-                    jobDescription,
-                    language,
-                    tone
-                });
-
-                const output = document.getElementById('coverLetterOutput');
-                if (output) {
-                    output.value = `Targy: ${result.subject || '-'}\n\n${result.body || ''}`;
-                }
-            } catch (error) {
-                alert('Cover letter hiba: ' + error.message);
-            }
-        };
 
         async function startStripeCheckout() {
             try {
                 if (!window.currentCvId) {
-                    throw new Error('Nincs aktiv CV. Elobb generalj egyet.');
+                    throw new Error('Nincs aktív CV. Előbb generálj egyet.');
                 }
 
                 if (typeof window.Stripe !== 'function') {
-                    throw new Error('Stripe script nem toltodott be.');
+                    throw new Error('Stripe script nem töltődött be.');
                 }
 
                 const response = await fetch('/api/payments/stripe/create-checkout-session', {
@@ -1016,7 +530,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
 
                 const payload = await response.json().catch(() => ({}));
                 if (!response.ok) {
-                    throw new Error(payload.error || 'Stripe fizetes inditasa sikertelen.');
+                    throw new Error(payload.error || 'Stripe fizetés indítása sikertelen.');
                 }
 
                 if (payload.alreadyPaid) {
@@ -1027,61 +541,59 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 const stripe = window.Stripe(payload.publishableKey);
                 const result = await stripe.redirectToCheckout({ sessionId: payload.sessionId });
                 if (result && result.error) {
-                    throw new Error(result.error.message || 'Stripe checkout atiranyitas sikertelen.');
+                    throw new Error(result.error.message || 'Stripe checkout átirányítás sikertelen.');
                 }
             } catch (error) {
                 console.error('Stripe checkout error:', error);
-                alert('Fizetesi hiba: ' + error.message);
+                alert('Fizetési hiba: ' + error.message);
             }
         }
+
         async function handlePaymentReturn() {
             const params = new URLSearchParams(window.location.search);
             const paymentState = params.get('payment');
             const sessionId = params.get('session_id');
 
             if (paymentState === 'cancelled') {
-                alert('A fizetes megszakadt. A preview tovabbra is vizjeles.');
+                alert('A fizetés megszakadt. A preview továbbra is vízjeles.');
                 params.delete('payment');
                 params.delete('session_id');
                 const nextQuery = params.toString();
-                const nextUrl = `${window.location.pathname}${nextQuery  `${nextQuery}` : ''}`;
+                const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
                 window.history.replaceState({}, '', nextUrl);
-                return 'cancelled';
+                return;
             }
 
             if (paymentState !== 'success' || !sessionId) {
-                return 'none';
+                return;
             }
 
-            let resultState = 'none';
             try {
-                const verifyResponse = await fetch(`/api/payments/stripe/verifysession_id=${encodeURIComponent(sessionId)}`);
+                const verifyResponse = await fetch(`/api/payments/stripe/verify?session_id=${encodeURIComponent(sessionId)}`);
                 const verifyPayload = await verifyResponse.json().catch(() => ({}));
 
                 if (!verifyResponse.ok) {
-                    throw new Error(verifyPayload.error || 'Fizetes ellenorzese sikertelen.');
+                    throw new Error(verifyPayload.error || 'Fizetés ellenőrzése sikertelen.');
                 }
 
                 if (!verifyPayload.paid || !verifyPayload.cvId) {
-                    throw new Error('A Stripe fizetes meg nem teljesult.');
+                    throw new Error('A Stripe fizetés még nem teljesült.');
                 }
 
                 await loadUnlockedCv(verifyPayload.cvId);
-                alert('Sikeres fizetes. A teljes CV feloldva.');
-                resultState = 'success';
+                alert('Sikeres fizetés. A teljes CV feloldva.');
             } catch (error) {
                 console.error('Payment verification error:', error);
-                alert('Fizetesi ellenorzesi hiba: ' + error.message);
-                resultState = 'error';
+                alert('Fizetés ellenőrzési hiba: ' + error.message);
             } finally {
                 params.delete('payment');
                 params.delete('session_id');
                 const nextQuery = params.toString();
-                const nextUrl = `${window.location.pathname}${nextQuery  `${nextQuery}` : ''}`;
+                const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`;
                 window.history.replaceState({}, '', nextUrl);
             }
-            return resultState;
         }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
@@ -1111,7 +623,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                     userData.experience = [];
                     userData.education = [];
 
-                    // Tapasztalatok osszegyujtese
+                    // Tapasztalatok összegyűjtése
                     document.querySelectorAll('.experience-entry').forEach(entry => {
                         const company = entry.querySelector('.company').value;
                         const title = entry.querySelector('.title').value;
@@ -1126,7 +638,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                         }
                     });
 
-                    // Tanulmanyok osszegyujtese
+                    // Tanulmányok összegyűjtése
                     document.querySelectorAll('.education-entry').forEach(entry => {
                         const institution = entry.querySelector('.institution').value;
                         const degree = entry.querySelector('.degree').value;
@@ -1143,7 +655,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                     // Validate Bulk Mode input manually
                     const bulkText = formData.get('bulkData');
                     if (!bulkText || bulkText.trim().length < 10) {
-                        alert('Kerlek irj be legalabb nehany mondatot a szabad szoveges mezobe!');
+                        alert('Kérlek írj be legalább néhány mondatot a szabad szöveges mezőbe!');
                         if (loadingOverlay) loadingOverlay.classList.add('hidden');
                         return;
                     }
@@ -1154,16 +666,14 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 const profilePicture = document.getElementById('profilePicture').files[0];
 
                 if (profilePicture && profilePicture.size > 4 * 1024 * 1024) {
-                    alert('A profilkep tul nagy. Kerlek valassz 4MB-nal kisebb kepet.');
+                    alert('A profilkép túl nagy. Kérlek válassz 4MB-nál kisebb képet.');
                     if (loadingOverlay) loadingOverlay.classList.add('hidden');
                     return;
                 }
 
-                const recaptchaToken = await getRecaptchaToken();
                 const payload = new FormData();
                 payload.append('userData', JSON.stringify(userData));
                 payload.append('theme', theme);
-                payload.append('recaptchaToken', recaptchaToken);
                 if (profilePicture) {
                     payload.append('profilePicture', profilePicture);
                 }
@@ -1175,14 +685,14 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(errorText || 'Hiba tortent a generalas soran');
+                    throw new Error(errorText || 'Hiba történt a generálás során');
                 }
 
                 const contentType = response.headers.get('content-type') || '';
                 if (contentType.includes('application/json')) {
                     const data = await response.json();
                     if (!data.previewHtml) {
-                        throw new Error('A szerver nem adott vissza elonezeti HTML-t.');
+                        throw new Error('A szerver nem adott vissza előnézeti HTML-t.');
                     }
 
                     window.currentCvId = data.cvId || null;
@@ -1193,7 +703,6 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                     }
 
                     displayCV(data.previewHtml, { locked: window.previewLocked });
-                    await loadCvVersions();
                 } else {
                     const htmlContent = await response.text();
                     window.previewLocked = false;
@@ -1202,9 +711,8 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 }
             } catch (error) {
                 console.error('Hiba:', error);
-                alert('Hiba tortent: ' + error.message);
+                alert('Hiba történt: ' + error.message);
             } finally {
-                resetRecaptcha();
                 if (loadingOverlay) loadingOverlay.classList.add('hidden');
             }
         }
@@ -1315,7 +823,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             iframe.style.display = 'block';
             iframe.style.transformOrigin = 'top left';
             iframe.style.background = 'white';
-            iframe.setAttribute('title', 'CV elonezet');
+            iframe.setAttribute('title', 'CV előnézet');
             frame.appendChild(iframe);
 
             const doc = iframe.contentWindow.document;
@@ -1324,7 +832,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
             doc.close();
 
             const resizePreview = () => {
-                const iframeDoc = iframe.contentWindow.document;
+                const iframeDoc = iframe.contentWindow?.document;
                 if (!iframeDoc || !iframeDoc.body) return;
 
                 ensureSinglePageStyles(iframeDoc);
@@ -1366,7 +874,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
                 setTimeout(resizePreview, 320);
             };
 
-            if (iframe.contentWindow.document.readyState === 'complete') {
+            if (iframe.contentWindow?.document?.readyState === 'complete') {
                 onIframeReady();
             } else {
                 iframe.addEventListener('load', onIframeReady, { once: true });
@@ -1380,7 +888,7 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
         }
 
         function preparePrintScale(iframe) {
-            const doc = iframe.contentWindow.document;
+            const doc = iframe?.contentWindow?.document;
             if (!doc || !doc.body || !doc.documentElement) return null;
 
             const a4 = getA4Pixels(doc);
@@ -1430,18 +938,10 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
 
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
-            downloadBtn.addEventListener('click', async () => {
+            downloadBtn.addEventListener('click', () => {
                 if (window.previewLocked) {
-                    alert('A letoltes fizetes utan elerheto.');
+                    alert('A letöltés fizetés után elérhető.');
                     return;
-                }
-
-                if (window.currentCvId) {
-                    try {
-                        await postJson(`/api/cv/${encodeURIComponent(window.currentCvId)}/download-event`, {});
-                    } catch (error) {
-                        console.warn('Download tracking failed:', error.message);
-                    }
                 }
 
                 const iframe = document.querySelector('#previewContainer iframe');
@@ -1458,4 +958,3 @@ Kovacs Janos vagyok, szoftverfejlesztokent dolgoztam 3 evet a Tech Kft-nel..."><
     </script>
 </body>
 </html>
-
