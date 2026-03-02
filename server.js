@@ -195,6 +195,16 @@ function getAppBaseUrl(req) {
     return process.env.APP_BASE_URL || `${req.protocol}://${req.get('host')}`;
 }
 
+function buildAppReturnUrl(req, query = {}) {
+    const url = new URL('/', getAppBaseUrl(req));
+    Object.entries(query).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+            url.searchParams.set(key, String(value));
+        }
+    });
+    return url.toString();
+}
+
 function timingSafeEqualString(a, b) {
     if (typeof a !== 'string' || typeof b !== 'string') return false;
     const aBuffer = Buffer.from(a);
@@ -762,9 +772,14 @@ app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async 
             return res.json({ alreadyPaid: true, cvId });
         }
 
-        const appBaseUrl = getAppBaseUrl(req);
-        const successUrl = `${appBaseUrl}/payment=success&session_id={CHECKOUT_SESSION_ID}`;
-        const cancelUrl = `${appBaseUrl}/payment=cancelled&cvId=${encodeURIComponent(cvId)}`;
+        const successUrl = buildAppReturnUrl(req, {
+            payment: 'success',
+            session_id: '{CHECKOUT_SESSION_ID}'
+        });
+        const cancelUrl = buildAppReturnUrl(req, {
+            payment: 'cancelled',
+            cvId
+        });
 
         const checkoutAmount = getCheckoutUnitAmount();
 
