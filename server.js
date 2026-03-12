@@ -91,6 +91,7 @@ const DOWNLOAD_TOKEN_TTL_MS = Number(process.env.DOWNLOAD_TOKEN_TTL_MS || 7 * 24
 const ADMIN_PANEL_TOKEN = process.env.ADMIN_PANEL_TOKEN || '';
 const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || ADMIN_PANEL_TOKEN || 'change-me';
 const ADMIN_SESSION_TTL_MS = Number(process.env.ADMIN_SESSION_TTL_MS || 12 * 60 * 60 * 1000);
+const FREE_COUPON_CODE = String(process.env.FREE_COUPON_CODE || '').trim().toUpperCase();
 
 function createLimiter(max, message) {
     return rateLimit({
