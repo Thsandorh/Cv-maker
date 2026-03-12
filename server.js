@@ -146,9 +146,14 @@ function normalizeCouponCode(code) {
     return String(code || '').trim().toUpperCase();
 }
 
+function getFreeCouponCode() {
+    return String(process.env.FREE_COUPON_CODE || '').trim().toUpperCase();
+}
+
 function isFreeCoupon(code) {
     const normalized = normalizeCouponCode(code);
-    return Boolean(FREE_COUPON_CODE && normalized && normalized === FREE_COUPON_CODE);
+    const expectedCode = getFreeCouponCode();
+    return Boolean(expectedCode && normalized && normalized === expectedCode);
 }
 
 function isRecaptchaEnabled() {
@@ -769,10 +774,6 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
 
 app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async (req, res) => {
     try {
-        if (!stripe || !stripePublishableKey) {
-            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
-        }
-
         const { cvId, couponCode } = req.body || {};
         const record = await getCvRecord(cvId, CV_TTL_MS);
         if (!record) {
@@ -805,6 +806,10 @@ app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async 
             }
 
             return res.json({ alreadyPaid: true, cvId, unlockedByCoupon: true });
+        }
+
+        if (!stripe || !stripePublishableKey) {
+            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
         }
 
         const successUrl = buildAppReturnUrl(req, {
