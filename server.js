@@ -26,11 +26,12 @@ const {
 const app = express();
 const port = process.env.PORT || 3000;
 app.set('trust proxy', 1);
+const WEBHOOK_PATHS = ['/api/payments/stripe/webhook', '/api/stripe/webhook'];
 
 // Middleware
 const jsonParser = express.json();
 app.use((req, res, next) => {
-    if (req.path === '/api/payments/stripe/webhook') {
+    if (WEBHOOK_PATHS.includes(req.path)) {
         return next();
     }
     return jsonParser(req, res, next);
@@ -137,6 +138,21 @@ function getCheckoutUnitAmount() {
 function getDisplayAmount() {
     const normalized = Number.isFinite(CV_PRICE_CENTS) ? Math.round(CV_PRICE_CENTS) : 0;
     return Math.max(normalized, getStripeMinimumAmount(CV_CURRENCY));
+}
+
+
+function normalizeCouponCode(code) {
+    return String(code || '').trim().toUpperCase();
+}
+
+function getFreeCouponCode() {
+    return String(process.env.FREE_COUPON_CODE || '').trim().toUpperCase();
+}
+
+function isFreeCoupon(code) {
+    const normalized = normalizeCouponCode(code);
+    const expectedCode = getFreeCouponCode();
+    return Boolean(expectedCode && normalized && normalized === expectedCode);
 }
 
 function isRecaptchaEnabled() {
@@ -757,11 +773,7 @@ app.post('/api/generate-cv', generateCvLimiter, upload.single('profilePicture'),
 
 app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async (req, res) => {
     try {
-        if (!stripe || !stripePublishableKey) {
-            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
-        }
-
-        const { cvId } = req.body || {};
+        const { cvId, couponCode } = req.body || {};
         const record = await getCvRecord(cvId, CV_TTL_MS);
         if (!record) {
             return res.status(404).json({ error: 'CV not found or expired. Please generate it again.' });
@@ -770,6 +782,33 @@ app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async 
         const access = await getEffectiveAccess(record);
         if (access.paid) {
             return res.json({ alreadyPaid: true, cvId });
+        }
+
+        const normalizedCouponCode = normalizeCouponCode(couponCode);
+        if (normalizedCouponCode) {
+            if (!isFreeCoupon(normalizedCouponCode)) {
+                return res.status(400).json({ error: 'Érvénytelen kuponkód.' });
+            }
+
+            const updated = await markCvPaidCascade(cvId);
+            const cvRecord = await getCvRecord(cvId, CV_TTL_MS);
+            const rootCvId = resolveRootCvId(cvRecord) || cvId;
+            if (updated > 0) {
+                await trackAnalyticsEvent('payment_success', {
+                    cvId: rootCvId,
+                    eventKey: `payment_success:coupon:${rootCvId}`,
+                    metadata: {
+                        source: 'coupon',
+                        couponCode: normalizedCouponCode
+                    }
+                });
+            }
+
+            return res.json({ alreadyPaid: true, cvId, unlockedByCoupon: true });
+        }
+
+        if (!stripe || !stripePublishableKey) {
+            return res.status(503).json({ error: 'Stripe payment is not configured on the server.' });
         }
 
         const successUrl = buildAppReturnUrl(req, {
@@ -824,7 +863,7 @@ app.post('/api/payments/stripe/create-checkout-session', checkoutLimiter, async 
     }
 });
 
-app.post('/api/payments/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+app.post(WEBHOOK_PATHS, express.raw({ type: 'application/json' }), async (req, res) => {
     try {
         if (!stripe || !stripeWebhookSecret) {
             return res.status(503).send('Stripe webhook is not configured on the server.');

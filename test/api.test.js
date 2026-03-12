@@ -116,6 +116,49 @@ describe('API Test', () => {
     expect(res.statusCode).toBe(401);
   });
 
+
+
+  it('should unlock CV with valid coupon even when Stripe is not configured', async () => {
+    process.env.FREE_COUPON_CODE = 'INGYEN';
+
+    const userData = {
+      fullName: 'Coupon User',
+      email: 'coupon@example.com',
+      mode: 'bulk',
+      bulkData: 'Profile for coupon based unlock'
+    };
+
+    const generated = await request(app)
+      .post('/api/generate-cv')
+      .field('userData', JSON.stringify(userData))
+      .field('theme', 'modern');
+
+    const cvId = generated.body.cvId;
+
+    const checkout = await request(app)
+      .post('/api/payments/stripe/create-checkout-session')
+      .send({ cvId, couponCode: 'ingyen' });
+
+    expect(checkout.statusCode).toBe(200);
+    expect(checkout.body.alreadyPaid).toBe(true);
+    expect(checkout.body.unlockedByCoupon).toBe(true);
+
+    const full = await request(app).get(`/api/cv/${cvId}/full`);
+    expect(full.statusCode).toBe(200);
+    expect(full.text).toContain('Hungarian CV content');
+
+    delete process.env.FREE_COUPON_CODE;
+  });
+
+  it('should expose webhook alias endpoint (not 404)', async () => {
+    const res = await request(app)
+      .post('/api/stripe/webhook')
+      .set('Content-Type', 'application/json')
+      .send({});
+
+    expect(res.statusCode).toBe(503);
+    expect(res.text).toContain('Stripe webhook is not configured');
+  });
   it('should deny admin profile endpoint without authentication', async () => {
     const res = await request(app).get('/api/admin/me');
     expect(res.statusCode).toBe(401);
