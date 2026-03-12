@@ -116,6 +116,16 @@ describe('API Test', () => {
     expect(res.statusCode).toBe(401);
   });
 
+
+  it('should expose webhook alias endpoint (not 404)', async () => {
+    const res = await request(app)
+      .post('/api/stripe/webhook')
+      .set('Content-Type', 'application/json')
+      .send({});
+
+    expect(res.statusCode).toBe(503);
+    expect(res.text).toContain('Stripe webhook is not configured');
+  });
   it('should deny admin profile endpoint without authentication', async () => {
     const res = await request(app).get('/api/admin/me');
     expect(res.statusCode).toBe(401);
